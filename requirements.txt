@@ -1,0 +1,6 @@
+lxml
+-e git+http://github.com/opencivicdata/pupa.git#egg=pupa
+-e git+http://github.com/opencivicdata/larvae.git#egg=larvae
+Django
+django-toolbelt
+dj-database-url
