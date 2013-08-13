@@ -1,1 +1,1 @@
-web: gunicorn hellodjango.wsgi
+web: gunicorn mycityhall_scraperreports.wsgi
