@@ -1,6 +1,9 @@
 lxml
 -e git+http://github.com/opencivicdata/pupa.git#egg=pupa
 -e git+http://github.com/opencivicdata/larvae.git#egg=larvae
-Django
-django-toolbelt
-dj-database-url
+Django==1.5.1
+dj-database-url==0.2.1
+dj-static==0.0.5
+gunicorn==17.5
+psycopg2==2.5.1
+static==0.4
