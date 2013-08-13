@@ -6,7 +6,7 @@ from mycityhall_scrapers import *
 from pupa.cli import __main__
 from pupa.cli.commands import update, base
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mycityhall_scraperreports.settings")
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mycityhall_scraperreports.settings")
 
 
 from reports.models import Report
@@ -37,10 +37,8 @@ for jurisdiction in jurisdictions:
     subcommands[args.subcommand].handle(args)
     r = Report(name=jurisdiction, status="working", error="None")
     r.save()
-    # print '=========================='
 
   except:
     r = Report(name=jurisdiction, status="broken", error=sys.exc_info())
     r.save()
-    # print '---------------------------'
 
