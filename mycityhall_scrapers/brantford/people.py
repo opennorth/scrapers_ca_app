@@ -35,7 +35,7 @@ class BrantfordPersonScraper(Scraper):
 
       numbers = page.xpath('//div[@id="centre_content"]//p[contains(text(),"-")]')[0].text_content()
       if 'tel' in numbers:
-        phone = re.findall(r'(.*)tel', numbers)[0].strip().replace(' ','-').replace("\xc2",'').replace("\xa0",'-')
+        phone = re.findall(r'(.*)tel', numbers)[0].strip().replace(' ','-').replace("\\xc2",'').replace("\\xa0",'-')
         p.add_contact('phone', phone, None)
       if 'cell' in numbers:
         cell = re.findall(r'(.*)cell', numbers)[0].strip().replace(' ','-')
