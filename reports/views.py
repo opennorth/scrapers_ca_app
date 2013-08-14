@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.template import Template, Context
 from django.shortcuts import render_to_response
+from django.core import serializers
 from .models import Report
 import csv
 def home(request):
@@ -30,3 +31,8 @@ def serve_csv(request):
     row = [scraper.name, scraper.status, scraper.error]
     writer.writerow(row)
   return response
+
+def json(request):
+  scrapers = Report.objects.all()
+  data = serializers.serialize('json',scrapers, fields=('name', 'status', 'error'))
+  return HttpResponse(data)
