@@ -7,6 +7,8 @@ from django.conf.urls import patterns, include, url
 urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'reports.views.home', name='home'),
+    url(r'^json$', 'reports.views.json', name='json'),
+    url(r'^csv$', 'reports.views.serve_csv', name='serve_csv')
     # url(r'^mycityhall_scraperreports/', include('mycityhall_scraperreports.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
