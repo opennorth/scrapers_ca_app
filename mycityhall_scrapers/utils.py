@@ -1,11 +1,13 @@
-from pupa.scrape import Jurisdiction
-
+from pupa.scrape import Jurisdiction, Scraper
+from pupa.models import Organization
 import os.path
 
 from scrapelib import urlopen
 import lxml.html
 
+
 class CanadianJurisdiction(Jurisdiction):
+
   def get_metadata(self):
     metadata = {
       'feature_flags': [],
@@ -49,7 +51,8 @@ class CanadianJurisdiction(Jurisdiction):
   def scrape_session_list(self):
     return ['N/A']
 
-def lxmlize(url, encoding = 'utf-8'):
+
+def lxmlize(url, encoding='utf-8'):
   entry = urlopen(url).encode(encoding)
   page = lxml.html.fromstring(entry)
 
@@ -60,3 +63,10 @@ def lxmlize(url, encoding = 'utf-8'):
   else:
     page.make_links_absolute(url)
     return page
+
+class CanadianScraper(Scraper):
+  def get_organization(self):
+    name = self.jurisdiction.get_metadata()['name']
+    jurisdiction_id = self.jurisdiction.jurisdiction_id
+    org = Organization(name=name, classification='jurisdiction', jurisdiction_id=jurisdiction_id)
+    return org
