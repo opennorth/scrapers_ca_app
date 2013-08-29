@@ -8,7 +8,8 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'reports.views.home', name='home'),
     url(r'^json$', 'reports.views.json', name='json'),
-    url(r'^csv$', 'reports.views.serve_csv', name='serve_csv')
+    url(r'^csv$', 'reports.views.serve_csv', name='serve_csv'),
+    url(r'^represent_json$', 'mycityhall_scraperreports.views.represent_json', name='represent_json')
     # url(r'^mycityhall_scraperreports/', include('mycityhall_scraperreports.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

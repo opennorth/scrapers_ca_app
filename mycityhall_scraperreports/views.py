@@ -1,5 +1,9 @@
 from django.http import HttpResponse
 from django.template import Template, Context
+import mycityhall_scrapers.export_represent as export_represent
+import zipfile
+import os
+import StringIO
 
 def home(request):
   scrapers = [{'name':'montreal', 'status':'working'}, {'name':'outremont', 'status': 'not working'}]
@@ -14,3 +18,42 @@ def home(request):
 
   raw_template = raw_template+ "</table>"
   return HttpResponse(raw_template)
+
+def represent_json(request):
+  print export_represent.main()
+
+
+  # Files (local path) to put in the .zip
+   # FIXME: Change this (get paths from DB etc)
+  filenames = os.listdir('mycityhall_scrapers/represent_data/')
+
+   # Folder name in ZIP archive which contains the above files
+   # E.g [thearchive.zip]/somefiles/file2.txt
+   # FIXME: Set this to something better
+  zip_subdir = "mycityhall_scrapers/represent_data"
+  zip_filename = "%s.zip" % zip_subdir
+
+   # # Open StringIO to grab in-memory ZIP contents
+  s = StringIO.StringIO()
+
+   # # The zip compressor
+  zf = zipfile.ZipFile(s, "w")
+
+  for fpath in filenames:
+   #     # Calculate path for file in zip
+    fdir, fname = os.path.split(fpath)
+    zip_path = os.path.join(zip_subdir, fname)
+
+   #     # Add file, at correct path
+  # print fpath
+    zf.write('mycityhall_scrapers/represent_data/'+fpath, zip_path)
+
+   # # Must close zip for all contents to be written
+  zf.close()
+
+   # # Grab ZIP file from in-memory, make response with correct MIME-type
+  resp = HttpResponse(s.getvalue(), mimetype = "application/x-zip-compressed")
+   # # ..and correct content-disposition
+  resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
+
+  return resp
