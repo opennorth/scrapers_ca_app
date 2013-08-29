@@ -1,8 +1,8 @@
 from django.http import HttpResponse
 from django.template import Template, Context
-import mycityhall_scrapers.export_represent as export_represent
+from mycityhall_scrapers import export_represent
 import zipfile
-import os
+import os, sys
 import StringIO
 
 def home(request):
