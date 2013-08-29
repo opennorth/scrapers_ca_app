@@ -11,7 +11,7 @@ from pupa.core import db
 def main():
   for module_name in os.listdir('.'):
     print module_name
-    if os.path.isdir(module_name) and module_name not in ('.git', 'scrape_cache', 'scraped_data', 'represent_data'):
+    if os.path.isdir(module_name) and module_name not in ('.git', '.gitignore', '.profile.d' , 'scrape_cache', 'scraped_data', 'represent_data'):
       module = importlib.import_module(module_name)
       for obj in module.__dict__.values():
         jurisdiction_id = getattr(obj, 'jurisdiction_id', None)
