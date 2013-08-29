@@ -5,10 +5,12 @@ import re
 import json
 import os
 import importlib
+import pupa.core
 from pupa.core import db
 
 
 def main():
+  pupa.core._configure_db(os.environ['MONGOHQ_URL'], 27017, 'app17409961')
   for module_name in os.listdir('.'):
     print module_name
     if os.path.isdir(module_name) and module_name not in ('.git', '.gitignore', '.profile.d', '.heroku' , 'scrape_cache', 'scraped_data', 'represent_data'):
