@@ -12,13 +12,11 @@ from pupa.core import db
 def main():
   pupa.core._configure_db(os.environ['MONGOHQ_URL'], 27017, 'app17409961')
   for module_name in os.listdir('.'):
-    print module_name
     if os.path.isdir(module_name) and module_name not in ('.git', '.gitignore', '.profile.d', '.heroku' , 'scrape_cache', 'scraped_data', 'represent_data'):
       module = importlib.import_module(module_name)
       for obj in module.__dict__.values():
         jurisdiction_id = getattr(obj, 'jurisdiction_id', None)
         if jurisdiction_id:  # We've found the module.
-          print module_name
           with open('represent_data/'+module_name+'.json', 'wb') as json_file:
             content = []
             print db.memberships.find({'jurisdiction_id' : jurisdiction_id}).count()
@@ -27,7 +25,11 @@ def main():
               organization = db.organizations.find_one({'_id' : member['organization_id']})
               person = db.people.find_one({'_id' : member['person_id']})
               print person['name']
-              role = db.memberships.find_one({'person_id': member['person_id'], 'role' : {'$ne' : 'member'}})['role']
+              role = db.memberships.find_one({'person_id': member['person_id'], 'role' : {'$ne' : 'member'}})
+              if role:
+                role = role['role']
+              else:
+                role = 'councillor'
 
               name = organization['name'] + ' ' + person['post_id']
               data = {
