@@ -20,7 +20,7 @@ def home(request):
   return HttpResponse(raw_template)
 
 def represent_json(request):
-  print export_represent.main()
+  export_represent.main()
 
 
   # Files (local path) to put in the .zip
