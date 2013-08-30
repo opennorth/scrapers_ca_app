@@ -5,6 +5,7 @@ import sys
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+    sys.path.append('.')
     sys.path.insert(0,'app/mycityhall_scrapers/')
 
     from django.core.management import execute_from_command_line

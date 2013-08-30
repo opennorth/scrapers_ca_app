@@ -20,9 +20,9 @@ def home(request):
   return HttpResponse(raw_template)
 
 def represent_json(request):
+  os.system('rm -rf mycityhall_scrapers/represent_data/*')
+
   export_represent.main()
-
-
   # Files (local path) to put in the .zip
    # FIXME: Change this (get paths from DB etc)
   filenames = os.listdir('mycityhall_scrapers/represent_data/')
