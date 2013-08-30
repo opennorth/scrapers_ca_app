@@ -1,4 +1,4 @@
 *.pyc
 /scraped_data
 /scrape_cache
-/mycityhall_scrapers/represent_data/*.json
+*.json
