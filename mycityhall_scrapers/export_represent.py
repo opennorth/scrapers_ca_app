@@ -17,7 +17,7 @@ def main():
       for obj in module.__dict__.values():
         jurisdiction_id = getattr(obj, 'jurisdiction_id', None)
         if jurisdiction_id:  # We've found the module.
-          with open('./mycityhall_scrapers/represent_data/'+module_name+'.json', 'w') as json_file:
+          with open(os.path.abspath(os.path.join(__file__, os.pardir)) + '/represent_data/'+module_name+'.json', 'w') as json_file:
             content = []
             for member in db.memberships.find({'jurisdiction_id' : jurisdiction_id, 'role' : 'member'}):
               organization = db.organizations.find_one({'_id' : member['organization_id']})
