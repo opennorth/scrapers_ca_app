@@ -1,6 +1,6 @@
-## MyCityHall.ca Scrapers
+## Pupa Scrapers for Canada
 
-[Pupa](https://github.com/opencivicdata/pupa) scrapers for [MyCityHall.ca](http://mycityhall.ca/). See [blank-pupa](https://github.com/opennorth/blank-pupa) to install dependencies and get started.
+See [blank-pupa](https://github.com/opennorth/blank-pupa) to install dependencies and get started.
 
 ## Geographic codes
 
@@ -10,7 +10,7 @@ Other jurisdictions have an `ocd_division` that corresponds to its [Open Civic D
 
 ## Maintenance
 
-The `tasks.py` script will correct module names, class names, and `jurisdiction_id`, `name`, `legislature_name` and `legislature_url` in `__init.py__` files. It will report any module without an OCD division or with a `legislature_name` or `legislature_url` that requires manual verification.
+The `tasks.py` script will correct module names, class names, and `jurisdiction_id`, `division_name`, `name` and `url` in `__init.py__` files. It will report any module without an OCD division or with a `name` or `url` that requires manual verification.
 
     python tasks.py
 
@@ -24,6 +24,6 @@ To tidy all whitespace, run:
 
 ## Bugs? Questions?
 
-This repository is on GitHub: [http://github.com/opennorth/mycityhall-scrapers](http://github.com/opennorth/mycityhall-scrapers), where your contributions, forks, bug reports, feature requests, and feedback are greatly welcomed.
+This repository is on GitHub: [http://github.com/opencivicdata/scrapers-ca](http://github.com/opencivicdata/scrapers-ca), where your contributions, forks, bug reports, feature requests, and feedback are greatly welcomed.
 
 Copyright (c) 2013 Open North Inc., released under the MIT license
