@@ -1,3 +1,3 @@
-[submodule "scrapers-ca"]
-	path = scrapers-ca
+[submodule "scrapers"]
+	path = scrapers
 	url = git://github.com/opencivicdata/scrapers-ca.git
