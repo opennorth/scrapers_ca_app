@@ -18,7 +18,12 @@ if __name__ == "__main__":
   subparsers = parser.add_subparsers(dest='subcommand')
   subcommand = importlib.import_module('pupa.cli.commands.update').Command(subparsers)
 
-  for module_name in os.listdir('scrapers'):
+  if len(sys.argv) == 1:
+    module_names = os.listdir('scrapers')
+  else:
+    module_names = sys.argv[1:]
+
+  for module_name in module_names:
     if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', 'scrape_cache', 'scraped_data'):
       obj, _ = Report.objects.get_or_create(module=module_name)
       try:
