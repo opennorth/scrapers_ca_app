@@ -14,6 +14,6 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
+    url(r'^represent/(?P<module_name>[a-z0-9_]+)/$', 'reports.views.represent', name='represent'),
     url(r'^$', 'reports.views.home', name='home'),
-    # @todo JSON
 )
