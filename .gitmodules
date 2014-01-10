@@ -6,4 +6,4 @@
 	url = git://github.com/opencivicdata/pupa.git
 [submodule "vendor/scrapelib"]
 	path = vendor/scrapelib
-	url = http://github.com/sunlightlabs/scrapelib.git
+	url = git://github.com/sunlightlabs/scrapelib.git
