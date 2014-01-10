@@ -14,9 +14,6 @@ if __name__ == "__main__":
 
   from reports.models import Report
 
-  logging.basicConfig()
-  logger = logging.getLogger('pupa')
-
   parser = argparse.ArgumentParser('pupa', description='pupa CLI')
   subparsers = parser.add_subparsers(dest='subcommand')
   subcommand = importlib.import_module('pupa.cli.commands.update').Command(subparsers)

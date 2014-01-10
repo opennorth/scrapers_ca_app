@@ -37,7 +37,7 @@ def represent(request, module_name):
   for obj in module.__dict__.values():
     jurisdiction_id = getattr(obj, 'jurisdiction_id', None)
     if jurisdiction_id:  # We've found the module.
-      data = []
+      representatives = []
 
       # @todo check that all people are plain members of jurisdictions, without duplicates
       for membership in db.memberships.find({'jurisdiction_id': jurisdiction_id, 'role': 'member'}):
@@ -50,7 +50,7 @@ def represent(request, module_name):
         else:
           role = 'councillor' # @todo warn or error
 
-        data.append({
+        representatives.append({
           'name':           person['name'],
           # @todo check
           'district_name':  organization['name'] + ' ' + person['post_id'],
@@ -69,7 +69,7 @@ def represent(request, module_name):
           'extra':          get_extra(person),
         })
 
-      return HttpResponse(json.dumps(data), mimetype='application/json')
+      return HttpResponse(json.dumps(representatives), mimetype='application/json')
 
 # @todo check all contact detail note values
 def get_offices(obj):
