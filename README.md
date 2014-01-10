@@ -9,7 +9,7 @@ Create a virtual environment:
 ```
 rm -rf ~/.virtualenvs/scrapers_ca_app
 mkvirtualenv scrapers_ca_app
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
 
 Create a database:

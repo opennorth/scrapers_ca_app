@@ -15,7 +15,4 @@ Coffin==0.3.8
 django-compressor==1.3
 Jinja2==2.7.1
 
-# Scrapers
-lxml==3.3.0beta3
-./vendor/pupa
-./vendor/scrapelib
+-r scrapers/requirements.txt
