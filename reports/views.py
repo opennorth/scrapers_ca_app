@@ -23,7 +23,7 @@ CONTACT_DETAIL_TYPE_MAP = {
 
 def home(request):
   return render_to_response('index.html', RequestContext(request, {
-    'reports': Report.objects.all(),
+    'reports': Report.objects.order_by('module').all(),
   }))
 
 def represent(request, module_name):
