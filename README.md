@@ -35,17 +35,24 @@ foreman start
 
 ## Deployment
 
-Add `PRODUCTION` and `SECRET_KEY` configuration variables:
+Add `PRODUCTION` and `SECRET_KEY` configuration variables (replace `DATABASE`):
 
 ```
-heroku config:add PRODUCTION=1
-heroku config:add DJANGO_SECRET_KEY=your-secret-key
+heroku config:set PRODUCTION=1
+heroku config:set DJANGO_SECRET_KEY=your-secret-key
+heroku config:set DATABASE_URL=`heroku config:get DATABASE`
 ```
 
-Run `CREATE EXTENSION hstore` in a PostgreSQL shell:
+Run `CREATE EXTENSION hstore` in a PostgreSQL shell (replace `DATABASE`):
 
 ```
 heroku pg:psql DATABASE
+```
+
+Setup the database:
+
+```
+heroku run python manage.py syncdb --noinput
 ```
 
 Add `python cron.py` to the [Heroku Scheduler](https://scheduler.heroku.com/dashboard).
