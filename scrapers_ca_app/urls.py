@@ -6,15 +6,14 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
     # Examples:
-    url(r'^$', 'reports.views.home', name='home'),
-    url(r'^json$', 'reports.views.json', name='json'),
-    url(r'^csv$', 'reports.views.serve_csv', name='serve_csv'),
-    url(r'^represent_json$', 'mycityhall_scraperreports.views.represent_json', name='represent_json')
-    # url(r'^mycityhall_scraperreports/', include('mycityhall_scraperreports.foo.urls')),
+    # url(r'^$', 'scrapers_ca_app.views.home', name='home'),
+    # url(r'^scrapers_ca_app/', include('scrapers_ca_app.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
+    url(r'^$', 'reports.views.home', name='home'),
+    # @todo JSON
 )

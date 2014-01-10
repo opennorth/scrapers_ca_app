@@ -1,6 +1,18 @@
-# Django settings for mycityhall_scraperreports project.
+# Django settings for scrapers_ca_app project.
+
+# @see https://devcenter.heroku.com/articles/getting-started-with-django#settings-py
+
+# Parse database configuration from $DATABASE_URL
 import dj_database_url
+DATABASES = {'default': dj_database_url.config(default='postgres://localhost/pupa')}
+DATABASES['default']['ENGINE'] = 'django_hstore.postgresql_psycopg2'
+
+# Honor the 'X-Forwarded-Proto' header for request.is_secure()
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Static asset configuration
 import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -11,36 +23,9 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-
-
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'duo4tepmo8lia',                      # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
-        'USER': 'vvesghguwqnepl',
-        'PASSWORD': 'dL8R_Gh6PW-JbZiFx0Zxh0chaY',
-        'HOST': 'ec2-54-221-203-200.compute-1.amazonaws.com',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '5432',                      # Set to empty string for default.
-    }
-}
-
-# # Parse database configuration from $DATABASE_URL
-# DATABASES = {}
-# DATABASES['default'] =  dj_database_url.config()
-# DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
-# DATABASES['default']['NAME'] = 'scraper_status'
-
-# Honor the 'X-Forwarded-Proto' header for request.is_secure()
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-# Allow all host headers
-ALLOWED_HOSTS = ['*']
-
-
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
+ALLOWED_HOSTS = ['*']
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -63,7 +48,7 @@ USE_I18N = True
 USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = True
+USE_TZ = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
@@ -78,7 +63,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = 'staticfiles'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -89,6 +74,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(BASE_DIR, 'static'),
 )
 
 # List of finder classes that know how to find static files in
@@ -97,10 +83,11 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    'compressor.finders.CompressorFinder',
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '4y+vddl4y0&h)kl2hmo1iv8_8*s#fta#rt)3-)cel_51ysdu41'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', '4y+vddl4y0&h)kl2hmo1iv8_8*s#fta#rt)3-)cel_51ysdu41')
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -119,10 +106,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'mycityhall_scraperreports.urls'
+ROOT_URLCONF = 'scrapers_ca_app.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'mycityhall_scraperreports.wsgi.application'
+WSGI_APPLICATION = 'scrapers_ca_app.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -137,11 +124,13 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'reports',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'compressor',
+    'django_hstore',
+    'reports',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -173,20 +162,6 @@ LOGGING = {
     }
 }
 
-
-
-# # Honor the 'X-Forwarded-Proto' header for request.is_secure()
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-# # Allow all host headers
-# ALLOWED_HOSTS = ['*']
-
-# # Static asset configuration
-# import os
-# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# STATIC_ROOT = 'staticfiles'
-# STATIC_URL = '/static/'
-
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'static'),
-# )
+JINJA2_EXTENSIONS = [
+    'compressor.contrib.jinja2ext.CompressorExtension',
+]

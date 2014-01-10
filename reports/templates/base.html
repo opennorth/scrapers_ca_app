@@ -1,0 +1,27 @@
+{% load compress %}
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>{% block title %}{% endblock %}</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% compress css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.min.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
+{% endcompress %}
+<script src="{{ STATIC_URL }}js/vendor/modernizr-2.7.1.min.js"></script>
+</head>
+<body>
+{% block content %}{% endblock %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="{{ STATIC_URL }}js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+{% compress js %}
+<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+<script src="{{ STATIC_URL }}js/plugins.js"></script>
+<script src="{{ STATIC_URL }}js/main.js"></script>
+{% endcompress %}
+</body>
+</html>

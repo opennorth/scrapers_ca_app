@@ -1,9 +1,21 @@
-lxml
-Django==1.5.1
-dj-database-url==0.2.1
+# @see https://devcenter.heroku.com/articles/getting-started-with-django#requirements-txt
+Django==1.6
+dj-database-url==0.2.2
 dj-static==0.0.5
-gunicorn==17.5
+gunicorn==18.0
 psycopg2==2.5.1
 static==0.4
+wsgiref==0.1.2
+
+# Models
+django-hstore
+
+# Views
+Coffin
+django_compressor
+Jinja2
+
+# Scrapers
+lxml
 -e git+http://github.com/sunlightlabs/scrapelib.git#egg=scrapelib
 -e git+http://github.com/opencivicdata/pupa.git#egg=pupa
