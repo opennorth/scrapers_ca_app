@@ -11,14 +11,11 @@ from django.template import RequestContext
 from pupa.core import _configure_db, db
 from reports.models import Report
 
-# @todo check all link note values
-PERSONAL_URL_NOTES = ('personal site', 'web page', 'Website')
-
-# @todo check all contact detail type values
 CONTACT_DETAIL_TYPE_MAP = {
-  'voice': 'tel',
   'address': 'postal',
+  'cell': 'alt',
   'fax': 'fax',
+  'voice': 'tel',
 }
 
 def home(request):
@@ -45,25 +42,21 @@ def represent(request, module_name):
         person = db.people.find_one({'_id': membership['person_id']})
 
         role = db.memberships.find_one({'person_id': membership['person_id'], 'role': {'$ne': 'member'}})
-        if role:
-          role = role['role'] # @todo check that role['role'] is not empty
+        if role and role['role']:
+          role = role['role']
         else:
-          role = 'councillor' # @todo warn or error
+          raise Exception('db.memberships.findOne({person_id: "%s"})' % membership['person_id']) # @todo fix all these exceptions, then remove this exception and move this check to sanity.js
 
         representatives.append({
           'name':           person['name'],
-          # @todo check
-          'district_name':  organization['name'] + ' ' + person['post_id'],
+          'district_name':  person['post_id'], # @todo remove post_id and instead use a field in 'extra'
           'elected_office': role,
           'source_url':     person['sources'][0]['url'],
-          # @todo check that contact details are on the membership in all cases
           'email':          next((contact_detail['value'] for contact_detail in membership['contact_details'] if contact_detail['type'] == 'email'), None),
           'url':            person['sources'][-1]['url'],
           'photo_url':      person['image'],
-          # @todo check that links are on the person in all cases
-          'personal_url':   next((link['url'] for link in person['links'] if link['note'] in PERSONAL_URL_NOTES), None),
-          # @todo check
-          'district_id':    person['post_id'],
+          'personal_url':   next((link['url'] for link in person['links'] if link['note'] in PERSONAL_URL_NOTES), None), # @todo PERSONAL_URL_NOTES is gone, use another method to set the url
+          'district_id':    person['post_id'], # @todo remove post_id and instead use a field in 'extra'
           'gender':         person['gender'],
           'offices':        get_offices(membership),
           'extra':          get_extra(person),
@@ -71,19 +64,27 @@ def represent(request, module_name):
 
       return HttpResponse(json.dumps(representatives), mimetype='application/json')
 
-# @todo check all contact detail note values
+# @todo tidy contact_details.note values
 def get_offices(obj):
   offices_by_note = defaultdict(dict)
   for contact_detail in obj['contact_details']:
-    # @todo skip if note is empty?
-    note = contact_detail['note']
-    offices_by_note[note]['type'] = note
-    offices_by_note[note][CONTACT_DETAIL_TYPE_MAP[contact_detail['type']]] = contact_detail['value']
+    if contact_detail['type'] != 'email' and contact_detail['note']:
+      note = contact_detail['note']
+      kind = CONTACT_DETAIL_TYPE_MAP[contact_detail['type']]
+      if offices_by_note[note][kind] and kind == 'tel':
+        kind = 'alt'
+      offices_by_note[note]['type'] = note
+      offices_by_note[note][kind] = contact_detail['value']
   return offices_by_note.values()
 
 def get_extra(obj):
   extra = {}
   for link in obj['links']:
-    if link['note'] not in PERSONAL_URL_NOTES:
-      extra[link['note']] = link['url']
+    domain = '.'.join(urlsplit(link['url']).netloc.split('.')[-2:])
+    if domain == 'facebook.com':
+      extra['facebook'] = link['url']
+    else if domain == 'twitter.com':
+      extra['twitter'] = link['url']
+    else if domain == 'youtube.com':
+      extra['youtube'] = link['url']
   return extra
