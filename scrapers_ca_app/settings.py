@@ -14,7 +14,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-DEBUG = True
+DEBUG = not os.getenv('PRODUCTION', False)
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (

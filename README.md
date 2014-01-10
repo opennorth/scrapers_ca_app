@@ -35,9 +35,10 @@ foreman start
 
 ## Deployment
 
-Add a `SECRET_KEY` configuration variable:
+Add `PRODUCTION` and `SECRET_KEY` configuration variables:
 
 ```
+heroku config:add PRODUCTION=1
 heroku config:add DJANGO_SECRET_KEY=your-secret-key
 ```
 

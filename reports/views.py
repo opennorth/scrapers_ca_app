@@ -57,11 +57,11 @@ def represent(request, module_name):
           'elected_office': role,
           'source_url':     person['sources'][0]['url'],
           # @todo check that contact details are on the membership in all cases
-          'email':          next(contact_detail['value'] for contact_detail in membership['contact_details'] if contact_detail['type'] == 'email', None),
+          'email':          next((contact_detail['value'] for contact_detail in membership['contact_details'] if contact_detail['type'] == 'email'), None),
           'url':            person['sources'][-1]['url'],
           'photo_url':      person['image'],
           # @todo check that links are on the person in all cases
-          'personal_url':   next(link['url'] for link in person['links'] if link['note'] in PERSONAL_URL_NOTES, None),
+          'personal_url':   next((link['url'] for link in person['links'] if link['note'] in PERSONAL_URL_NOTES), None),
           # @todo check
           'district_id':    person['post_id'],
           'gender':         person['gender'],

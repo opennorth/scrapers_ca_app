@@ -1,9 +1,3 @@
 [submodule "scrapers"]
 	path = scrapers
 	url = git://github.com/opencivicdata/scrapers-ca.git
-[submodule "vendor/pupa"]
-	path = vendor/pupa
-	url = git://github.com/opencivicdata/pupa.git
-[submodule "vendor/scrapelib"]
-	path = vendor/scrapelib
-	url = git://github.com/sunlightlabs/scrapelib.git
