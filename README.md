@@ -21,19 +21,33 @@ psql pupa -c 'CREATE EXTENSION hstore'
 python manage.py syncdb --noinput
 ```
 
-Run the project:
+Run the scrapers:
 
 ```
 python cron.py
+```
+
+Start the web app:
+
+```
 foreman start
 ```
 
 ## Deployment
 
+Add a `SECRET_KEY` configuration variable:
+
 ```
 heroku config:add DJANGO_SECRET_KEY=your-secret-key
-heroku pg:psql DATABASE # CREATE EXTENSION hstore
 ```
+
+Run `CREATE EXTENSION hstore` in a PostgreSQL shell:
+
+```
+heroku pg:psql DATABASE
+```
+
+Add `python cron.py` to the [Heroku Scheduler](https://scheduler.heroku.com/dashboard).
 
 ## Bugs? Questions?
 
