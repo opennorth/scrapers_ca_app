@@ -60,7 +60,6 @@ def represent(request, module_name):
 
       return HttpResponse(json.dumps(representatives), mimetype='application/json')
 
-# @todo add sanity check for multiples?
 def get_personal_url(obj):
   for link in obj['links']:
     domain = '.'.join(urlsplit(link['url']).netloc.split('.')[-2:])

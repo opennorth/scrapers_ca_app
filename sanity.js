@@ -130,11 +130,27 @@ expectNone('organizations', 'links.url');
 expectNone('memberships', 'links.note');
 expectNone('organizations', 'links.note');
 
-matches('people', 'jurisdiction_id', {
+matches('people', 'links.note', {
   'links.note': {
     $ne: null,
   },
 });
+
+matches('people', 'links.url', {
+  $where: function () {
+    var count = 0;
+    for (var i = 0, l = this.links.length; i < l; i++) {
+      if (!/facebook\.com/.test(this.links[i].url)
+       && !/twitter\.com/.test(this.links[i].url)
+       && !/youtube\.com/.test(this.links[i].url)) {
+        count += 1;
+      }
+      if (count > 1) {
+        return true;
+      }
+    }
+  },
+}, 'memberships: multiple links with a non-social media url');
 
 matches('people', 'links.url', {
   $where: function () {
