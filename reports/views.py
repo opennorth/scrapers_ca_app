@@ -37,25 +37,21 @@ def represent(request, module_name):
       representatives = []
 
       # @todo check that all people are plain members of jurisdictions, without duplicates
+      # @todo we have too few memberships
       for membership in db.memberships.find({'jurisdiction_id': jurisdiction_id, 'role': 'member'}):
         organization = db.organizations.find_one({'_id': membership['organization_id']})
         person = db.people.find_one({'_id': membership['person_id']})
 
-        role = db.memberships.find_one({'person_id': membership['person_id'], 'role': {'$ne': 'member'}})
-        if role and role['role']:
-          role = role['role']
-        else:
-          raise Exception('db.memberships.findOne({person_id: "%s"})' % membership['person_id']) # @todo fix all these exceptions, then remove this exception and move this check to sanity.js
-
+        # @see http://represent.opennorth.ca/api/#fields
         representatives.append({
           'name':           person['name'],
           'district_name':  person['post_id'], # @todo remove post_id and instead use a field in 'extra'
-          'elected_office': role,
+          'elected_office': db.memberships.find_one({'person_id': person['_id'], 'role': {'$ne': 'member'}})['role'],
           'source_url':     person['sources'][0]['url'],
           'email':          next((contact_detail['value'] for contact_detail in membership['contact_details'] if contact_detail['type'] == 'email'), None),
           'url':            person['sources'][-1]['url'],
           'photo_url':      person['image'],
-          'personal_url':   next((link['url'] for link in person['links'] if link['note'] in PERSONAL_URL_NOTES), None), # @todo PERSONAL_URL_NOTES is gone, use another method to set the url
+          'personal_url':   get_personal_url(person),
           'district_id':    person['post_id'], # @todo remove post_id and instead use a field in 'extra'
           'gender':         person['gender'],
           'offices':        get_offices(membership),
@@ -64,7 +60,14 @@ def represent(request, module_name):
 
       return HttpResponse(json.dumps(representatives), mimetype='application/json')
 
-# @todo tidy contact_details.note values
+# @todo add sanity check for multiples?
+def get_personal_url(obj):
+  for link in obj['links']:
+    domain = '.'.join(urlsplit(link['url']).netloc.split('.')[-2:])
+    if domain not in ('facebook.com', 'twitter.com', 'youtube.com'):
+      return link['url']
+  return None
+
 def get_offices(obj):
   offices_by_note = defaultdict(dict)
   for contact_detail in obj['contact_details']:

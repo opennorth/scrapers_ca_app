@@ -40,6 +40,12 @@ var matches = function (collection, field, criteria, message) {
   }
 };
 
+// Role
+
+matches('memberships', 'role', {
+  role: null,
+});
+
 // Contact details
 
 expectNone('people', 'contact_details.type');
@@ -59,7 +65,7 @@ matches('memberships', 'jurisdiction_id', {
   contact_details: {
     $elemMatch: {
       type: {$ne: 'email'},
-      note: {$nin: ['constituency', 'legislature', 'residence']},
+      note: {$nin: ['constituency', 'legislature', 'office', 'residence']},
     },
   },
 }, 'memberships: unexpected contact_details.note');
@@ -82,23 +88,67 @@ matches('memberships', 'jurisdiction_id', {
   },
 }, 'memberships: non-email with empty note');
 
+matches('memberships', 'jurisdiction_id', {
+  $where: function () {
+    var types = ['address', 'cell', 'fax', 'voice'];
+    var notes = ['constituency', 'legislature', 'residence'];
+    for (var k = 0, n = types.length; k < n; k++) {
+      for (var j = 0, m = notes.length; j < m; j++) {
+        var count = 0;
+        for (var i = 0, l = this.contact_details.length; i < l; i++) {
+          var contact_detail = this.contact_details[i];
+          if (contact_detail.type == types[k] && contact_detail.note == notes[j]) {
+            count += 1;
+          }
+          if (count > 1) {
+            return true;
+          }
+        }
+      }
+    }
+  },
+}, 'memberships: multiple contact_details with the same type and note');
+
+// @todo multiple emails
+
 // Links
+
+expectNone('memberships', 'links.url');
+expectNone('organizations', 'links.url');
+expectNone('memberships', 'links.note');
+expectNone('organizations', 'links.note');
 
 matches('people', 'jurisdiction_id', {
   'links.note': {
     $ne: null,
   },
 });
+
+matches('people', 'links.url', {
+  $where: function () {
+    var urls = [/facebook\.com/, /twitter\.com/, /youtube\.com/];
+    for (var j = 0, m = urls.length; j < m; j++) {
+      var count = 0;
+      for (var i = 0, l = this.links.length; i < l; i++) {
+        if (urls[j].test(this.links[i].url)) {
+          count += 1;
+        }
+        if (count > 1) {
+          return true;
+        }
+      }
+    }
+  },
+}, 'people: multiple links with the same social media url');
+
 // print('\nDistinct people links.url domains for manual review:');
 // mapReduce('people', function () {
 //   this.links.forEach(function (link) {
 //     emit(link.url.match('^(?:[a-z]+://)?(?:www\\.)?([^/]+)')[1], 1);
 //   })
 // });
-expectNone('memberships', 'links.url');
-expectNone('organizations', 'links.url');
-expectNone('memberships', 'links.note');
-expectNone('organizations', 'links.note');
+
+// Miscellaneous
 
 // print('\nDistinct memberships post_id for manual review:');
 // mapReduce('memberships', function () {
