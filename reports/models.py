@@ -14,9 +14,5 @@ class Report(models.Model):
   def exception_header(self):
     return self.exception.strip().split('\n')[-1]
 
-  @property
-  def exception_teaser(self):
-    return self.exception_header[:49] + (self.exception_header[49:] and u'…')
-
   def __unicode__(self):
     return self.module

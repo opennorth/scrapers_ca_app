@@ -20,8 +20,12 @@ CONTACT_DETAIL_TYPE_MAP = {
 
 def home(request):
   return render_to_response('index.html', RequestContext(request, {
+    'exceptions': Report.objects.exclude(exception='').count(),
     'reports': Report.objects.order_by('module').all(),
   }))
+
+def report(request, module_name):
+  return HttpResponse(json.dumps(Report.objects.get(module=module_name).report), mimetype='application/json')
 
 def represent(request, module_name):
   url = os.getenv('MONGOHQ_URL', 'mongodb://localhost:27017/pupa')

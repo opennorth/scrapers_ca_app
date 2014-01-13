@@ -9,7 +9,7 @@
       <th>Module</th>
       <th>JSON</th>
       <th>Report</th>
-      <th>Exception</th>
+      <th>Exception ({{ exceptions }} / {{ reports | length }})</th>
     </tr>
   </thead>
   <tbody>
@@ -24,12 +24,18 @@
           {% endif %}
         </td>
         <td>{{ report.module }}</td>
-        <td><a href="{% url 'represent' report.module %}" class="label label-default">JSON</a></td>
-        <td></td>{# @todo report.report #}
+        <td>
+          <a href="{% url 'represent' report.module %}" class="label label-default">JSON</a>
+        </td>
+        <td>
+          {% if not report.exception %}
+            <a href="{% url 'report' report.module %}" class="label label-success">JSON</a>
+          {% endif %}
+        </td>
         <td>
           {% if report.exception %}
             <a data-toggle="modal" data-target="#report-{{ report.id }}">
-              {{ report.exception_teaser }}
+              {{ report.exception_header|truncate(100) }}
             </a>
             <div id="report-{{ report.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="report-{{ report.id }}-label" aria-hidden="true">
               <div class="modal-dialog">

@@ -8,6 +8,10 @@ a {
   cursor: pointer;
 }
 
+table {
+  font-size: 85%;
+}
+
 table.tablesorter thead tr .header {
   background-repeat: no-repeat;
   background-position: center right;
