@@ -25,7 +25,7 @@ def home(request):
   }))
 
 def report(request, module_name):
-  return HttpResponse(json.dumps(Report.objects.get(module=module_name).report), mimetype='application/json')
+  return HttpResponse(json.dumps(Report.objects.get(module=module_name).report), content_type='application/json')
 
 def represent(request, module_name):
   url = os.getenv('MONGOHQ_URL', 'mongodb://localhost:27017/pupa')
@@ -60,7 +60,7 @@ def represent(request, module_name):
           'extra':          get_extra(person),
         })
 
-      return HttpResponse(json.dumps(representatives), mimetype='application/json')
+      return HttpResponse(json.dumps(representatives), content_type='application/json')
 
 def get_personal_url(obj):
   for link in obj['links']:
