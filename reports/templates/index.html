@@ -35,7 +35,7 @@
         <td>
           {% if report.exception %}
             <a data-toggle="modal" data-target="#report-{{ report.id }}">
-              {{ report.exception_header|truncate(100) }}
+              {{ report.exception_header|truncate(125) }}
             </a>
             <div id="report-{{ report.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="report-{{ report.id }}-label" aria-hidden="true">
               <div class="modal-dialog">

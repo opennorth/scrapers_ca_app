@@ -40,8 +40,7 @@ def represent(request, module_name):
     if jurisdiction_id:  # We've found the module.
       representatives = []
 
-      # @todo check that all people are plain members of jurisdictions, without duplicates
-      for membership in db.memberships.find({'jurisdiction_id': jurisdiction_id, 'role': 'member'}):
+      for membership in db.memberships.find({'jurisdiction_id': jurisdiction_id}):
         organization = db.organizations.find_one({'_id': membership['organization_id']})
         person = db.people.find_one({'_id': membership['person_id']})
 
@@ -49,7 +48,7 @@ def represent(request, module_name):
         representatives.append({
           'name':           person['name'],
           'district_name':  person['post_id'], # @todo remove post_id and instead use a field in 'extra'
-          'elected_office': db.memberships.find_one({'person_id': person['_id'], 'role': {'$ne': 'member'}})['role'],
+          'elected_office': membership['role'],
           'source_url':     person['sources'][0]['url'],
           'email':          next((contact_detail['value'] for contact_detail in membership['contact_details'] if contact_detail['type'] == 'email'), None),
           'url':            person['sources'][-1]['url'],
@@ -75,11 +74,8 @@ def get_offices(obj):
   for contact_detail in obj['contact_details']:
     if contact_detail['type'] != 'email' and contact_detail['note']:
       note = contact_detail['note']
-      kind = CONTACT_DETAIL_TYPE_MAP[contact_detail['type']]
-      if offices_by_note[note][kind] and kind == 'tel':
-        kind = 'alt'
       offices_by_note[note]['type'] = note
-      offices_by_note[note][kind] = contact_detail['value']
+      offices_by_note[note][CONTACT_DETAIL_TYPE_MAP[contact_detail['type']]] = contact_detail['value']
   return offices_by_note.values()
 
 def get_extra(obj):
