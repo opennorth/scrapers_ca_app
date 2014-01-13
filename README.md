@@ -9,7 +9,7 @@ Create a virtual environment:
 ```
 rm -rf ~/.virtualenvs/scrapers_ca_app
 mkvirtualenv scrapers_ca_app
-pip install -r requirements-dev.txt
+pip install -r requirements.txt
 ```
 
 Create a database:
@@ -34,7 +34,7 @@ foreman start
 
 ## Deployment
 
-Add `PRODUCTION` and `SECRET_KEY` configuration variables (replace `DATABASE`):
+Add configuration variables (replace `DATABASE`):
 
 ```
 heroku config:set PRODUCTION=1
@@ -42,9 +42,10 @@ heroku config:set DJANGO_SECRET_KEY=your-secret-key
 heroku config:set DATABASE_URL=`heroku config:get DATABASE`
 ```
 
-Setup the database:
+Setup the database (replace `DATABASE`):
 
 ```
+heroku pg:reset DATABASE
 heroku run python manage.py syncdb --noinput
 ```
 

@@ -43,8 +43,22 @@ var matches = function (collection, field, criteria, message) {
 // Role
 
 matches('memberships', 'role', {
-  role: null,
+  role: {$nin: [
+    // Provincial
+    'MLA',
+    // Municipal unique
+    'Mayor',
+    'Deputy Warden',
+    'Warden',
+    // Municipal
+    'City Councillor',
+    'Councillor',
+    'Regional Councillor',
+  ]},
 });
+
+// @todo One role=Mayor membership, etc. per organization
+// @todo check appropriate role per level of government
 
 // Contact details
 
@@ -173,7 +187,7 @@ matches('people', 'links.url', {
 //   })
 // });
 
-// Hierarchy
+// Relationships
 
 var pad = '                                                                                                         ';
 
@@ -182,13 +196,10 @@ db.organizations.distinct('jurisdiction_id').forEach(function (jurisdiction_id) 
   expect(db.organizations.count({jurisdiction_id: jurisdiction_id}), 1, jurisdiction_id);
 });
 
-print('\nPeople without exactly two memberships:');
+print('\nPeople without exactly one membership:');
 db.people.find().forEach(function (person) {
-  expect(db.memberships.count({person_id: person._id}), 2, person._id + ' memberships: ' + person.sources[0].url);
+  expect(db.memberships.count({person_id: person._id}), 1, person._id + ' memberships: ' + person.sources[0].url);
 });
-
-// @todo One role=mayor membership, etc. per organization
-// @todo check appropriate role per level of government
 
 // Miscellaneous
 

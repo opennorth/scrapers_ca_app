@@ -84,8 +84,8 @@ def get_extra(obj):
     domain = '.'.join(urlsplit(link['url']).netloc.split('.')[-2:])
     if domain == 'facebook.com':
       extra['facebook'] = link['url']
-    else if domain == 'twitter.com':
+    elif domain == 'twitter.com':
       extra['twitter'] = link['url']
-    else if domain == 'youtube.com':
+    elif domain == 'youtube.com':
       extra['youtube'] = link['url']
   return extra

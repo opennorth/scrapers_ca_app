@@ -5,7 +5,6 @@
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
 DATABASES = {'default': dj_database_url.config(default='postgres://localhost/pupa')}
-DATABASES['default']['ENGINE'] = 'django_hstore.postgresql_psycopg2'
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -129,7 +128,6 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'compressor',
-    'django_hstore',
     'reports',
 )
 
