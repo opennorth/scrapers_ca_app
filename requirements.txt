@@ -12,7 +12,7 @@ django-appconf==0.6
 BeautifulSoup==3.2.1
 
 # Models
-django-hstore==1.1.1
+jsonfield==0.9.20
 
 # Views
 Coffin==0.3.8

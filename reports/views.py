@@ -37,7 +37,6 @@ def represent(request, module_name):
       representatives = []
 
       # @todo check that all people are plain members of jurisdictions, without duplicates
-      # @todo we have too few memberships
       for membership in db.memberships.find({'jurisdiction_id': jurisdiction_id, 'role': 'member'}):
         organization = db.organizations.find_one({'_id': membership['organization_id']})
         person = db.people.find_one({'_id': membership['person_id']})

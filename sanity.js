@@ -188,6 +188,7 @@ db.people.find().forEach(function (person) {
 });
 
 // @todo One role=mayor membership, etc. per organization
+// @todo check appropriate role per level of government
 
 // Miscellaneous
 

@@ -17,7 +17,6 @@ Create a database:
 ```
 dropdb pupa
 createdb pupa
-psql pupa -c 'CREATE EXTENSION hstore'
 python manage.py syncdb --noinput
 ```
 
@@ -41,12 +40,6 @@ Add `PRODUCTION` and `SECRET_KEY` configuration variables (replace `DATABASE`):
 heroku config:set PRODUCTION=1
 heroku config:set DJANGO_SECRET_KEY=your-secret-key
 heroku config:set DATABASE_URL=`heroku config:get DATABASE`
-```
-
-Run `CREATE EXTENSION hstore` in a PostgreSQL shell (replace `DATABASE`):
-
-```
-heroku pg:psql DATABASE
 ```
 
 Setup the database:
