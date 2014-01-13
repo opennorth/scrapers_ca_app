@@ -64,8 +64,7 @@ matches('memberships', 'jurisdiction_id', {
 matches('memberships', 'jurisdiction_id', {
   contact_details: {
     $elemMatch: {
-      type: {$ne: 'email'},
-      note: {$nin: ['constituency', 'legislature', 'office', 'residence']},
+      note: {$nin: ['constituency', 'legislature', 'office', 'residence', null]},
     },
   },
 }, 'memberships: unexpected contact_details.note');
@@ -140,9 +139,7 @@ matches('people', 'links.url', {
   $where: function () {
     var count = 0;
     for (var i = 0, l = this.links.length; i < l; i++) {
-      if (!/facebook\.com/.test(this.links[i].url)
-       && !/twitter\.com/.test(this.links[i].url)
-       && !/youtube\.com/.test(this.links[i].url)) {
+      if (!/facebook\.com/.test(this.links[i].url) && !/twitter\.com/.test(this.links[i].url) && !/youtube\.com/.test(this.links[i].url)) {
         count += 1;
       }
       if (count > 1) {
@@ -150,7 +147,7 @@ matches('people', 'links.url', {
       }
     }
   },
-}, 'memberships: multiple links with a non-social media url');
+}, 'people: multiple links with a non-social media url');
 
 matches('people', 'links.url', {
   $where: function () {
@@ -175,6 +172,22 @@ matches('people', 'links.url', {
 //     emit(link.url.match('^(?:[a-z]+://)?(?:www\\.)?([^/]+)')[1], 1);
 //   })
 // });
+
+// Hierarchy
+
+var pad = '                                                                                                         ';
+
+print('\nJurisdictions without exactly one organization:');
+db.organizations.distinct('jurisdiction_id').forEach(function (jurisdiction_id) {
+  expect(db.organizations.count({jurisdiction_id: jurisdiction_id}), 1, jurisdiction_id);
+});
+
+print('\nPeople without exactly two memberships:');
+db.people.find().forEach(function (person) {
+  expect(db.memberships.count({person_id: person._id}), 2, person._id + ' memberships: ' + person.sources[0].url);
+});
+
+// @todo One role=mayor membership, etc. per organization
 
 // Miscellaneous
 
