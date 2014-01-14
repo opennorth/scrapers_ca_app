@@ -1,8 +1,13 @@
 var pad = '                                        ';
 
 var expect = function (actual, expected, message) {
-  if (expected != actual) {
-    print(message + ': ' + actual + ' (expected: ' + expected + ')');
+  if (toString.call(expected) === '[object Array]') {
+    if (expected.indexOf(actual) === -1) {
+      print(message + ': ' + actual + ' (expected in [' + expected + '])');
+    }
+  }
+  else if (expected !== actual) {
+    print(message + ': ' + actual + ' (expected == ' + expected + ')');
   }
 };
 
@@ -40,25 +45,57 @@ var matches = function (collection, field, criteria, message) {
   }
 };
 
+
+
 // Role
 
+// @todo Check that the hardcoded roles in scrapers-ca are correct.
+
+roles = [
+  // Provincial
+  'MLA',
+  // Municipal
+  'Alderman',
+  'City Councillor',
+  'Councillor',
+  'Regional Councillor',
+]
+
+uniqueRoles = [
+  // Municipal
+  'Acting Chief Administrative Officer',
+  'Chairperson',
+  'Chief Administrative Officer',
+  'Chief Executive Officer',
+  'City Manager',
+  'Mayor', 'Deputy Mayor',
+  'Municipal Administrator',
+  'Reeve', 'Deputy Reeve',
+  'Warden', 'Deputy Warden',
+]
+
 matches('memberships', 'role', {
-  role: {$nin: [
-    // Provincial
-    'MLA',
-    // Municipal unique
-    'Mayor',
-    'Deputy Warden',
-    'Warden',
-    // Municipal
-    'City Councillor',
-    'Councillor',
-    'Regional Councillor',
-  ]},
+  role: {$nin: roles.concat(uniqueRoles)},
 });
 
-// @todo One role=Mayor membership, etc. per organization
-// @todo check appropriate role per level of government
+// db.memberships.ensureIndex({organization_id: 1, role: 1})
+print('\nOrganizations without any unique roles:');
+db.organizations.find().forEach(function (organization) {
+  if (!/\/legislature$/.test(organization.jurisdiction_id)) {
+    expect(db.memberships.count({organization_id: organization._id, role: {$in: uniqueRoles}}), [1, 2],
+      [organization.jurisdiction_id, organization._id].join(' '));
+  }
+});
+
+print('\nOrganizations with multiple unique roles:');
+db.organizations.find().forEach(function (organization) {
+  uniqueRoles.forEach(function (role) {
+    expect(db.memberships.count({organization_id: organization._id, role: role}), [0, 1],
+      [organization.jurisdiction_id, organization._id, role].join(' '));
+  });
+});
+
+
 
 // Contact details
 
@@ -105,7 +142,7 @@ matches('memberships', 'jurisdiction_id', {
   $where: function () {
     var count = 0;
     for (var i = 0, l = this.contact_details.length; i < l; i++) {
-      if (this.contact_details[i].type == 'email') {
+      if (this.contact_details[i].type === 'email') {
         count += 1;
       }
       if (count > 1) {
@@ -124,7 +161,7 @@ matches('memberships', 'jurisdiction_id', {
         var count = 0;
         for (var i = 0, l = this.contact_details.length; i < l; i++) {
           var contact_detail = this.contact_details[i];
-          if (contact_detail.type == types[k] && contact_detail.note == notes[j]) {
+          if (contact_detail.type === types[k] && contact_detail.note === notes[j]) {
             count += 1;
           }
           if (count > 1) {
@@ -135,6 +172,8 @@ matches('memberships', 'jurisdiction_id', {
     }
   },
 }, 'memberships: multiple contact_details with the same type and note');
+
+
 
 // Links
 
@@ -187,25 +226,32 @@ matches('people', 'links.url', {
 //   })
 // });
 
+
+
 // Relationships
 
 var pad = '                                                                                                         ';
 
 print('\nJurisdictions without exactly one organization:');
 db.organizations.distinct('jurisdiction_id').forEach(function (jurisdiction_id) {
-  expect(db.organizations.count({jurisdiction_id: jurisdiction_id}), 1, jurisdiction_id);
+  if (!/\/municipalities$/.test(jurisdiction_id)) {
+    expect(db.organizations.count({jurisdiction_id: jurisdiction_id}), 1, jurisdiction_id);
+  }
 });
 
+// db.memberships.ensureIndex({person_id: 1})
 print('\nPeople without exactly one membership:');
 db.people.find().forEach(function (person) {
   expect(db.memberships.count({person_id: person._id}), 1, person._id + ' memberships: ' + person.sources[0].url);
 });
 
+
+
 // Miscellaneous
 
-// print('\nDistinct memberships post_id for manual review:');
-// mapReduce('memberships', function () {
-//   if (this.post_id) {
-//     emit(this.post_id, 1);
-//   }
-// });
+print('\nDistinct memberships post_id for manual review:');
+mapReduce('memberships', function () {
+  if (this.post_id) {
+    emit(this.post_id, 1);
+  }
+});
