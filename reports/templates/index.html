@@ -4,33 +4,41 @@
 <table class="table table-striped table-hover table-condensed tablesorter">
   <thead>
     <tr>
-      <th style="white-space: nowrap">Updated</th>
-      <th style="white-space: nowrap">Success</th>
+      <th></th>
       <th>Module</th>
-      <th>JSON</th>
-      <th>Report</th>
+      <th style="white-space: nowrap">Last success</th>
+      <th style="white-space: nowrap">Last attempt</th>
       <th>Exception ({{ exceptions }} / {{ reports | length }})</th>
     </tr>
   </thead>
   <tbody>
     {% for report in reports %}
       <tr{% if report.exception %} class="danger"{% endif %}>
-        <td style="white-space: nowrap">
-          {{ report.updated_at.strftime('%Y-%m-%d') }}
+        <td>
+          <span class="glyphicon glyphicon-{% if report.exception %}remove{% else %}ok{% endif %}"></span>
+        </td>
+        <td>
+          {{ report.module }}
+          {% if not report.exception %}
+            <a href="{% url 'represent' report.module %}" title="Download Represent JSON">
+              <span class="glyphicon glyphicon-cloud-download"></span>
+            </a>
+            <a href="{% url 'report' report.module %}" title="Download Report JSON">
+              <span class="glyphicon glyphicon-info-sign"></span>
+            </a>
+          {% endif %}
         </td>
         <td style="white-space: nowrap">
           {% if report.success_at %}
-          {{ report.success_at.strftime('%Y-%m-%d') }}
+          <abbr class="timeago" title="{{ report.updated_at.strftime("%Y-%m-%dT%H:%M:%SZ") }}">
+            {{ report.success_at.strftime('%Y-%m-%d') }}
+          </abbr>
           {% endif %}
         </td>
-        <td>{{ report.module }}</td>
-        <td>
-          <a href="{% url 'represent' report.module %}" class="label label-default">JSON</a>
-        </td>
-        <td>
-          {% if not report.exception %}
-            <a href="{% url 'report' report.module %}" class="label label-success">JSON</a>
-          {% endif %}
+        <td style="white-space: nowrap">
+          <abbr class="timeago" title="{{ report.updated_at.strftime("%Y-%m-%dT%H:%M:%SZ") }}">
+            {{ report.updated_at.strftime('%Y-%m-%d') }}
+          </abbr>
         </td>
         <td>
           {% if report.exception %}
