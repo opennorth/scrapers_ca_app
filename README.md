@@ -4,6 +4,8 @@ This Django project runs the [Canadian legislative scrapers](http://github.com/o
 
 ## Development
 
+To install dependencies, see the instructions in [blank-pupa](https://github.com/opennorth/blank-pupa).
+
 Create a virtual environment:
 
 ```
