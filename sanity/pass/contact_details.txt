@@ -1,0 +1,7 @@
+MongoDB shell version: 2.4.3
+connecting to: pupa
+loading file: sanity/common.js
+loading file: sanity/contact_details.js
+
+memberships: multiple contact_details with the same type and note:
+ocd-membership/2ebf6b35-7d68-11e3-a709-c82a1443c6f3: ocd-jurisdiction/country:ca/csd:1307022/council

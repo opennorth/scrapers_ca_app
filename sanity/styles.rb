@@ -7,10 +7,10 @@ end
 
 headers = ['Leader', 'Member', 'Member At Large']
 
-File.open('sanity-styles-of-address.js', 'w') do |f|
-  f.write "styles = {}\n"
+File.open('styles.js', 'w') do |f|
+  f.write "var styles = {}\n"
 
-  [0, 1].each_with_index do |gid,index|
+  [0, 1].each do |gid|
     CSV.parse(open("https://docs.google.com/spreadsheet/pub?key=0AtzgYYy0ZABtdFJrVTdaV1h5XzRpTkxBdVROX3FNelE&single=true&gid=#{gid}&output=csv"), headers: true) do |row|
       if headers.any?{|header| row[header]}
         f.write "styles['#{row['Identifier']}'] = []\n"
