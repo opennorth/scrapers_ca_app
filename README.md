@@ -14,6 +14,14 @@ git submodule init
 git submodule update
 ```
 
+Switch the submodule to master:
+
+```
+cd scrapers
+git checkout master
+cd ..
+```
+
 Create a virtual environment:
 
 ```
