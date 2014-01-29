@@ -30,10 +30,16 @@ createdb pupa
 python manage.py syncdb --noinput
 ```
 
-Run the scrapers:
+Run all the scrapers:
 
 ```
 python cron.py
+```
+
+Or run specific scrapers:
+
+```
+python cron.py ca_ab_edmonton ca_ab_grande_prairie_county_no_1
 ```
 
 Install the foreman gem:
