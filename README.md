@@ -54,6 +54,12 @@ Start the web app:
 foreman start
 ```
 
+## Data Quality
+
+```
+mongo pupa sanity-styles-of-address.js sanity.js
+```
+
 ## Deployment
 
 Add configuration variables (replace `DATABASE`):

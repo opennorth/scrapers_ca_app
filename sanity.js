@@ -49,19 +49,23 @@ var matches = function (collection, field, criteria, message) {
 
 // Role
 
-// @todo Check that the hardcoded roles in scrapers-ca are correct.
-
-roles = [
+var roles = [
   // Provincial
+  'MHA',
   'MLA',
+  'MNA',
+  'MPP',
   // Municipal
   'Alderman',
-  'City Councillor',
+  'Area Councillor',
   'Councillor',
+  'Local Councillor',
   'Regional Councillor',
-]
+];
 
-uniqueRoles = [
+var uniqueRoles = [
+  // Provincial
+  'Premier',
   // Municipal
   'Acting Chief Administrative Officer',
   'Chairperson',
@@ -72,10 +76,28 @@ uniqueRoles = [
   'Municipal Administrator',
   'Reeve', 'Deputy Reeve',
   'Warden', 'Deputy Warden',
-]
+];
 
 matches('memberships', 'role', {
   role: {$nin: roles.concat(uniqueRoles)},
+});
+
+print('\nOrganizations with unexpected roles:');
+db.organizations.find().forEach(function (organization) {
+  // @todo In "municipalities" scrapers, need to tag each organization with its
+  // OCD ID, in order to validate its styles of address.
+  if (!/\/municipalities$/.test(organization.jurisdiction_id)) {
+    var division_id = organization.jurisdiction_id.replace('jurisdiction', 'division').replace(/\/(?:council|legislature)$/, '');
+    if (styles[division_id]) {
+      var difference = db.memberships.distinct('role', {organization_id: organization._id}).filter(function (x) {
+        return styles[division_id].indexOf(x) === -1;
+      });
+      expect(difference.length, 0, [organization.jurisdiction_id, organization._id].concat(difference).join(' '));
+    }
+    else {
+      print('No styles of address for ' + division_id);
+    }
+  }
 });
 
 // db.memberships.ensureIndex({organization_id: 1, role: 1})
@@ -94,8 +116,6 @@ db.organizations.find().forEach(function (organization) {
       [organization.jurisdiction_id, organization._id, role].join(' '));
   });
 });
-
-
 
 // Contact details
 
