@@ -6,10 +6,18 @@ This Django project runs the [Canadian legislative scrapers](http://github.com/o
 
 To install dependencies, see the instructions in [blank-pupa](https://github.com/opennorth/blank-pupa).
 
+Set up the git repository:
+
+```
+git clone git@github.com:opennorth/scrapers_ca_app.git
+git submodule init
+git submodule update
+```
+
 Create a virtual environment:
 
 ```
-rm -rf ~/.virtualenvs/scrapers_ca_app
+rm -rf ~/.virtualenvs/scrapers_ca_app # if it already exists
 mkvirtualenv scrapers_ca_app
 pip install -r requirements.txt
 ```
@@ -17,7 +25,7 @@ pip install -r requirements.txt
 Create a database:
 
 ```
-dropdb pupa
+dropdb pupa # if it already exists
 createdb pupa
 python manage.py syncdb --noinput
 ```
@@ -26,6 +34,12 @@ Run the scrapers:
 
 ```
 python cron.py
+```
+
+Install the foreman gem:
+
+```
+gem install foreman
 ```
 
 Start the web app:
@@ -52,6 +66,15 @@ heroku run python manage.py syncdb --noinput
 ```
 
 Add `python cron.py` to the [Heroku Scheduler](https://scheduler.heroku.com/dashboard).
+
+## Troubleshooting
+
+* Make sure PostgreSQL and MongoDB are running. If you use Homebrew, you can find instructions on how to run each with:
+
+```
+brew info postgres
+brew info mongo
+```
 
 ## Bugs? Questions?
 
