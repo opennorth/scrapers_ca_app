@@ -2,6 +2,7 @@ from collections import defaultdict
 import importlib
 import json
 import os
+import re
 import sys
 from urlparse import urlsplit
 
