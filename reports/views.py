@@ -68,8 +68,9 @@ def represent(request, module_name):
           representative['boundary_url'] = '/boundaries/census-subdivisions/%d/' % geographic_code
         else:
           representative['district_name'] = person['post_id']
-          if match = re.search('\A(?:District|Division|Ward) (\d+)\Z'):
-            representative['district_id'] = match.group(1)
+          district_id = re.search('\A(?:District|Division|Ward) (\d+)\Z', person['post_id'])
+          if district_id:
+            representative['district_id'] = district_id.group(1)
 
         representatives.append(representative)
 
