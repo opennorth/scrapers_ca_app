@@ -56,8 +56,8 @@ def represent(request, module_name):
           'personal_url':   get_personal_url(person),
           'district_id':    person['post_id'], # @todo remove post_id and instead use a field in 'extra'
           'gender':         person['gender'],
-          'offices':        get_offices(membership),
-          'extra':          get_extra(person),
+          'offices':        json.dumps(get_offices(membership)),
+          'extra':          json.dumps(get_extra(person)),
         })
 
       return HttpResponse(json.dumps(representatives), content_type='application/json')
