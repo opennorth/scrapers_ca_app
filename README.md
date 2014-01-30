@@ -87,6 +87,7 @@ diff -U0 sanity/pass/contact_details.txt test/contact_details.txt
 diff -U0 sanity/pass/links.txt test/links.txt
 diff -U0 sanity/pass/relations.txt test/relations.txt
 diff -U0 sanity/pass/roles.txt test/roles.txt
+cat test/miscellaneous.txt
 ```
 
 ## Deployment

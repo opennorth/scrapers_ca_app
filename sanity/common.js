@@ -31,7 +31,9 @@ var uniqueRoles = [
 
 var expect = function (actual, expected, message) {
   if (toString.call(expected) === '[object Array]') {
-    if (expected.indexOf(actual) === -1) {
+    var minimum = expected[0]
+      , maximum = expected[1];
+    if (actual < minimum || maximum < actual) {
       print(message + ': ' + actual + ' (expected in [' + expected + '])');
     }
   }

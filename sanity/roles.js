@@ -29,6 +29,14 @@ db.organizations.find().forEach(function (organization) {
   }
 });
 
+print('\nOrganizations without any non-unique roles:');
+db.organizations.find().forEach(function (organization) {
+  if (!/\/legislature$/.test(organization.jurisdiction_id)) {
+    expect(db.memberships.count({organization_id: organization._id, role: {$in: roles}}), [1, 338],
+      [organization.jurisdiction_id, organization._id].join(' '));
+  }
+});
+
 print('\nOrganizations with multiple unique roles:');
 db.organizations.find().forEach(function (organization) {
   uniqueRoles.forEach(function (role) {

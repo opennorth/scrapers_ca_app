@@ -5,4 +5,3 @@ loading file: sanity/styles-of-address.js
 loading file: sanity/roles.js
 
 Organizations with unexpected roles:
-ocd-jurisdiction/country:ca/csd:1310032/council ocd-organization/2cc58dd7-7d68-11e3-af1d-c82a1443c6f3 Deputy Mayor: 1 (expected == 0)

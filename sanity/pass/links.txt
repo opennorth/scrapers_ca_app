@@ -4,5 +4,5 @@ loading file: sanity/common.js
 loading file: sanity/links.js
 
 people: multiple links with a non-social media url:
-ocd-person/a7a67a51-8937-11e3-b423-c82a1443c6f3
-ocd-person/a7a6b32e-8937-11e3-87db-c82a1443c6f3
+ocd-person/f0952f54-8980-11e3-95b4-c82a1443c6f3
+ocd-person/f0954f5e-8980-11e3-8eb0-c82a1443c6f3
