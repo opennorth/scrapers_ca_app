@@ -12,7 +12,7 @@ db.memberships.find().forEach(function (membership) {
         }
       }
       // @todo Remove this if-statement once this issue is closed: https://sunlight.atlassian.net/browse/DATA-83?filter=-1
-      else if (!/^(?:Division |Ward )?\d+$/.test(post_id)) {
+      else if (!/^(?:District |Division |Ward )?\d+$/.test(post_id)) {
         if (uniqueRoles.indexOf(membership.role) === -1) {
           post_ids[post_id] = (post_ids[post_id] || 0) + 1;
         }
