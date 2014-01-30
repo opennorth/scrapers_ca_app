@@ -45,20 +45,28 @@ def represent(request, module_name):
         person = db.people.find_one({'_id': membership['person_id']})
 
         # @see http://represent.opennorth.ca/api/#fields
-        representatives.append({
+        representative = {
           'name':           person['name'],
-          'district_name':  person['post_id'], # @todo remove post_id and instead use a field in 'extra'
           'elected_office': membership['role'],
           'source_url':     person['sources'][0]['url'],
           'email':          next((contact_detail['value'] for contact_detail in membership['contact_details'] if contact_detail['type'] == 'email'), None),
           'url':            person['sources'][-1]['url'],
           'photo_url':      person['image'],
           'personal_url':   get_personal_url(person),
-          'district_id':    person['post_id'], # @todo remove post_id and instead use a field in 'extra'
           'gender':         person['gender'],
           'offices':        json.dumps(get_offices(membership)),
           'extra':          json.dumps(get_extra(person)),
-        })
+        }
+
+        geographic_code = getattr(obj, 'geographic_code', None)
+        if re.search('\A\d+\Z', person['post_id']):
+          representative['district_id'] = person['post_id']
+        elif person['post_id'] == getattr(obj, 'division_name', None) and len(geographic_code) == 7:
+          representative['boundary_url'] = '/boundaries/census-subdivisions/%d/' % geographic_code
+        else:
+          representative['district_name'] = person['post_id']
+
+        representatives.append(representative)
 
       return HttpResponse(json.dumps(representatives), content_type='application/json')
 
