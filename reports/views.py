@@ -59,6 +59,8 @@ def represent(request, module_name):
           'extra':          json.dumps(get_extra(person)),
         }
 
+        # @todo If a person represents multiple wards (e.g. Ajax), need to split
+        # post_id into each district name and add one representative for each.
         geographic_code = getattr(obj, 'geographic_code', None)
         if re.search('\A\d+\Z', person['post_id']):
           representative['district_id'] = person['post_id']
@@ -66,6 +68,8 @@ def represent(request, module_name):
           representative['boundary_url'] = '/boundaries/census-subdivisions/%d/' % geographic_code
         else:
           representative['district_name'] = person['post_id']
+          if match = re.search('\A(?:District|Division|Ward) (\d+)\Z'):
+            representative['district_id'] = match.group(1)
 
         representatives.append(representative)
 
