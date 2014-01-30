@@ -30,12 +30,18 @@ mkvirtualenv scrapers_ca_app
 pip install -r requirements.txt
 ```
 
-Create a database:
+Create a database (`dropdb pupa` if it already exists):
 
 ```
-dropdb pupa # if it already exists
+dropdb pupa
 createdb pupa
 python manage.py syncdb --noinput
+```
+
+Drop the MongoDB database:
+
+```
+mongo pupa --eval 'db.dropDatabase()'
 ```
 
 Run all the scrapers:
