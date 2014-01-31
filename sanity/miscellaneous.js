@@ -11,17 +11,14 @@ db.memberships.find().forEach(function (membership) {
           post_ids[post_id] = division_id;
         }
       }
-      // @todo Remove this if-statement once this issue is closed: https://sunlight.atlassian.net/browse/DATA-83?filter=-1
-      else if (!/^(?:District |Division |Ward )?\d+$/.test(post_id)) {
-        if (uniqueRoles.indexOf(membership.role) === -1) {
-          post_ids[post_id] = (post_ids[post_id] || 0) + 1;
-        }
-        else if (styles[division_id] && styles[division_id].indexOf(membership.role) === -1) {
-          post_ids[post_id] = membership.role;
-        }
-        else if (post_id !== names[division_id]) {
-          post_ids[post_id] = names[division_id];
-        }
+      else if (uniqueRoles.indexOf(membership.role) === -1) {
+        post_ids[post_id] = typeof post_ids[post_id] !== 'undefined' ? post_ids[post_id] : 1;
+      }
+      else if (styles[division_id] && styles[division_id].indexOf(membership.role) === -1) {
+        post_ids[post_id] = typeof post_ids[post_id] !== 'undefined' ? post_ids[post_id] : membership.role;
+      }
+      else if (post_id !== names[division_id]) {
+        post_ids[post_id] = typeof post_ids[post_id] !== 'undefined' ? post_ids[post_id] : names[division_id];
       }
     }
   }
