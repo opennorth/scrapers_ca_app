@@ -27,10 +27,10 @@ for module_name in os.listdir('scrapers'):
           if name in names:
             obj = Report.objects.get(module=module_name)
             if not obj.exception and not names[name].startswith('http://scrapers.herokuapp.com/represent/'):
-              print 'Can replace %s\n  http://scrapers.herokuapp.com/represent/%s/\n' % (name, module_name)
+              print 'Replace %s\n  http://scrapers.herokuapp.com/represent/%s/\n' % (name, module_name)
           else:
             obj = Report.objects.get(module=module_name)
             if not obj.exception:
-              print 'Can import %s\n  http://scrapers.herokuapp.com/represent/%s/\n' % (name, module_name)
+              print 'Import %s\n  http://scrapers.herokuapp.com/represent/%s/\n' % (name, module_name)
         else:
           print 'No name for %s' % module_name
