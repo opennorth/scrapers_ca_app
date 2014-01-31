@@ -24,9 +24,11 @@ File.open('posts.js', 'w') do |f|
   ].each do |filename|
     CSV.parse(open("https://raw.github.com/opencivicdata/ocd-division-ids/master/identifiers/country-ca/#{filename}.csv")) do |row|
       identifier, _, pair = row[0].rpartition('/')
-      alternative_name = pair.capitalize.sub(':', ' ')
       f.write %(posts['#{identifier}'].push("#{row[1]}")\n)
-      f.write %(posts['#{identifier}'].push("#{alternative_name}")\n) unless row[1] == alternative_name
+      if pair[/:\d+\z/]
+        alternative_name = pair.capitalize.sub(':', ' ')
+        f.write %(posts['#{identifier}'].push("#{alternative_name}")\n) unless row[1] == alternative_name
+      end
     end
   end
 end

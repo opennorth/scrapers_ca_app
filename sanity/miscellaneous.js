@@ -12,13 +12,13 @@ db.memberships.find().forEach(function (membership) {
         }
       }
       else if (uniqueRoles.indexOf(membership.role) === -1) {
-        post_ids[post_id] = typeof post_ids[post_id] !== 'undefined' ? post_ids[post_id] : 1;
+        post_ids[post_id] = 1;
       }
       else if (styles[division_id] && styles[division_id].indexOf(membership.role) === -1) {
-        post_ids[post_id] = typeof post_ids[post_id] !== 'undefined' ? post_ids[post_id] : membership.role;
+        post_ids[post_id] = membership.role;
       }
       else if (post_id !== names[division_id]) {
-        post_ids[post_id] = typeof post_ids[post_id] !== 'undefined' ? post_ids[post_id] : names[division_id];
+        post_ids[post_id] = names[division_id];
       }
     }
   }
