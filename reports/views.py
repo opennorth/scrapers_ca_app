@@ -64,6 +64,7 @@ def represent(request, module_name):
         match = re.search('\AWards (\d) (?:&|and) (\d)\Z', person['post_id'])
         if match:
           for district_id in match.groups():
+            representative = representative.copy()
             representative['district_id'] = district_id
             representative['district_name'] = 'Ward %s' % district_id
             representatives.append(representative)
