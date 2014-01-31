@@ -59,20 +59,26 @@ def represent(request, module_name):
           'extra':          json.dumps(get_extra(person)),
         }
 
-        # @todo If a person represents multiple wards (e.g. Ajax), need to split
-        # post_id into each district name and add one representative for each.
         geographic_code = getattr(obj, 'geographic_code', None)
-        if re.search('\A\d+\Z', person['post_id']):
-          representative['district_id'] = person['post_id']
-        elif person['post_id'] == getattr(obj, 'division_name', None) and len(str(geographic_code)) == 7:
-          representative['boundary_url'] = '/boundaries/census-subdivisions/%d/' % geographic_code
-        else:
-          representative['district_name'] = person['post_id']
-          district_id = re.search('\A(?:District|Division|Ward) (\d+)\Z', person['post_id'])
-          if district_id:
-            representative['district_id'] = district_id.group(1)
 
-        representatives.append(representative)
+        match = re.search('\AWards (\d) (?:&|and) (\d)\Z', person['post_id'])
+        if match:
+          for district_id in match.groups():
+            representative['district_id'] = district_id
+            representative['district_name'] = 'Ward %s' % district_id
+            representatives.append(representative)
+        else:
+          if re.search('\A\d+\Z', person['post_id']):
+            representative['district_id'] = person['post_id']
+          elif person['post_id'] == getattr(obj, 'division_name', None) and len(str(geographic_code)) == 7:
+            representative['boundary_url'] = '/boundaries/census-subdivisions/%d/' % geographic_code
+          else:
+            representative['district_name'] = person['post_id']
+            district_id = re.search('\A(?:District|Division|Ward) (\d+)\Z', person['post_id'])
+            if district_id:
+              representative['district_id'] = district_id.group(1)
+
+          representatives.append(representative)
 
       return HttpResponse(json.dumps(representatives), content_type='application/json')
 
