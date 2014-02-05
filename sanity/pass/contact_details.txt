@@ -5,3 +5,4 @@ loading file: sanity/contact_details.js
 
 memberships: multiple contact_details with the same type and note:
 ocd-membership/ac0b6ae3-8980-11e3-880e-c82a1443c6f3: ocd-jurisdiction/country:ca/csd:1307022/council
+ocd-membership/f7f73d21-8dde-11e3-a9ca-c82a1443c6f3: ocd-jurisdiction/country:ca/csd:3520005/council
