@@ -72,6 +72,7 @@ def represent(request, module_name):
           if re.search('\A\d+\Z', person['post_id']):
             representative['district_id'] = person['post_id']
           elif person['post_id'] == getattr(obj, 'division_name', None) and len(str(geographic_code)) == 7:
+            representative['district_name'] = person['post_id']
             representative['boundary_url'] = '/boundaries/census-subdivisions/%d/' % geographic_code
           else:
             representative['district_name'] = person['post_id']
