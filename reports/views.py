@@ -97,8 +97,7 @@ def represent(request, module_name):
         geographic_code = getattr(obj, 'geographic_code', None)
 
         if re.search('\AWards \d(?:(?:,| & | and )\d)+\Z', person['post_id']):
-          match = re.findall('\d+', person['post_id'])
-          for district_id in match.groups():
+          for district_id in re.findall('\d+', person['post_id']):
             representative = representative.copy()
             representative['district_id'] = district_id
             representative['district_name'] = 'Ward %s' % district_id
