@@ -51,13 +51,15 @@ def represent(request, module_name):
           'elected_office': membership['role'],
           'source_url':     person['sources'][0]['url'],
           'email':          next((contact_detail['value'] for contact_detail in membership['contact_details'] if contact_detail['type'] == 'email'), None),
-          'url':            person['sources'][-1]['url'],
           'photo_url':      person['image'],
           'personal_url':   get_personal_url(person),
           'gender':         person['gender'],
           'offices':        json.dumps(get_offices(membership)),
           'extra':          json.dumps(get_extra(person)),
         }
+
+        if len(person['sources']) > 1:
+          representative['url'] = person['sources'][-1]['url']
 
         geographic_code = getattr(obj, 'geographic_code', None)
 
