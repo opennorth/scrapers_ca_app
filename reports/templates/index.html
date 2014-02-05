@@ -21,11 +21,14 @@
           {{ report.module }}
           {% if not report.exception %}
             <a href="{% url 'represent' report.module %}" title="Download Represent JSON">
-              <span class="glyphicon glyphicon-cloud-download"></span>
+              <span class="glyphicon glyphicon-export"></span>
             </a>
             <a href="{% url 'report' report.module %}" title="Download Report JSON">
               <span class="glyphicon glyphicon-info-sign"></span>
             </a>
+          {% endif %}
+          {% if icons.get(report.id) %}
+            <span class="glyphicon glyphicon-{{ icons[report.id] }}"></span>
           {% endif %}
         </td>
         <td style="white-space: nowrap">

@@ -109,10 +109,6 @@ heroku run python manage.py syncdb --noinput
 
 Add `python cron.py` to the [Heroku Scheduler](https://scheduler.heroku.com/dashboard).
 
-## Represent
-
-Run `python represent.py` to see a list of scrapers that can be integrated into Represent.
-
 ## Troubleshooting
 
 * Make sure PostgreSQL and MongoDB are running. If you use Homebrew, you can find instructions on how to run each with:

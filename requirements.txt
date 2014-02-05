@@ -16,7 +16,6 @@ jsonfield==0.9.20
 
 # Views
 Coffin==0.3.8
-django-compressor==1.3
 Jinja2==2.7.1
 
 -r scrapers/requirements.txt

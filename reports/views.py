@@ -10,6 +10,8 @@ from coffin.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext
 from pupa.core import _configure_db, db
+import requests
+
 from reports.models import Report
 
 CONTACT_DETAIL_TYPE_MAP = {
@@ -20,20 +22,51 @@ CONTACT_DETAIL_TYPE_MAP = {
 }
 
 def home(request):
+  sys.path.append(os.path.abspath('scrapers'))
+
+  data = json.loads(requests.get('http://represent.opennorth.ca/representative-sets/?limit=0').content)
+
+  names = {}
+  for obj in data['objects']:
+    names[obj['name']] = obj['data_url']
+
+  icons = {}
+  for module_name in os.listdir('scrapers'):
+    if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', 'scrape_cache', 'scraped_data'):
+      module = importlib.import_module(module_name)
+      for obj in module.__dict__.values():
+        jurisdiction_id = getattr(obj, 'jurisdiction_id', None)
+        if jurisdiction_id:  # We've found the module.
+          name = getattr(obj, 'name', None)
+          if name:
+            try:
+              if name in names:
+                obj = Report.objects.get(module=module_name)
+                if not obj.exception and not names[name].startswith('http://scrapers.herokuapp.com/represent/'):
+                  icons[obj.id] = 'warning-sign'
+              else:
+                obj = Report.objects.get(module=module_name)
+                if not obj.exception:
+                  icons[obj.id] = 'import'
+            except Report.DoesNotExist:
+              pass
+
   return render_to_response('index.html', RequestContext(request, {
     'exceptions': Report.objects.exclude(exception='').count(),
     'reports': Report.objects.order_by('module').all(),
+    'icons': icons,
   }))
 
 def report(request, module_name):
   return HttpResponse(json.dumps(Report.objects.get(module=module_name).report), content_type='application/json')
 
 def represent(request, module_name):
+  sys.path.append(os.path.abspath('scrapers'))
+
   url = os.getenv('MONGOHQ_URL', 'mongodb://localhost:27017/pupa')
   parsed = urlsplit(url)
   _configure_db(url, parsed.port, parsed.path[1:])
 
-  sys.path.append(os.path.abspath('scrapers'))
   module = importlib.import_module(module_name)
 
   for obj in module.__dict__.values():
