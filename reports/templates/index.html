@@ -16,9 +16,6 @@
       <tr{% if report.exception %} class="danger"{% endif %}>
         <td>
           <span class="glyphicon glyphicon-{% if report.exception %}remove{% else %}ok{% endif %}"></span>
-        </td>
-        <td>
-          {{ report.module }}
           {% if not report.exception %}
             <a href="{% url 'represent' report.module %}" title="Download Represent JSON">
               <span class="glyphicon glyphicon-export"></span>
@@ -30,6 +27,9 @@
           {% if icons.get(report.id) %}
             <span class="glyphicon glyphicon-{{ icons[report.id] }}"></span>
           {% endif %}
+        </td>
+        <td>
+          {{ report.module }}
         </td>
         <td style="white-space: nowrap">
           {% if report.success_at %}
