@@ -66,11 +66,18 @@ Start the web app:
 
 ## Deployment
 
-Add configuration variables (replace `DATABASE`):
+Add configuration variables (replace `YOUR-SECRET-KEY` and `DATABASE`):
 
     heroku config:set PRODUCTION=1
-    heroku config:set DJANGO_SECRET_KEY=your-secret-key
+    heroku config:set DJANGO_SECRET_KEY=YOUR-SECRET-KEY
     heroku config:set DATABASE_URL=`heroku config:get DATABASE`
+
+You can [generate a secret key in Python](https://github.com/django/django/blob/master/django/core/management/commands/startproject.py):
+
+```python
+from django.utils.crypto import get_random_string
+get_random_string(50, 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)')
+```
 
 Setup the database (replace `DATABASE`):
 
