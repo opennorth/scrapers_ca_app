@@ -4,108 +4,78 @@ This Django project runs the [Canadian legislative scrapers](http://github.com/o
 
 ## Development
 
-To install dependencies, see the instructions in [blank-pupa](https://github.com/opennorth/blank-pupa).
+Follow the instructions in the [Python Quick Start Guide](https://github.com/opennorth/opennorth.ca/wiki/Python-Quick-Start%3A-OS-X) to install Homebrew, Git, MongoDB, Python and virtualenv.
 
-Set up the git repository:
+    mkvirtualenv scrapers_ca_app
+    git clone git@github.com:opennorth/scrapers_ca_app.git
+    cd scrapers_ca_app
 
-```
-git clone git@github.com:opennorth/scrapers_ca_app.git
-git submodule init
-git submodule update
-```
+Set up the submodule and switch it to master:
 
-Switch the submodule to master:
+    git submodule init
+    git submodule update
+    cd scrapers
+    git checkout master
+    cd ..
 
-```
-cd scrapers
-git checkout master
-cd ..
-```
+Install the requirements:
 
-Create a virtual environment:
-
-```
-rm -rf ~/.virtualenvs/scrapers_ca_app # if it already exists
-mkvirtualenv scrapers_ca_app
-pip install -r requirements.txt
-```
+    pip install -r requirements.txt
 
 Create a database (`dropdb pupa` if it already exists):
 
-```
-dropdb pupa
-createdb pupa
-python manage.py syncdb --noinput
-```
+    dropdb pupa
+    createdb pupa
+    python manage.py syncdb --noinput
 
 Drop the MongoDB database:
 
-```
-mongo pupa --eval 'db.dropDatabase()'
-```
+    mongo pupa --eval 'db.dropDatabase()'
 
 Run all the scrapers:
 
-```
-python cron.py
-```
+    python cron.py
 
 Or run specific scrapers:
 
-```
-python cron.py ca_ab_edmonton ca_ab_grande_prairie_county_no_1
-```
+    python cron.py ca_ab_edmonton ca_ab_grande_prairie_county_no_1
 
 Install the foreman gem:
 
-```
-gem install foreman
-```
+    gem install foreman
 
 Start the web app:
 
-```
-foreman start
-```
+    foreman start
 
 ## Data Quality
 
-```
-mkdir test
-```
+    mkdir test
 
-```
-mongo pupa sanity/common.js sanity/contact_details.js > test/contact_details.txt
-mongo pupa sanity/common.js sanity/links.js > test/links.txt
-mongo pupa sanity/common.js sanity/names.js sanity/posts.js sanity/styles.js sanity/miscellaneous.js > test/miscellaneous.txt
-mongo pupa sanity/common.js sanity/relations.js > test/relations.txt
-mongo pupa sanity/common.js sanity/styles.js sanity/roles.js > test/roles.txt
-```
+    mongo pupa sanity/common.js sanity/contact_details.js > test/contact_details.txt
+    mongo pupa sanity/common.js sanity/links.js > test/links.txt
+    mongo pupa sanity/common.js sanity/names.js sanity/posts.js sanity/styles.js sanity/miscellaneous.js > test/miscellaneous.txt
+    mongo pupa sanity/common.js sanity/relations.js > test/relations.txt
+    mongo pupa sanity/common.js sanity/styles.js sanity/roles.js > test/roles.txt
 
-```
-diff -U0 sanity/pass/contact_details.txt test/contact_details.txt
-diff -U0 sanity/pass/links.txt test/links.txt
-diff -U0 sanity/pass/relations.txt test/relations.txt
-diff -U0 sanity/pass/roles.txt test/roles.txt
-cat test/miscellaneous.txt
-```
+    diff -U0 sanity/pass/contact_details.txt test/contact_details.txt
+    diff -U0 sanity/pass/links.txt test/links.txt
+    diff -U0 sanity/pass/relations.txt test/relations.txt
+    diff -U0 sanity/pass/roles.txt test/roles.txt
+    cat test/miscellaneous.txt
 
 ## Deployment
 
 Add configuration variables (replace `DATABASE`):
 
-```
-heroku config:set PRODUCTION=1
-heroku config:set DJANGO_SECRET_KEY=your-secret-key
-heroku config:set DATABASE_URL=`heroku config:get DATABASE`
-```
+    heroku config:set PRODUCTION=1
+    heroku config:set DJANGO_SECRET_KEY=your-secret-key
+    heroku config:set DATABASE_URL=`heroku config:get DATABASE`
 
 Setup the database (replace `DATABASE`):
 
-```
-heroku pg:reset DATABASE
-heroku run python manage.py syncdb --noinput
-```
+    heroku pg:reset DATABASE
+    heroku run python manage.py syncdb --noinput
 
 Add `python cron.py` to the [Heroku Scheduler](https://scheduler.heroku.com/dashboard).
 
@@ -113,10 +83,8 @@ Add `python cron.py` to the [Heroku Scheduler](https://scheduler.heroku.com/dash
 
 * Make sure PostgreSQL and MongoDB are running. If you use Homebrew, you can find instructions on how to run each with:
 
-```
-brew info postgres
-brew info mongo
-```
+    brew info postgres
+    brew info mongo
 
 ## Bugs? Questions?
 
