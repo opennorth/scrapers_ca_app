@@ -1,6 +1,6 @@
-expectNone('people', 'contact_details.type');
+// @todo Move into models?
+
 expectNone('organizations', 'contact_details.type');
-expectNone('people', 'contact_details.note');
 expectNone('organizations', 'contact_details.note');
 
 matches('memberships', 'jurisdiction_id', {

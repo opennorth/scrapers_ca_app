@@ -27,7 +27,7 @@ if __name__ == "__main__":
     if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', 'scrape_cache', 'scraped_data'):
       obj, _ = Report.objects.get_or_create(module=module_name)
       try:
-        obj.report = subcommand.handle(parser.parse_args(['update', '--people', module_name]))
+        obj.report = subcommand.handle(parser.parse_args(['update', '--nonstrict', '--people', module_name]))
         obj.exception = ''
         obj.success_at = datetime.now()
       except:

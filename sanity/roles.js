@@ -2,6 +2,7 @@ matches('memberships', 'role', {
   role: {$nin: roles.concat(uniqueRoles)},
 });
 
+// @todo Move into models?
 print('\nOrganizations with unexpected roles:');
 db.organizations.find().forEach(function (organization) {
   // @todo In "municipalities" scrapers, need to tag each organization with its
