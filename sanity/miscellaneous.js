@@ -1,3 +1,4 @@
+// @todo Move into models?
 print('\nDistinct memberships post_id for manual review:');
 var post_ids = {};
 db.memberships.find().forEach(function (membership) {

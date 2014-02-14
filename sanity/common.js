@@ -42,12 +42,6 @@ var expect = function (actual, expected, message) {
   }
 };
 
-var expectNone = function (collection, field) {
-  var selector = {};
-  selector[field] = {$exists: true};
-  expect(db[collection].count(selector), 0, collection + ' ' + field + ' count');
-};
-
 var mapReduce = function (collection, map) {
   db[collection].mapReduce(map, function (key, values) {
     return Array.sum(values);
@@ -55,26 +49,6 @@ var mapReduce = function (collection, map) {
     print(result._id + pad.substring(0, 40 - result._id.length) + result.value);
   });
 }
-
-// Finds documents in the given collection matching the given criteria. If any
-// documents are found, prints the given message and, for each document, prints
-// its ID and the value of the given field.
-var matches = function (collection, field, criteria, message) {
-  message = message || collection + ' with invalid ' + field;
-
-  var count = db[collection].count(criteria);
-  if (count) {
-    print('\n' + message + ':');
-    db[collection].find(criteria).forEach(function (obj) {
-      if (field.indexOf('.') === -1) {
-        print(obj._id + ': ' + obj[field]);
-      }
-      else {
-        print(obj._id);
-      }
-    });
-  }
-};
 
 var division_id_from_jurisdiction_id = function (jurisdiction_id) {
   return jurisdiction_id.replace('jurisdiction', 'division').replace(/\/(?:council|legislature)$/, '');
