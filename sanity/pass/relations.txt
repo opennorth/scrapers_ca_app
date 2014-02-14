@@ -1,8 +1,0 @@
-MongoDB shell version: 2.4.3
-connecting to: pupa
-loading file: sanity/common.js
-loading file: sanity/relations.js
-
-Jurisdictions without exactly one organization:
-
-People without exactly one membership:

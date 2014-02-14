@@ -1,7 +1,0 @@
-MongoDB shell version: 2.4.3
-connecting to: pupa
-loading file: sanity/common.js
-loading file: sanity/styles-of-address.js
-loading file: sanity/roles.js
-
-Organizations with unexpected roles:
