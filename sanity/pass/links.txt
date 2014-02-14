@@ -1,8 +1,0 @@
-MongoDB shell version: 2.4.3
-connecting to: pupa
-loading file: sanity/common.js
-loading file: sanity/links.js
-
-people: multiple links with a non-social media url:
-ocd-person/f08e6042-8a23-11e3-820b-c82a1443c6f3
-ocd-person/f08e9405-8a23-11e3-a150-c82a1443c6f3

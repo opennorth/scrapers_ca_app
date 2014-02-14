@@ -52,13 +52,10 @@ Start the web app:
 
     mkdir test
 
-    mongo pupa sanity/common.js sanity/contact_details.js > test/contact_details.txt
     mongo pupa sanity/common.js sanity/names.js sanity/posts.js sanity/styles.js sanity/miscellaneous.js > test/miscellaneous.txt
     mongo pupa sanity/common.js sanity/relations.js > test/relations.txt
     mongo pupa sanity/common.js sanity/styles.js sanity/roles.js > test/roles.txt
 
-    diff -U0 sanity/pass/contact_details.txt test/contact_details.txt
-    diff -U0 sanity/pass/links.txt test/links.txt
     diff -U0 sanity/pass/relations.txt test/relations.txt
     diff -U0 sanity/pass/roles.txt test/roles.txt
     cat test/miscellaneous.txt
