@@ -11,28 +11,6 @@ var expect = function (actual, expected, message) {
   }
 };
 
-// @todo Move into models
-// var division_id_from_jurisdiction_id = function (jurisdiction_id) {
-//   return jurisdiction_id.replace('jurisdiction', 'division').replace(/\/(?:council|legislature)$/, '');
-// };
-// print('\nOrganizations with unexpected roles:');
-// db.organizations.find().forEach(function (organization) {
-//   // @todo In "municipalities" scrapers, need to tag each organization with its
-//   // OCD ID, in order to validate its styles of address.
-//   if (!/\/municipalities$/.test(organization.jurisdiction_id)) {
-//     var division_id = division_id_from_jurisdiction_id(organization.jurisdiction_id);
-//     if (styles[division_id]) {
-//       var difference = db.memberships.distinct('role', {organization_id: organization._id}).filter(function (x) {
-//         return styles[division_id].indexOf(x) === -1;
-//       });
-//       expect(difference.length, 0, [organization.jurisdiction_id, organization._id].concat(difference).join(' '));
-//     }
-//     else {
-//       print('No styles of address for ' + division_id);
-//     }
-//   }
-// });
-
 var roles = [
   // Provincial
   'MHA',
