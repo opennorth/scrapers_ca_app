@@ -31,3 +31,10 @@ keys.sort();
 keys.forEach(function (post_id) {
   print('"' + post_id + '"' + pad.substring(0, 50 - post_id.length) + post_ids[post_id]);
 });
+
+// print('\nDistinct people links.url domains for manual review:');
+// mapReduce('people', function () {
+//   this.links.forEach(function (link) {
+//     emit(link.url.match('^(?:[a-z]+://)?(?:www\\.)?([^/]+)')[1], 1);
+//   })
+// });

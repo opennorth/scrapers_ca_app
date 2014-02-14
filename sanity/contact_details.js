@@ -1,24 +1,5 @@
 // @todo Move into models?
 
-expectNone('organizations', 'contact_details.type');
-expectNone('organizations', 'contact_details.note');
-
-matches('memberships', 'jurisdiction_id', {
-  contact_details: {
-    $elemMatch: {
-      type: {$nin: ['address', 'cell', 'email', 'fax', 'voice']},
-    },
-  },
-}, 'memberships: unexpected contact_details.type');
-
-matches('memberships', 'jurisdiction_id', {
-  contact_details: {
-    $elemMatch: {
-      note: {$nin: ['constituency', 'legislature', 'office', 'residence', null]},
-    },
-  },
-}, 'memberships: unexpected contact_details.note');
-
 matches('memberships', 'jurisdiction_id', {
   contact_details: {
     $elemMatch: {
