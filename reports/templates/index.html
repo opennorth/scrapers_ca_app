@@ -16,17 +16,19 @@
       <tr{% if report.exception %} class="danger"{% endif %}>
         <td>
           <span class="glyphicon glyphicon-{% if report.exception %}remove{% else %}ok{% endif %}"></span>
+          {% if report.report %}
+            <a href="{% url 'report' report.module %}" title="Download report JSON">
+              <span class="glyphicon glyphicon-info-sign"></span>
+            </a>
+          {% endif %}
           {% if not report.exception %}
             <a href="{% url 'represent' report.module %}" title="Download Represent JSON">
               <span class="glyphicon glyphicon-export"></span>
             </a>
-            <a href="{% url 'report' report.module %}" title="Download Report JSON">
-              <span class="glyphicon glyphicon-info-sign"></span>
-            </a>
           {% endif %}
           <span class="glyphicon glyphicon-{{ icons[report.id] }}"></span>
           {% if report.warnings %}
-            <a data-toggle="modal" data-target="#warnings-{{ report.id }}">
+            <a data-toggle="modal" data-target="#warnings-{{ report.id }}" title="View validation errors">
               <span class="glyphicon glyphicon-warning-sign"></span>
             </a>
             <div id="warnings-{{ report.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="warnings-{{ report.id }}-label" aria-hidden="true">

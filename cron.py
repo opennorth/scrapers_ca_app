@@ -32,9 +32,10 @@ if __name__ == "__main__":
       obj, _ = Report.objects.get_or_create(module=module_name)
       try:
         obj.report = subcommand.handle(parser.parse_args(['update', '--nonstrict', '--people', module_name]))
-        obj.warnings = '\n'.join('%(asctime)s %(levelname)s %(name)s: %(message)s' % d for d in handler.buffer)
         obj.exception = ''
         obj.success_at = datetime.now()
       except:
         obj.exception = traceback.format_exc()
+      obj.warnings = '\n'.join('%(asctime)s %(levelname)s %(name)s: %(message)s' % d for d in handler.buffer)
       obj.save()
+      handler.flush()
