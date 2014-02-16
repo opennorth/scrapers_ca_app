@@ -20,7 +20,7 @@
           {% elif icons[report.id] == 'add' %}
             <span class="glyphicon glyphicon-plus-sign" style="color: #0d0"></span>
           {% elif icons[report.id] == 'replace' %}
-            <span class="glyphicon glyphicon-question-sign" style="color: #66f"></span>
+            <span class="glyphicon glyphicon-question-sign" style="color: #0d0"></span>
           {% elif report.exception %}
             <span class="glyphicon glyphicon-remove-sign" style="color: #f00"></span>
           {% endif %}
@@ -61,13 +61,13 @@
         <td style="white-space: nowrap">
           {% if report.success_at %}
           <abbr class="timeago" title="{{ report.updated_at.strftime("%Y-%m-%dT%H:%M:%SZ") }}">
-            {{ report.success_at.strftime('%Y-%m-%d %H:%M') }}
+            {{ report.success_at.strftime('%Y-%m-%d %H:%M:%S') }}
           </abbr>
           {% endif %}
         </td>
         <td style="white-space: nowrap">
           <abbr class="timeago" title="{{ report.updated_at.strftime("%Y-%m-%dT%H:%M:%SZ") }}">
-            {{ report.updated_at.strftime('%Y-%m-%d %H:%M') }}
+            {{ report.updated_at.strftime('%Y-%m-%d %H:%M:%S') }}
           </abbr>
         </td>
         <td>
