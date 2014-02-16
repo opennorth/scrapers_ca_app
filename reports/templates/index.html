@@ -32,7 +32,7 @@
             <span class="glyphicon glyphicon-plus-sign" style="color: #390"></span>
           {% elif icons[report.id] == 'replace' %}
             <span class="glyphicon glyphicon-question-sign" style="color: #66f"></span>
-          {% end %}
+          {% endif %}
           {% if report.warnings %}
             <a data-toggle="modal" data-target="#warnings-{{ report.id }}" title="View validation errors">
               <span class="glyphicon glyphicon-warning-sign"></span>
