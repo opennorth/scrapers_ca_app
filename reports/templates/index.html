@@ -15,7 +15,15 @@
     {% for report in reports %}
       <tr{% if report.exception %} class="danger"{% endif %}>
         <td>
-          <span class="glyphicon glyphicon-{% if report.exception %}remove{% else %}ok{% endif %}"></span>
+          {% if icons[report.id] == 'noop' %}
+            <span class="glyphicon glyphicon-ok-sign"></span>
+          {% elif icons[report.id] == 'add' %}
+            <span class="glyphicon glyphicon-plus-sign" style="color: #0d0"></span>
+          {% elif icons[report.id] == 'replace' %}
+            <span class="glyphicon glyphicon-question-sign" style="color: #66f"></span>
+          {% elif report.exception %}
+            <span class="glyphicon glyphicon-remove-sign" style="color: #f00"></span>
+          {% endif %}
           {% if report.report %}
             <a href="{% url 'report' report.module %}" title="Download report JSON">
               <span class="glyphicon glyphicon-info-sign"></span>
@@ -25,13 +33,6 @@
             <a href="{% url 'represent' report.module %}" title="Download Represent JSON">
               <span class="glyphicon glyphicon-export"></span>
             </a>
-          {% endif %}
-          {% if icons[report.id] == 'noop' %}
-            <span class="glyphicon glyphicon-ok-sign"></span>
-          {% elif icons[report.id] == 'add' %}
-            <span class="glyphicon glyphicon-plus-sign" style="color: #390"></span>
-          {% elif icons[report.id] == 'replace' %}
-            <span class="glyphicon glyphicon-question-sign" style="color: #66f"></span>
           {% endif %}
           {% if report.warnings %}
             <a data-toggle="modal" data-target="#warnings-{{ report.id }}" title="View validation errors">
