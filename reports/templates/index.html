@@ -15,13 +15,17 @@
     {% for report in reports %}
       <tr{% if report.exception %} class="danger"{% endif %}>
         <td>
-          {% if icons[report.id] == 'noop' %}
-            <span class="glyphicon glyphicon-ok-sign" title="Already in Represent"></span>
-          {% elif icons[report.id] == 'add' %}
-            <span class="glyphicon glyphicon-plus-sign" style="color: #0d0" title="Add to Represent"></span>
+          {% if icons[report.id] == 'add' %}
+            <span class="hide">A</span>
+            <span class="glyphicon glyphicon-plus-sign" style="color: #0d0"></span>
           {% elif icons[report.id] == 'replace' %}
-            <span class="glyphicon glyphicon-question-sign" style="color: #0d0" title="Replace in Represent"></span>
+            <span class="hide">B</span>
+            <span class="glyphicon glyphicon-question-sign" style="color: #0d0"></span>
+          {% elif icons[report.id] == 'noop' %}
+            <span class="hide">C</span>
+            <span class="glyphicon glyphicon-ok-sign"></span>
           {% elif report.exception %}
+            <span class="hide">D></span>
             <span class="glyphicon glyphicon-remove-sign" style="color: #f00" title="Error during scrape"></span>
           {% endif %}
           {% if report.report %}
