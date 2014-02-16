@@ -40,10 +40,10 @@ var uniqueRoles = [
   'Warden', 'Deputy Warden',
 ];
 
-// db.memberships.ensureIndex({organization_id: 1, role: 1})
+db.memberships.ensureIndex({organization_id: 1, role: 1})
 print('\nOrganizations without any unique roles:');
 db.organizations.find().forEach(function (organization) {
-  if (!/\/legislature$/.test(organization.jurisdiction_id)) {
+  if (!/\/legislature$/.test(organization.jurisdiction_id) && organization.classification != 'party') {
     expect(db.memberships.count({organization_id: organization._id, role: {$in: uniqueRoles}}), [1, 2],
       [organization.jurisdiction_id, organization._id].join(' '));
   }
@@ -51,7 +51,7 @@ db.organizations.find().forEach(function (organization) {
 
 print('\nOrganizations without any non-unique roles:');
 db.organizations.find().forEach(function (organization) {
-  if (!/\/legislature$/.test(organization.jurisdiction_id)) {
+  if (!/\/legislature$/.test(organization.jurisdiction_id) && organization.classification != 'party') {
     expect(db.memberships.count({organization_id: organization._id, role: {$in: roles}}), [1, 338],
       [organization.jurisdiction_id, organization._id].join(' '));
   }

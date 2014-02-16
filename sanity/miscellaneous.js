@@ -1,3 +1,5 @@
+pad = '                                        ';
+
 print('\nDistinct people links.url domains for manual review:');
 db.people.mapReduce(function () {
   this.links.forEach(function (link) {
