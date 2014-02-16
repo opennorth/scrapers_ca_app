@@ -26,7 +26,13 @@
               <span class="glyphicon glyphicon-export"></span>
             </a>
           {% endif %}
-          <span class="glyphicon glyphicon-{{ icons[report.id] }}"></span>
+          {% if icons[report.id] == 'noop' %}
+            <span class="glyphicon glyphicon-ok-sign"></span>
+          {% elif icons[report.id] == 'add' %}
+            <span class="glyphicon glyphicon-plus-sign" style="color: #390"></span>
+          {% elif icons[report.id] == 'replace' %}
+            <span class="glyphicon glyphicon-question-sign" style="color: #66f"></span>
+          {% end %}
           {% if report.warnings %}
             <a data-toggle="modal" data-target="#warnings-{{ report.id }}" title="View validation errors">
               <span class="glyphicon glyphicon-warning-sign"></span>

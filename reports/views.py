@@ -44,13 +44,13 @@ def home(request):
                 obj = Report.objects.get(module=module_name)
                 if not obj.exception:
                   if names[name].startswith('http://scrapers.herokuapp.com/represent/'):
-                    icons[obj.id] = 'ok-sign'
+                    icons[obj.id] = 'noop'
                   else:
-                    icons[obj.id] = 'question-sign'
+                    icons[obj.id] = 'replace'
               else:
                 obj = Report.objects.get(module=module_name)
                 if not obj.exception:
-                  icons[obj.id] = 'plus-sign'
+                  icons[obj.id] = 'add'
             except Report.DoesNotExist:
               pass
 
