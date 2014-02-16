@@ -23,11 +23,16 @@ if __name__ == "__main__":
   else:
     module_names = sys.argv[1:]
 
+  handler = logging.getLogger().handlers[0]
+
+  # @see http://pythonhosted.org//logutils/testing.html
+  # @see http://plumberjack.blogspot.ca/2010/09/unit-testing-and-logging.html
   for module_name in module_names:
     if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', 'scrape_cache', 'scraped_data'):
       obj, _ = Report.objects.get_or_create(module=module_name)
       try:
         obj.report = subcommand.handle(parser.parse_args(['update', '--nonstrict', '--people', module_name]))
+        obj.warnings = '\n'.join('%(asctime)s %(levelname)s %(name)s: %(message)s' % d for d in handler.buffer)
         obj.exception = ''
         obj.success_at = datetime.now()
       except:

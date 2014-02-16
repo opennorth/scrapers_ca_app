@@ -7,9 +7,10 @@ psycopg2==2.5.1
 static==0.4
 wsgiref==0.1.2
 
-# Static
-django-appconf==0.6
+# Miscellaneous
 BeautifulSoup==3.2.1
+django-appconf==0.6
+logutils==0.3.3
 
 # Models
 jsonfield==0.9.20

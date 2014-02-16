@@ -6,6 +6,7 @@ class Report(models.Model):
   id = models.AutoField(primary_key=True)
   module = models.CharField(max_length=100)
   report = JSONField(null=True)
+  warnings = models.TextField()
   exception = models.TextField()
   updated_at = models.DateTimeField(auto_now=True)
   success_at = models.DateTimeField(null=True)

@@ -31,7 +31,8 @@ LOGGING_CONFIG = {
     },
     'handlers': {
         'default': {'level': 'DEBUG',
-                    'class': 'pupa.ext.ansistrm.ColorizingStreamHandler',
+                    'class': 'logutils.testing.TestHandler',
+                    'matcher': 'logutils.testing.Matcher',
                     'formatter': 'standard'},
     },
     'loggers': {

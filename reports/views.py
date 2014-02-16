@@ -42,12 +42,15 @@ def home(request):
             try:
               if name in names:
                 obj = Report.objects.get(module=module_name)
-                if not obj.exception and not names[name].startswith('http://scrapers.herokuapp.com/represent/'):
-                  icons[obj.id] = 'warning-sign'
+                if not obj.exception:
+                  if names[name].startswith('http://scrapers.herokuapp.com/represent/'):
+                    icons[obj.id] = 'ok-sign'
+                  else:
+                    icons[obj.id] = 'question-sign'
               else:
                 obj = Report.objects.get(module=module_name)
                 if not obj.exception:
-                  icons[obj.id] = 'import'
+                  icons[obj.id] = 'plus-sign'
             except Report.DoesNotExist:
               pass
 

@@ -24,8 +24,26 @@
               <span class="glyphicon glyphicon-info-sign"></span>
             </a>
           {% endif %}
-          {% if icons.get(report.id) %}
-            <span class="glyphicon glyphicon-{{ icons[report.id] }}"></span>
+          <span class="glyphicon glyphicon-{{ icons[report.id] }}"></span>
+          {% if report.warnings %}
+            <a data-toggle="modal" data-target="#warnings-{{ report.id }}">
+              <span class="glyphicon glyphicon-warning-sign"></span>
+            </a>
+            <div id="warnings-{{ report.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="warnings-{{ report.id }}-label" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="warnings-{{ report.id }}-label">
+                      Warnings
+                    </h4>
+                  </div>
+                  <div class="modal-body">
+                    <pre>{{ report.warnings }}</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
           {% endif %}
         </td>
         <td>
@@ -45,15 +63,15 @@
         </td>
         <td>
           {% if report.exception %}
-            <a data-toggle="modal" data-target="#report-{{ report.id }}">
+            <a data-toggle="modal" data-target="#exception-{{ report.id }}">
               {{ report.exception_header|truncate(125) }}
             </a>
-            <div id="report-{{ report.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="report-{{ report.id }}-label" aria-hidden="true">
+            <div id="exception-{{ report.id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exception-{{ report.id }}-label" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="report-{{ report.id }}-label">
+                    <h4 class="modal-title" id="exception-{{ report.id }}-label">
                       {{ report.exception_header }}
                     </h4>
                   </div>
