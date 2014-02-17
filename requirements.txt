@@ -10,6 +10,8 @@ wsgiref==0.1.2
 # Miscellaneous
 BeautifulSoup==3.2.1
 django-appconf==0.6
+
+# Cron
 logutils==0.3.3
 
 # Models
