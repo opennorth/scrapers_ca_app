@@ -12,32 +12,43 @@ var expect = function (actual, expected, message) {
 };
 
 var roles = [
+  // Federal
+  "MP",
   // Provincial
-  'MHA',
-  'MLA',
-  'MNA',
-  'MPP',
+  "MHA",
+  "MLA",
+  "MNA",
+  "MPP",
   // Municipal
-  'Alderman',
-  'Area Councillor',
-  'Councillor',
-  'Local Councillor',
-  'Regional Councillor',
+  "Alderman",
+  "Area Councillor",
+  "Conseiller",
+  "Conseiller d'arrondissement",
+  "Conseiller de ville",
+  "Councillor",
+  "Local Councillor",
+  "Regional Councillor",
+  "Water Councillor",
 ];
 
 var uniqueRoles = [
+  // Federal
+  "Prime Minister",
   // Provincial
-  'Premier',
+  "Premier",
   // Municipal
-  'Acting Chief Administrative Officer',
-  'Chairperson',
-  'Chief Administrative Officer',
-  'Chief Executive Officer',
-  'City Manager',
-  'Mayor', 'Deputy Mayor',
-  'Municipal Administrator',
-  'Reeve', 'Deputy Reeve',
-  'Warden', 'Deputy Warden',
+  "Acting Chief Administrative Officer",
+  "Administrator",
+  "Chairperson",
+  "Chief Administrative Officer",
+  "Chief Executive Officer",
+  "City Manager",
+  "Maire",
+  "Mayor", "Acting Mayor", "Deputy Mayor", "Interim Mayor",
+  "Municipal Administrator",
+  "Regional Chair",
+  "Reeve", "Deputy Reeve",
+  "Warden", "Deputy Warden",
 ];
 
 db.memberships.ensureIndex({organization_id: 1, role: 1})
