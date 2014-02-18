@@ -48,12 +48,6 @@ Start the web app:
 
     foreman start
 
-## Data Quality
-
-    mongo pupa sanity/miscellaneous.js
-    mongo pupa sanity/relations.js
-    mongo pupa sanity/roles.js
-
 ## Deployment
 
 Add configuration variables (replace `YOUR-SECRET-KEY` and `DATABASE`):
