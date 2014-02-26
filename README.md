@@ -74,8 +74,8 @@ Add `python cron.py` to the [Heroku Scheduler](https://scheduler.heroku.com/dash
 
 * Make sure PostgreSQL and MongoDB are running. If you use Homebrew, you can find instructions on how to run each with:
 
-    brew info postgres
-    brew info mongo
+        brew info postgres
+        brew info mongo
 
 ## Bugs? Questions?
 
