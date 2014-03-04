@@ -99,21 +99,27 @@ def represent(request, module_name):
 
         geographic_code = getattr(obj, 'geographic_code', None)
 
-        if re.search('\AWards \d(?:(?:,| & | and )\d)+\Z', person['post_id']):
-          for district_id in re.findall('\d+', person['post_id']):
+        # If the person is associated to multiple boundaries.
+        if re.search(r'\AWards \d(?:(?:,| & | and )\d)+\Z', person['post_id']):
+          for district_id in re.findall(r'\d+', person['post_id']):
             representative = representative.copy()
             representative['district_id'] = district_id
             representative['district_name'] = 'Ward %s' % district_id
             representatives.append(representative)
         else:
-          if re.search('\A\d+\Z', person['post_id']):
+          # If the post_id is numeric.
+          if re.search(r'\A\d+\Z', person['post_id']):
             representative['district_id'] = person['post_id']
+          # If the post_id is a boundary URL.
+          elif re.search(r'\A/boundaries/', person['post_id']):
+            representative['boundary_url'] = person['post_id']
+          # If the post_id is a census subdivision.
           elif person['post_id'] == getattr(obj, 'division_name', None) and len(str(geographic_code)) == 7:
             representative['district_name'] = person['post_id']
             representative['boundary_url'] = '/boundaries/census-subdivisions/%d/' % geographic_code
           else:
             representative['district_name'] = person['post_id']
-            district_id = re.search('\A(?:District|Division|Ward) (\d+)\Z', person['post_id'])
+            district_id = re.search(r'\A(?:District|Division|Ward) (\d+)\Z', person['post_id'])
             if district_id:
               representative['district_id'] = district_id.group(1)
 
