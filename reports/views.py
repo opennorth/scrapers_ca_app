@@ -77,7 +77,7 @@ def represent(request, module_name):
     if jurisdiction_id:  # We've found the module.
       representatives = []
 
-      for membership in db.memberships.find({'jurisdiction_id': jurisdiction_id}):
+      for membership in db.memberships.find({'jurisdiction_id': jurisdiction_id, 'role': {'$ne': 'member'}}):
         organization = db.organizations.find_one({'_id': membership['organization_id']})
         person = db.people.find_one({'_id': membership['person_id']})
 
