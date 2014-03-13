@@ -94,6 +94,8 @@ def represent(request, module_name):
           'extra':          json.dumps(get_extra(person)),
         }
 
+        if representative['extra'].get('party'):
+          representative['party_name'] = representative['extra']['party']
         if len(person['sources']) > 1:
           representative['url'] = person['sources'][-1]['url']
 
@@ -144,7 +146,7 @@ def get_offices(obj):
   return offices_by_note.values()
 
 def get_extra(obj):
-  extra = {}
+  extra = obj.get('extra', {})
   for link in obj['links']:
     domain = '.'.join(urlsplit(link['url']).netloc.split('.')[-2:])
     if domain == 'facebook.com':
