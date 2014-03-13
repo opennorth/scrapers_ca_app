@@ -81,21 +81,23 @@ def represent(request, module_name):
         organization = db.organizations.find_one({'_id': membership['organization_id']})
         person = db.people.find_one({'_id': membership['person_id']})
 
+        extra = get_extra(person)
+        party_name = extra.pop('party', None)
+
         # @see http://represent.opennorth.ca/api/#fields
         representative = {
           'name':           person['name'],
           'elected_office': membership['role'],
           'source_url':     person['sources'][0]['url'],
+          'party_name':     party_name,
           'email':          next((contact_detail['value'] for contact_detail in membership['contact_details'] if contact_detail['type'] == 'email'), None),
           'photo_url':      person['image'],
           'personal_url':   get_personal_url(person),
           'gender':         person['gender'],
           'offices':        json.dumps(get_offices(membership)),
-          'extra':          json.dumps(get_extra(person)),
+          'extra':          json.dumps(extra),
         }
 
-        if representative['extra'].get('party'):
-          representative['party_name'] = representative['extra']['party']
         if len(person['sources']) > 1:
           representative['url'] = person['sources'][-1]['url']
 
@@ -146,7 +148,7 @@ def get_offices(obj):
   return offices_by_note.values()
 
 def get_extra(obj):
-  extra = obj.get('extra', {})
+  extra = obj.get('extras', {})
   for link in obj['links']:
     domain = '.'.join(urlsplit(link['url']).netloc.split('.')[-2:])
     if domain == 'facebook.com':
