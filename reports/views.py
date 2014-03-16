@@ -104,7 +104,7 @@ def represent(request, module_name):
         geographic_code = getattr(obj, 'geographic_code', None)
 
         # If the person is associated to multiple boundaries.
-        if re.search(r'\AWards \d(?:(?:,| & | and )\d)+\Z', person['post_id']):
+        if re.search(r'\AWards \d(?:(?:,| & | and )\d+)+\Z', person['post_id']):
           for district_id in re.findall(r'\d+', person['post_id']):
             representative = representative.copy()
             representative['district_id'] = district_id
