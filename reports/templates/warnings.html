@@ -2,7 +2,7 @@
 {% block title %}Canadian Legislative Scrapers - Warnings{% endblock %}
 {% block content %}
 {% for report in reports %}
-{% if report.warnings %}
+{% if report.warnings and not report.exception %}
 <div class="panel-group" id="{{ report.id }}">
   <div class="panel panel-default">
     <div class="panel-heading">
