@@ -82,12 +82,16 @@ def represent(request, module_name):
     if jurisdiction_id:  # We've found the module.
       representatives = []
 
+      # Exclude party memberships.
       for membership in db.memberships.find({'jurisdiction_id': jurisdiction_id, 'role': {'$ne': 'member'}}):
         organization = db.organizations.find_one({'_id': membership['organization_id']})
         person = db.people.find_one({'_id': membership['person_id']})
 
-        extra = get_extra(person)
-        party_name = extra.pop('party', None)
+        party_membership = db.memberships.find_one({'jurisdiction_id': jurisdiction_id, 'role': 'member', 'person_id': membership['person_id']})
+        if party_membership:
+          party_name = db.organizations.find_one({'_id': party_membership['organization_id']})['name']
+        else:
+          party_name = None
 
         # @see http://represent.opennorth.ca/api/#fields
         representative = {
@@ -100,7 +104,7 @@ def represent(request, module_name):
           'personal_url':   get_personal_url(person),
           'gender':         person['gender'],
           'offices':        json.dumps(get_offices(membership)),
-          'extra':          json.dumps(extra),
+          'extra':          json.dumps(get_extra(person)),
         }
 
         if len(person['sources']) > 1:
