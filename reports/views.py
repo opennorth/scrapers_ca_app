@@ -124,8 +124,8 @@ def represent(request, module_name):
           if re.search(r'\A\d+\Z', person['post_id']):
             representative['district_id'] = person['post_id']
           # If the post_id is a boundary URL.
-          elif re.search(r'\A/boundaries/', person['post_id']):
-            representative['boundary_url'] = person['post_id']
+          elif person.get('extras', {}).get('sgc'):
+            representative['boundary_url'] = '/boundaries/census-subdivisions/%d/' % person['extras']['sgc']
           # If the post_id is a census subdivision.
           elif person['post_id'] == getattr(obj, 'division_name', None) and len(str(geographic_code)) == 7:
             representative['district_name'] = person['post_id']
