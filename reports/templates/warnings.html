@@ -8,11 +8,11 @@
     <div class="panel-heading">
       <h4 class="panel-title">
         <a data-toggle="collapse" data-parent="#{{ report.id }}" href="#{{ report.id }}-panel">
-          {{ report.module }}
+          {{ report.module }} ({{ report.warnings.split('\n') | length }})
         </a>
       </h4>
     </div>
-    <div id="{{ report.id }}-panel" class="panel-collapse collapse in">
+    <div id="{{ report.id }}-panel" class="panel-collapse collapse{% if not report.module.endswith('_municipalities') %} in{% endif %}">
       <div class="panel-body">
         <pre>{{ report.warnings }}</pre>
       </div>
