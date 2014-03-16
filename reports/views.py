@@ -60,6 +60,11 @@ def home(request):
     'icons': icons,
   }))
 
+def warnings(request):
+  return render_to_response('warnings.html', RequestContext(request, {
+    'reports': Report.objects.order_by('module').all(),
+  }))
+
 def report(request, module_name):
   return HttpResponse(json.dumps(Report.objects.get(module=module_name).report), content_type='application/json')
 
