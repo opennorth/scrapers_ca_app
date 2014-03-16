@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Canadian Legislative Scrapers - Warnings{% endblock %}
+{% block content %}
+{% for report in reports %}
+{% if report.warnings %}
+<div class="panel-group" id="{{ report.id }}">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#{{ report.id }}" href="#{{ report.id }}-panel">
+          {{ report.module }}
+        </a>
+      </h4>
+    </div>
+    <div id="{{ report.id }}-panel" class="panel-collapse collapse in">
+      <div class="panel-body">
+        <pre>{{ report.warnings }}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %}
