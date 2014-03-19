@@ -93,6 +93,12 @@ def represent(request, module_name):
         else:
           party_name = None
 
+        gender = None
+        if person['gender'] == 'male':
+          gender = 'M'
+        elif person['gender'] == 'female':
+          gender = 'F'
+
         # @see http://represent.opennorth.ca/api/#fields
         representative = {
           'name':           person['name'],
@@ -102,7 +108,7 @@ def represent(request, module_name):
           'email':          next((contact_detail['value'] for contact_detail in membership['contact_details'] if contact_detail['type'] == 'email'), None),
           'photo_url':      person['image'],
           'personal_url':   get_personal_url(person),
-          'gender':         person['gender'],
+          'gender':         gender,
           'offices':        json.dumps(get_offices(membership)),
           'extra':          json.dumps(get_extra(person)),
         }
