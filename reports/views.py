@@ -131,6 +131,7 @@ def represent(request, module_name):
             representative['district_id'] = person['post_id']
           # If the person has a boundary URL.
           elif person.get('extras', {}).get('boundary_url'):
+            representative['district_name'] = person['post_id']
             representative['boundary_url'] = person['extras']['boundary_url']
           # If the post_id is a census subdivision.
           elif person['post_id'] == getattr(obj, 'division_name', None) and len(str(geographic_code)) == 7:
