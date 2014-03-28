@@ -28,7 +28,10 @@ def home(request):
 
   names = {}
   for obj in data['objects']:
-    names[obj['name']] = obj['data_url']
+    if obj['name'] == 'House of Commons':
+      names['Parliament of Canada'] = obj['data_url']
+    else:
+      names[obj['name']] = obj['data_url']
 
   icons = {}
   for module_name in os.listdir('scrapers'):
