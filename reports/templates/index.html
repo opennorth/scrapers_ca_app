@@ -64,7 +64,7 @@
         </td>
         <td style="white-space: nowrap">
           {% if report.success_at %}
-          <abbr class="timeago" title="{{ report.updated_at.strftime("%Y-%m-%dT%H:%M:%SZ") }}">
+          <abbr class="timeago" title="{{ report.success_at.strftime("%Y-%m-%dT%H:%M:%SZ") }}">
             {{ report.success_at.strftime('%Y-%m-%d %H:%M:%S') }}
           </abbr>
           {% endif %}
