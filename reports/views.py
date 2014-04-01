@@ -86,7 +86,14 @@ def represent(request, module_name):
       representatives = []
 
       # Exclude party memberships.
-      for membership in db.memberships.find({'jurisdiction_id': jurisdiction_id, 'role': {'$ne': 'member'}}):
+      criteria = {'jurisdiction_id': jurisdiction_id}
+
+      if module_name.endswith('_candidates'):
+        criteria['role'] = 'candidate'
+      else:
+        criteria['role'] = {'$nin': ['member', 'candidate']}
+
+      for membership in db.memberships.find(criteria):
         organization = db.organizations.find_one({'_id': membership['organization_id']})
         person = db.people.find_one({'_id': membership['person_id']})
 
