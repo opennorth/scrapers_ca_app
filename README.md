@@ -34,11 +34,11 @@ Drop the MongoDB database:
 
 Run all the scrapers:
 
-    python cron.py
+    python manage.py update
 
 Or run specific scrapers:
 
-    python cron.py ca_ab_edmonton ca_ab_grande_prairie_county_no_1
+    python manage.py update ca_ab_edmonton ca_ab_grande_prairie_county_no_1
 
 Install the foreman gem:
 
@@ -53,7 +53,9 @@ Start the web app:
 Add configuration variables (replace `YOUR-SECRET-KEY` and `DATABASE`):
 
     heroku config:set PRODUCTION=1
-    heroku config:set DJANGO_SECRET_KEY=YOUR-SECRET-KEY
+    heroku config:set AWS_ACCESS_KEY_ID=YOUR-AWS-ACCESS-KEY-ID
+    heroku config:set AWS_SECRET_ACCESS_KEY=YOUR-AWS-SECRET-ACCESS-KEY
+    heroku config:set DJANGO_SECRET_KEY=YOUR-DJANGO-SECRET-KEY
     heroku config:set DATABASE_URL=`heroku config:get DATABASE`
 
 You can [generate a secret key in Python](https://github.com/django/django/blob/master/django/core/management/commands/startproject.py):
@@ -68,7 +70,7 @@ Setup the database (replace `DATABASE`):
     heroku pg:reset DATABASE
     heroku run python manage.py syncdb --noinput
 
-Add `python cron.py` to the [Heroku Scheduler](https://scheduler.heroku.com/dashboard).
+Add `python manage.py update` to the [Heroku Scheduler](https://scheduler.heroku.com/dashboard).
 
 ## Troubleshooting
 
