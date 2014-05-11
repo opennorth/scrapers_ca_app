@@ -73,7 +73,6 @@ def represent(request, module_name):
   _configure_db(url, parsed.port, parsed.path[1:])
 
   module = importlib.import_module(module_name)
-
   for obj in module.__dict__.values():
     jurisdiction_id = getattr(obj, 'jurisdiction_id', None)
     if jurisdiction_id:  # We've found the module.
