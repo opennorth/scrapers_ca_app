@@ -50,6 +50,8 @@ Start the web app:
 
 ## Deployment
 
+    heroku addons:add mongohq
+
 Add configuration variables (replace `YOUR-SECRET-KEY` and `DATABASE`):
 
     heroku config:set PRODUCTION=1

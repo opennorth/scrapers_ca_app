@@ -1,11 +1,9 @@
 # @see https://devcenter.heroku.com/articles/getting-started-with-django#requirements-txt
-Django==1.6
+Django==1.6 # -e git+git://github.com/django/django.git@1.7b2#egg=django
 dj-database-url==0.3.0
 dj-static==0.0.5
 gunicorn==18.0
 psycopg2==2.5.2
-static==0.4
-wsgiref==0.1.2
 
 # Miscellaneous
 django-appconf==0.6
@@ -15,9 +13,5 @@ logutils==0.3.3
 
 # Models
 jsonfield==0.9.20
-
-# Views
-Coffin==0.3.8
-Jinja2==2.7.2
 
 -r scrapers/requirements.txt

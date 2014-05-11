@@ -6,7 +6,7 @@ import re
 import sys
 from urlparse import urlsplit
 
-from coffin.shortcuts import render_to_response
+from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext
 from pupa.core import _configure_db, db
@@ -33,34 +33,28 @@ def home(request):
     else:
       names[obj['name']] = obj['data_url']
 
-  icons = {}
-  for module_name in os.listdir('scrapers'):
-    if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', 'scrape_cache', 'scraped_data'):
-      module = importlib.import_module(module_name)
-      for obj in module.__dict__.values():
-        jurisdiction_id = getattr(obj, 'jurisdiction_id', None)
-        if jurisdiction_id:  # We've found the module.
-          name = getattr(obj, 'name', None)
-          if name:
-            try:
-              if name in names:
-                obj = Report.objects.get(module=module_name)
-                if not obj.exception:
-                  if names[name].startswith('http://scrapers.herokuapp.com/represent/'):
-                    icons[obj.id] = 'noop'
-                  else:
-                    icons[obj.id] = 'replace'
+  reports = Report.objects.order_by('module').all()
+  for report in reports:
+    if not report.exception:
+      try:
+        module = importlib.import_module(report.module)
+        for obj in module.__dict__.values():
+          jurisdiction_id = getattr(obj, 'jurisdiction_id', None)
+          if jurisdiction_id:  # We've found the module.
+            name = getattr(obj, 'name', None)
+            if name in names:
+              if names[name].startswith('http://scrapers.herokuapp.com/represent/'):
+                report.icon = 'noop'
               else:
-                obj = Report.objects.get(module=module_name)
-                if not obj.exception:
-                  icons[obj.id] = 'add'
-            except Report.DoesNotExist:
-              pass
+                report.icon = 'replace'
+            else:
+              report.icon = 'add'
+      except ImportError:
+        report.delete()  # delete reports for old modules
 
   return render_to_response('index.html', RequestContext(request, {
     'exceptions': Report.objects.exclude(exception='').count(),
-    'reports': Report.objects.order_by('module').all(),
-    'icons': icons,
+    'reports': reports,
   }))
 
 def warnings(request):
@@ -171,7 +165,7 @@ def get_offices(obj):
       note = contact_detail['note']
       offices_by_note[note]['type'] = note
       offices_by_note[note][CONTACT_DETAIL_TYPE_MAP[contact_detail['type']]] = contact_detail['value']
-  return offices_by_note.values()
+  return list(offices_by_note.values())
 
 def get_extra(obj):
   extra = obj.get('extras', {})

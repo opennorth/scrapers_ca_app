@@ -12,6 +12,14 @@ class Report(models.Model):
   success_at = models.DateTimeField(null=True)
 
   @property
+  def icon(self):
+      return self._icon
+
+  @icon.setter
+  def icon(self, value):
+      self._icon = value
+
+  @property
   def exception_header(self):
     return self.exception.strip().split('\n')[-1]
 
