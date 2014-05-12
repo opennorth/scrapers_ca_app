@@ -1,6 +1,3 @@
-from django.core.management.base import BaseCommand
-from reports.models import Report
-
 import argparse
 from datetime import datetime
 import os
@@ -8,6 +5,10 @@ import importlib
 import logging
 import sys
 import traceback
+
+from django.core.management.base import BaseCommand
+
+from reports.models import Report
 
 class Command(BaseCommand):
   args = '<module module ...>'
