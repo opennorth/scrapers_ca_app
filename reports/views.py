@@ -1,4 +1,3 @@
-from collections import defaultdict
 import importlib
 import json
 import os
@@ -13,13 +12,7 @@ from pupa.core import _configure_db, db
 import requests
 
 from reports.models import Report
-
-CONTACT_DETAIL_TYPE_MAP = {
-  'address': 'postal',
-  'cell': 'alt',
-  'fax': 'fax',
-  'voice': 'tel',
-}
+from reports.utils import get_offices, get_personal_url
 
 def home(request):
   sys.path.append(os.path.abspath('scrapers'))
@@ -96,11 +89,12 @@ def represent(request, module_name):
         else:
           party_name = None
 
-        gender = None
         if person['gender'] == 'male':
           gender = 'M'
         elif person['gender'] == 'female':
           gender = 'F'
+        else:
+          gender = None
 
         # @see http://represent.opennorth.ca/api/#fields
         representative = {
@@ -119,8 +113,6 @@ def represent(request, module_name):
         if len(person['sources']) > 1:
           representative['url'] = person['sources'][-1]['url']
 
-        geographic_code = getattr(obj, 'geographic_code', None)
-
         # If the person is associated to multiple boundaries.
         if re.search(r'\AWards \d(?:(?:,| & | and )\d+)+\Z', person['post_id']):
           for district_id in re.findall(r'\d+', person['post_id']):
@@ -129,6 +121,7 @@ def represent(request, module_name):
             representative['district_name'] = 'Ward %s' % district_id
             representatives.append(representative)
         else:
+          geographic_code = getattr(obj, 'geographic_code', None)
           # If the post_id is numeric.
           if re.search(r'\A\d+\Z', person['post_id']):
             representative['district_id'] = person['post_id']
@@ -149,22 +142,6 @@ def represent(request, module_name):
           representatives.append(representative)
 
       return HttpResponse(json.dumps(representatives), content_type='application/json')
-
-def get_personal_url(obj):
-  for link in obj['links']:
-    domain = '.'.join(urlsplit(link['url']).netloc.split('.')[-2:])
-    if domain not in ('facebook.com', 'twitter.com', 'youtube.com'):
-      return link['url']
-  return None
-
-def get_offices(obj):
-  offices_by_note = defaultdict(dict)
-  for contact_detail in obj['contact_details']:
-    if contact_detail['type'] != 'email' and contact_detail['note']:
-      note = contact_detail['note']
-      offices_by_note[note]['type'] = note
-      offices_by_note[note][CONTACT_DETAIL_TYPE_MAP[contact_detail['type']]] = contact_detail['value']
-  return list(offices_by_note.values())
 
 def get_extra(obj):
   extra = obj.get('extras', {})
