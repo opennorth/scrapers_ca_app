@@ -20,8 +20,16 @@ class Report(models.Model):
       self._icon = value
 
   @property
+  def warnings_count(self):
+    return len(self.warnings.split('\n'))
+
+  @property
   def exception_header(self):
     return self.exception.strip().split('\n')[-1]
+
+  @property
+  def aggregation(self):
+    return self.module.endswith('_municipalities')
 
   def __unicode__(self):
     return self.module
