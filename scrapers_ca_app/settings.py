@@ -17,7 +17,7 @@ DEBUG = not os.getenv('PRODUCTION', False)
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('James McKinney', 'james@opennorth.ca'),
 )
 
 MANAGERS = ADMINS
