@@ -100,7 +100,6 @@ def represent(request, module_name):
         representative = {
           'name':           person['name'],
           'elected_office': membership['role'],
-          'source_url':     person['sources'][0]['url'],
           'party_name':     party_name,
           'email':          next((contact_detail['value'] for contact_detail in membership['contact_details'] if contact_detail['type'] == 'email'), None),
           'photo_url':      person['image'],
@@ -109,6 +108,10 @@ def represent(request, module_name):
           'offices':        json.dumps(get_offices(membership)),
           'extra':          json.dumps(get_extra(person)),
         }
+
+        # @see https://github.com/opennorth/represent-canada/issues/81
+        if len(person['sources'][0]['url']) <= 200:
+          representative['source_url'] = person['sources'][0]['url']
 
         if len(person['sources']) > 1:
           representative['url'] = person['sources'][-1]['url']
