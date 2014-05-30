@@ -4,7 +4,7 @@
 {% for report in reports %}
 {% if report.warnings and not report.exception %}
 <div class="panel-group" id="{{ report.id }}">
-  <div class="panel panel-default">
+  <div class="panel panel-default" id="{{ report.module }}">
     <div class="panel-heading">
       <h4 class="panel-title">
         <a data-toggle="collapse" data-parent="#{{ report.id }}" href="#{{ report.id }}-panel">
