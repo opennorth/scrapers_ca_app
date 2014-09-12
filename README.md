@@ -1,5 +1,7 @@
 # Canadian Legislative Scrapers
 
+[![Dependency Status](https://gemnasium.com/opennorth/scrapers_ca_app.png)](https://gemnasium.com/opennorth/scrapers_ca_app)
+
 This Django project runs the [Canadian legislative scrapers](http://github.com/opencivicdata/scrapers-ca), displays the status of each scraper, and returns the scraped data as JSON.
 
 ## Development
