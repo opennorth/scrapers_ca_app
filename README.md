@@ -54,13 +54,13 @@ Start the web app:
 
     heroku addons:add mongohq
 
-Add configuration variables (replace `YOUR-SECRET-KEY` and `DATABASE`):
+Add configuration variables (replace `REPLACE`):
 
     heroku config:set PRODUCTION=1
-    heroku config:set AWS_ACCESS_KEY_ID=YOUR-AWS-ACCESS-KEY-ID
-    heroku config:set AWS_SECRET_ACCESS_KEY=YOUR-AWS-SECRET-ACCESS-KEY
-    heroku config:set DJANGO_SECRET_KEY=YOUR-DJANGO-SECRET-KEY
-    heroku config:set DATABASE_URL=`heroku config:get DATABASE`
+    heroku config:set AWS_ACCESS_KEY_ID=REPLACE
+    heroku config:set AWS_SECRET_ACCESS_KEY=REPLACE
+    heroku config:set DJANGO_SECRET_KEY=REPLACE
+    heroku config:set DATABASE_URL=`heroku config:get REPLACE`
 
 You can [generate a secret key in Python](https://github.com/django/django/blob/master/django/core/management/commands/startproject.py):
 
