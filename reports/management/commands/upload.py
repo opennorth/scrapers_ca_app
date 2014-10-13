@@ -106,6 +106,9 @@ class Command(BaseCommand):
       'URL',
       'Photo URL',
       'Personal URL',
+      'Facebook',
+      'Twitter',
+      'YouTube',
     ]
     office_headers = [
       'Office type',
@@ -140,6 +143,18 @@ class Command(BaseCommand):
               else:
                 party_name = None
 
+              facebook = None
+              twitter = None
+              youtube = None
+              for link in obj['links']:
+                domain = '.'.join(urlsplit(link['url']).netloc.split('.')[-2:])
+                if domain == 'facebook.com':
+                  facebook = link['url']
+                elif domain == 'twitter.com':
+                  twitter = link['url']
+                elif domain == 'youtube.com':
+                  youtube = link['url']
+
               if person['gender'] == 'male':
                 gender = 'M'
               elif person['gender'] == 'female':
@@ -165,6 +180,9 @@ class Command(BaseCommand):
                 person['sources'][-1]['url'] if len(person['sources']) > 1 else None, # URL
                 person['image'], # Photo URL
                 get_personal_url(person), # Personal URL
+                facebook, # Facebook
+                twitter, # Twitter
+                youtube, # YouTube
               ]
 
               offices = get_offices(membership)
