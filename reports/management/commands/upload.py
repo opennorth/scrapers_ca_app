@@ -146,7 +146,7 @@ class Command(BaseCommand):
               facebook = None
               twitter = None
               youtube = None
-              for link in obj.get('links', []):
+              for link in person['links']:
                 domain = '.'.join(urlsplit(link['url']).netloc.split('.')[-2:])
                 if domain == 'facebook.com':
                   facebook = link['url']
