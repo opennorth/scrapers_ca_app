@@ -9,7 +9,7 @@ import os
 import re
 from StringIO import StringIO
 import sys
-from urlparse import urlsplit
+from six.moves.urllib.parse import urlsplit
 
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key

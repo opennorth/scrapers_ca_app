@@ -1,5 +1,5 @@
 import os
-from urlparse import urlsplit
+from six.moves.urllib.parse import urlsplit
 
 from django.core.management.base import BaseCommand
 from pupa.core import _configure_db, db

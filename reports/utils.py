@@ -1,5 +1,5 @@
 from collections import defaultdict
-from urlparse import urlsplit
+from six.moves.urllib.parse import urlsplit
 
 CONTACT_DETAIL_TYPE_MAP = {
   'address': 'postal',

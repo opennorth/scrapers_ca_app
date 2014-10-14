@@ -3,7 +3,7 @@ import json
 import os
 import re
 import sys
-from urlparse import urlsplit
+from six.moves.urllib.parse import urlsplit
 
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
