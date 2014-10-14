@@ -17,7 +17,7 @@ from reports.utils import get_offices, get_personal_url
 def home(request):
   sys.path.append(os.path.abspath('scrapers'))
 
-  data = json.loads(requests.get('http://represent.opennorth.ca/representative-sets/?limit=0').content)
+  data = json.loads(requests.get('http://represent.opennorth.ca/representative-sets/?limit=0').text)
 
   names = {}
   for obj in data['objects']:
