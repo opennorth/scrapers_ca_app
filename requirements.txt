@@ -1,18 +1,11 @@
 # @see https://devcenter.heroku.com/articles/getting-started-with-django#requirements-txt
-Django==1.7
-dj-database-url==0.3.0
 dj-static==0.0.6
 gunicorn==19.0.0
-psycopg2==2.5.3
 
 # Miscellaneous
 django-appconf==0.6
 
 # Management
-boto==2.33.0
 logutils==0.3.3
-
-# Models
-jsonfield==0.9.20
 
 -r scrapers/requirements.txt

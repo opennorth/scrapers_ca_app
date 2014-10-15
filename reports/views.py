@@ -8,7 +8,6 @@ from six.moves.urllib.parse import urlsplit
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext
-from pupa.core import _configure_db, db
 import requests
 
 from reports.models import Report
@@ -32,8 +31,8 @@ def home(request):
       try:
         module = importlib.import_module(report.module)
         for obj in module.__dict__.values():
-          jurisdiction_id = getattr(obj, 'jurisdiction_id', None)
-          if jurisdiction_id:  # We've found the module.
+          division_id = getattr(obj, 'division_id', None)
+          if division_id:  # We've found the module.
             name = getattr(obj, 'name', None)
             if name in names:
               if names[name].startswith('http://scrapers.herokuapp.com/represent/'):
@@ -61,14 +60,10 @@ def report(request, module_name):
 def represent(request, module_name):
   sys.path.append(os.path.abspath('scrapers'))
 
-  url = os.getenv('MONGOHQ_URL', 'mongodb://localhost:27017/pupa')
-  parsed = urlsplit(url)
-  _configure_db(url, parsed.port, parsed.path[1:])
-
   module = importlib.import_module(module_name)
   for obj in module.__dict__.values():
-    jurisdiction_id = getattr(obj, 'jurisdiction_id', None)
-    if jurisdiction_id:  # We've found the module.
+    division_id = getattr(obj, 'division_id', None)
+    if division_id:  # We've found the module.
       representatives = []
 
       # Exclude party memberships.

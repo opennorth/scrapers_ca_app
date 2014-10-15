@@ -6,7 +6,7 @@ This Django project runs the [Canadian legislative scrapers](http://github.com/o
 
 ## Development
 
-Follow the instructions in the [Python Quick Start Guide](https://github.com/opennorth/opennorth.ca/wiki/Python-Quick-Start%3A-OS-X) to install Homebrew, Git, MongoDB, Python and virtualenv.
+Follow the instructions in the [Python Quick Start Guide](https://github.com/opennorth/opennorth.ca/wiki/Python-Quick-Start%3A-OS-X) to install Homebrew, Git, PostgreSQL, Python and virtualenv.
 
     mkvirtualenv scrapers_ca_app
     git clone git@github.com:opennorth/scrapers_ca_app.git
@@ -30,10 +30,6 @@ Create a database (`dropdb pupa` if it already exists):
     createdb pupa
     python manage.py syncdb --noinput
 
-Drop the MongoDB database:
-
-    mongo pupa --eval 'db.dropDatabase()'
-
 Run all the scrapers:
 
     python manage.py update
@@ -51,8 +47,6 @@ Start the web app:
     foreman start
 
 ## Deployment
-
-    heroku addons:add mongohq
 
 Add configuration variables (replace `REPLACE`):
 
@@ -84,10 +78,9 @@ If, while developing your scraper, you create duplicates, you may need to:
 
 ## Troubleshooting
 
-* Make sure PostgreSQL and MongoDB are running. If you use Homebrew, you can find instructions on how to run each with:
+* Make sure PostgreSQL is running. If you use Homebrew, you can find instructions with:
 
         brew info postgres
-        brew info mongo
 
 ## Bugs? Questions?
 

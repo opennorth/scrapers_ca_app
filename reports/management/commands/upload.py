@@ -15,7 +15,6 @@ from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
-from pupa.core import _configure_db, db
 
 from reports.models import Report
 from reports.utils import get_offices, get_personal_url
@@ -74,10 +73,6 @@ class Command(BaseCommand):
 
     sys.path.append(os.path.abspath('scrapers'))
 
-    url = os.getenv('MONGOHQ_URL', 'mongodb://localhost:27017/pupa')
-    parsed = urlsplit(url)
-    _configure_db(url, parsed.port, parsed.path[1:])
-
     bucket = S3Connection().get_bucket('represent.opennorth.ca')
 
     names = {
@@ -125,8 +120,8 @@ class Command(BaseCommand):
       try:
         module = importlib.import_module(report.module)
         for obj in module.__dict__.values():
-          jurisdiction_id = getattr(obj, 'jurisdiction_id', None)
-          if jurisdiction_id:  # We've found the module.
+          division_id = getattr(obj, 'division_id', None)
+          if division_id:  # We've found the module.
             name = getattr(obj, 'name', None)
 
             rows = []
