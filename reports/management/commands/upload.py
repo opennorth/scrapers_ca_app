@@ -2,53 +2,22 @@
 from __future__ import unicode_literals
 
 import codecs
-import cStringIO
 import csv
 import importlib
 import os
 import re
 import sys
-from StringIO import StringIO
 
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
 from opencivicdata.models import Membership
+from six import StringIO
 from six.moves.urllib.parse import urlsplit
 
 from reports.models import Report
 from reports.utils import get_offices, get_personal_url
-
-
-class UnicodeWriter:
-    """
-    A CSV writer which will write rows to CSV file "f",
-    which is encoded in the given encoding.
-    """
-
-    def __init__(self, f, dialect=csv.excel, encoding="utf-8", **kwds):
-        # Redirect output to a queue
-        self.queue = cStringIO.StringIO()
-        self.writer = csv.writer(self.queue, dialect=dialect, **kwds)
-        self.stream = f
-        self.encoder = codecs.getincrementalencoder(encoding)()
-
-    def writerow(self, row):
-        self.writer.writerow([s.encode("utf-8") if s else '' for s in row])
-        # Fetch UTF-8 output from the queue ...
-        data = self.queue.getvalue()
-        data = data.decode("utf-8")
-        # ... and reencode it into the target encoding
-        data = self.encoder.encode(data)
-        # write to the target stream
-        self.stream.write(data)
-        # empty queue
-        self.queue.truncate(0)
-
-    def writerows(self, rows):
-        for row in rows:
-            self.writerow(row)
 
 
 class Command(BaseCommand):
@@ -199,10 +168,10 @@ class Command(BaseCommand):
               slug = slugify(name)
 
             io = StringIO()
-            body = UnicodeWriter(io, encoding='windows-1252')
+            body = csv.writer(io)
             body.writerow(headers)
             body.writerows(rows)
-            save('csv/%s.csv' % slug, io.getvalue())
+            save('csv/%s.csv' % slug, codecs.encode(io.getvalue(), 'windows-1252'))
 
             if offices_count > max_offices_count:
               max_offices_count = offices_count
@@ -218,7 +187,7 @@ class Command(BaseCommand):
       headers += office_headers
 
     io = StringIO()
-    body = UnicodeWriter(io, encoding='windows-1252')
+    body = csv.writer(io)
     body.writerow(headers)
     body.writerows(all_rows)
-    save('csv/complete.csv', io.getvalue())
+    save('csv/complete.csv', codecs.encode(io.getvalue(), 'windows-1252'))
