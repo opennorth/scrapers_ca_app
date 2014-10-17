@@ -72,7 +72,7 @@ def represent(request, module_name):
             representatives = []
 
             # Exclude party memberships.
-            queryset = Membership.objects.filter(organization__jurisdiction_id=jurisdiction_id)
+            queryset = Membership.objects.filter(organization__jurisdiction_id=obj.jurisdiction_id)
 
             if module_name.endswith('_candidates'):
                 queryset.filter(role='candidate')
@@ -123,7 +123,7 @@ def represent(request, module_name):
                         representative['district_name'] = 'Ward %s' % district_id
                         representatives.append(representative)
                 else:
-                    if re.search('\Aocd-division/country:ca/csd:(\d{7})\Z', division_id)
+                    if re.search('\Aocd-division/country:ca/csd:(\d{7})\Z', division_id):
                         geographic_code = division_id[-7:]
                     else:
                         geographic_code = None
