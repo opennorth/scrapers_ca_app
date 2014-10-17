@@ -7,14 +7,15 @@ import importlib
 import os
 import re
 import sys
-from six.moves.urllib.parse import urlsplit
 
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
 from pupa.core import _configure_db, db
-from six import cStringIO, StringIO
+from six import StringIO
+from six.moves import cStringIO
+from six.moves.urllib.parse import urlsplit
 
 from reports.models import Report
 from reports.utils import get_offices, get_personal_url
