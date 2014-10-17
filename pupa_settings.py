@@ -15,10 +15,10 @@ LOGGING = {
     },
     'loggers': {
         '': {
-            'handlers': ['default'], 'level': 'WARN', 'propagate': True # DEBUG
+            'handlers': ['default'], 'level': 'WARN', 'propagate': True  # DEBUG
         },
         'scrapelib': {
-            'handlers': ['default'], 'level': 'WARN', 'propagate': False # INFO
+            'handlers': ['default'], 'level': 'WARN', 'propagate': False  # INFO
         },
         'requests': {
             'handlers': ['default'], 'level': 'WARN', 'propagate': False
