@@ -2,12 +2,10 @@
 from __future__ import unicode_literals
 
 import codecs
-import cStringIO
 import csv
 import importlib
 import os
 import re
-from StringIO import StringIO
 import sys
 from six.moves.urllib.parse import urlsplit
 
@@ -16,6 +14,7 @@ from boto.s3.key import Key
 from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
 from pupa.core import _configure_db, db
+from six import cStringIO, StringIO
 
 from reports.models import Report
 from reports.utils import get_offices, get_personal_url
@@ -41,7 +40,7 @@ class UnicodeWriter:
 
     def __init__(self, f, dialect=csv.excel, encoding="utf-8", **kwds):
         # Redirect output to a queue
-        self.queue = cStringIO.StringIO()
+        self.queue = cStringIO()
         self.writer = csv.writer(self.queue, dialect=dialect, **kwds)
         self.stream = f
         self.encoder = codecs.getincrementalencoder(encoding)()
