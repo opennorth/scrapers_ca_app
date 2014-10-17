@@ -3,12 +3,21 @@ from datetime import datetime
 import os
 import importlib
 import logging
+import signal
 import sys
 import traceback
 
 from django.core.management.base import BaseCommand
 
+import pupa_settings
 from reports.models import Report
+
+pid = os.getpid()
+
+def signal_handler(signalnum, handler):
+  os.kill(pid, signal.SIGKILL)
+
+signal.signal(signal.SIGINT, signal_handler)
 
 class Command(BaseCommand):
   args = '<module module ...>'
@@ -23,16 +32,17 @@ class Command(BaseCommand):
     subparsers = parser.add_subparsers(dest='subcommand')
     subcommand = importlib.import_module('pupa.cli.commands.update').Command(subparsers)
 
+    logging.config.dictConfig(pupa_settings.LOGGING)
     handler = logging.getLogger().handlers[0]
     module_names = args or os.listdir('scrapers')
 
     # @see http://pythonhosted.org//logutils/testing.html
     # @see http://plumberjack.blogspot.ca/2010/09/unit-testing-and-logging.html
     for module_name in module_names:
-      if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', 'scrape_cache', 'scraped_data', '__pycache__'):
+      if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', '_cache', '_data', '__pycache__'):
         obj, _ = Report.objects.get_or_create(module=module_name)
         try:
-          obj.report = subcommand.handle(parser.parse_args(['update', '--nonstrict', '--people', module_name]))
+          obj.report = subcommand.handle(*parser.parse_known_args(['update', '--fastmode', module_name]))
           obj.exception = ''
           obj.success_at = datetime.now()
         except:

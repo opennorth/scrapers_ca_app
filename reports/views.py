@@ -3,12 +3,13 @@ import json
 import os
 import re
 import sys
-from six.moves.urllib.parse import urlsplit
 
+import requests
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext
-import requests
+from opencivicdata.models import Membership
+from six.moves.urllib.parse import urlsplit
 
 from reports.models import Report
 from reports.utils import get_offices, get_personal_url
@@ -67,37 +68,35 @@ def represent(request, module_name):
       representatives = []
 
       # Exclude party memberships.
-      criteria = {'jurisdiction_id': jurisdiction_id}
+      queryset = Membership.objects.filter(organization__jurisdiction_id=jurisdiction_id)
 
       if module_name.endswith('_candidates'):
-        criteria['role'] = 'candidate'
+        queryset.filter(role='candidate')
       else:
-        criteria['role'] = {'$nin': ['member', 'candidate']}
+        queryset.exclude(role__in=('member', 'candidate'))
 
-      for membership in db.memberships.find(criteria):
-        organization = db.organizations.find_one({'_id': membership['organization_id']})
-        person = db.people.find_one({'_id': membership['person_id']})
+      for membership in queryset.prefetch_related('contact_details', 'person', 'person__links', 'person__sources'):
+        person = membership.person
 
-        party_membership = db.memberships.find_one({'jurisdiction_id': jurisdiction_id, 'role': 'member', 'person_id': membership['person_id']})
-        if party_membership:
-          party_name = db.organizations.find_one({'_id': party_membership['organization_id']})['name']
-        else:
+        try:
+          party_name = Membership.objects.get(organization__classification='party', role='member', person=person).organization.name
+        except Membership.DoesNotExist:
           party_name = None
 
-        if person['gender'] == 'male':
+        if person.gender == 'male':
           gender = 'M'
-        elif person['gender'] == 'female':
+        elif person.gender == 'female':
           gender = 'F'
         else:
           gender = None
 
         # @see http://represent.opennorth.ca/api/#fields
         representative = {
-          'name':           person['name'],
-          'elected_office': membership['role'],
+          'name':           person.name,
+          'elected_office': membership.role,
           'party_name':     party_name,
-          'email':          next((contact_detail['value'] for contact_detail in membership['contact_details'] if contact_detail['type'] == 'email'), None),
-          'photo_url':      person['image'],
+          'email':          next((contact_detail.value for contact_detail in membership.contact_details.all() if contact_detail.type == 'email'), None),
+          'photo_url':      person.image,
           'personal_url':   get_personal_url(person),
           'gender':         gender,
           'offices':        json.dumps(get_offices(membership)),
@@ -105,32 +104,36 @@ def represent(request, module_name):
         }
 
         # @see https://github.com/opennorth/represent-canada/issues/81
-        if len(person['sources'][0]['url']) <= 200:
-          representative['source_url'] = person['sources'][0]['url']
+        sources = person.sources.all()
+        if len(sources[0].url) <= 200:
+          representative['source_url'] = sources[0].url
 
-        if len(person['sources']) > 1:
-          representative['url'] = person['sources'][-1]['url']
+        if len(sources) > 1:
+          representative['url'] = sources[-1].url
 
         # If the person is associated to multiple boundaries.
-        if re.search(r'\AWards \d(?:(?:,| & | and )\d+)+\Z', person['post_id']):
+        if re.search(r'\AWards \d(?:(?:,| & | and )\d+)+\Z', person['post_id']): # @todo 0.4
           for district_id in re.findall(r'\d+', person['post_id']):
             representative = representative.copy()
             representative['district_id'] = district_id
             representative['district_name'] = 'Ward %s' % district_id
             representatives.append(representative)
         else:
-          geographic_code = getattr(obj, 'geographic_code', None)
+          if re.search('\Aocd-division/country:ca/csd:(\d{7})\Z', division_id)
+            geographic_code = division_id[-7:]
+          else:
+            geographic_code = None
           # If the post_id is numeric.
           if re.search(r'\A\d+\Z', person['post_id']):
             representative['district_id'] = person['post_id']
           # If the person has a boundary URL.
-          elif person.get('extras', {}).get('boundary_url'):
+          elif membership.extras.get('boundary_url'):
             representative['district_name'] = person['post_id']
-            representative['boundary_url'] = person['extras']['boundary_url']
+            representative['boundary_url'] = membership['extras']['boundary_url']
           # If the post_id is a census subdivision.
-          elif person['post_id'] == getattr(obj, 'division_name', None) and len(str(geographic_code)) == 7:
+          elif person['post_id'] == obj.division_name and geographic_code:
             representative['district_name'] = person['post_id']
-            representative['boundary_url'] = '/boundaries/census-subdivisions/%d/' % geographic_code
+            representative['boundary_url'] = '/boundaries/census-subdivisions/%s/' % geographic_code
           else:
             representative['district_name'] = person['post_id']
             district_id = re.search(r'\A(?:District|Division|Ward) (\d+)\Z', person['post_id'])
@@ -143,12 +146,12 @@ def represent(request, module_name):
 
 def get_extra(obj):
   extra = obj.get('extras', {})
-  for link in obj['links']:
-    domain = '.'.join(urlsplit(link['url']).netloc.split('.')[-2:])
+  for link in obj.links.all():
+    domain = '.'.join(urlsplit(link.url).netloc.split('.')[-2:])
     if domain == 'facebook.com':
-      extra['facebook'] = link['url']
+      extra['facebook'] = link.url
     elif domain == 'twitter.com':
-      extra['twitter'] = link['url']
+      extra['twitter'] = link.url
     elif domain == 'youtube.com':
-      extra['youtube'] = link['url']
+      extra['youtube'] = link.url
   return extra

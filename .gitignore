@@ -1,4 +1,4 @@
 *.pyc
 staticfiles
-scrape_cache
-scraped_data
+/_cache
+/_data

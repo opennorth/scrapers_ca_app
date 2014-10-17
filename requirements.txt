@@ -2,9 +2,6 @@
 dj-static==0.0.6
 gunicorn==19.0.0
 
-# Miscellaneous
-django-appconf==0.6
-
 # Management
 logutils==0.3.3
 

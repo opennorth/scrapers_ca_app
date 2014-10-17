@@ -7,30 +7,19 @@ import csv
 import importlib
 import os
 import re
-from StringIO import StringIO
 import sys
-from six.moves.urllib.parse import urlsplit
+from StringIO import StringIO
 
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
+from opencivicdata.models import Membership
+from six.moves.urllib.parse import urlsplit
 
 from reports.models import Report
 from reports.utils import get_offices, get_personal_url
 
-class UTF8Recoder:
-    """
-    Iterator that reads an encoded stream and reencodes the input to UTF-8
-    """
-    def __init__(self, f, encoding):
-        self.reader = codecs.getreader(encoding)(f)
-
-    def __iter__(self):
-        return self
-
-    def next(self):
-        return self.reader.next().encode("utf-8")
 
 class UnicodeWriter:
     """
@@ -60,6 +49,7 @@ class UnicodeWriter:
     def writerows(self, rows):
         for row in rows:
             self.writerow(row)
+
 
 class Command(BaseCommand):
   help = 'Generates and uploads CSV files to S3'
@@ -128,52 +118,52 @@ class Command(BaseCommand):
             offices_count = 0
 
             # Exclude party memberships.
-            for membership in db.memberships.find({'jurisdiction_id': jurisdiction_id, 'role': {'$nin': ['member', 'candidate']}}):
-              organization = db.organizations.find_one({'_id': membership['organization_id']})
-              person = db.people.find_one({'_id': membership['person_id']})
+            queryset = Membership.filter(organization__jurisdiction_id=jurisdiction_id).exclude(role__in=('member', 'candidate'))
+            for membership in queryset.prefetch_related('contact_details', 'person', 'person__links', 'person__sources'):
+              person = membership.person
 
-              party_membership = db.memberships.find_one({'jurisdiction_id': jurisdiction_id, 'role': 'member', 'person_id': membership['person_id']})
-              if party_membership:
-                party_name = db.organizations.find_one({'_id': party_membership['organization_id']})['name']
-              else:
+              try:
+                party_name = Membership.objects.get(organization__classification='party', role='member', person=person).organization.name
+              except Membership.DoesNotExist:
                 party_name = None
 
               facebook = None
               twitter = None
               youtube = None
-              for link in person['links']:
-                domain = '.'.join(urlsplit(link['url']).netloc.split('.')[-2:])
+              for link in person.links.all():
+                domain = '.'.join(urlsplit(link.url).netloc.split('.')[-2:])
                 if domain == 'facebook.com':
-                  facebook = link['url']
+                  facebook = link.url
                 elif domain == 'twitter.com':
-                  twitter = link['url']
+                  twitter = link.url
                 elif domain == 'youtube.com':
-                  youtube = link['url']
+                  youtube = link.url
 
-              if person['gender'] == 'male':
+              if person.gender == 'male':
                 gender = 'M'
-              elif person['gender'] == 'female':
+              elif person.gender == 'female':
                 gender = 'F'
               else:
                 gender = None
 
-              if ' ' in person['name']:
-                first_name, last_name = person['name'].rsplit(' ', 1)
+              if ' ' in person.name:
+                first_name, last_name = person.name.rsplit(' ', 1)
               else:
-                first_name, last_name = None, person['name']
+                first_name, last_name = None, person.name
 
               # @see http://represent.opennorth.ca/api/#fields
+              sources = person.sources.all()
               row = [
-                person['post_id'], # District name
-                membership['role'], # Elected office
-                person['name'], # Name
+                person['post_id'], # District name # @todo 0.4
+                membership.role, # Elected office
+                person.name, # Name
                 first_name, # First name
                 last_name, # Last name
                 gender, # Gender
                 party_name, # Party name
-                next((contact_detail['value'] for contact_detail in membership['contact_details'] if contact_detail['type'] == 'email'), None), # Email
-                person['sources'][-1]['url'] if len(person['sources']) > 1 else None, # URL
-                person['image'], # Photo URL
+                next((contact_detail.value for contact_detail in membership.contact_details.all() if contact_detail.type == 'email'), None), # Email
+                sources[-1].url if len(sources) > 1 else None, # URL
+                person.image, # Photo URL
                 get_personal_url(person), # Personal URL
                 facebook, # Facebook
                 twitter, # Twitter
