@@ -31,6 +31,8 @@ ALLOWED_HOSTS = ['scrapers.herokuapp.com']
 
 INSTALLED_APPS = (
     'django.contrib.staticfiles',
+    'opencivicdata.apps.BaseConfig',
+    'pupa',
     'reports',
 )
 

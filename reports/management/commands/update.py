@@ -24,11 +24,10 @@ class Command(BaseCommand):
   help = 'Runs Pupa scrapers'
 
   def handle(self, *args, **options):
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'scrapers_ca_app.settings')
     sys.path.append(os.path.abspath('scrapers'))
 
     # @see https://github.com/opencivicdata/pupa/blob/master/pupa/cli/__main__.py
-    parser = argparse.ArgumentParser('pupa', description='pupa CLI')
+    parser = argparse.ArgumentParser('pupa')
     subparsers = parser.add_subparsers(dest='subcommand')
     subcommand = importlib.import_module('pupa.cli.commands.update').Command(subparsers)
 
@@ -39,10 +38,11 @@ class Command(BaseCommand):
     # @see http://pythonhosted.org//logutils/testing.html
     # @see http://plumberjack.blogspot.ca/2010/09/unit-testing-and-logging.html
     for module_name in module_names:
-      if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', '_cache', '_data', '__pycache__'):
+      if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', '_cache', '_data', '__pycache__') and not module_name.endswith('_municipalities'):
         obj, _ = Report.objects.get_or_create(module=module_name)
         try:
-          obj.report = subcommand.handle(*parser.parse_known_args(['update', '--fastmode', module_name]))
+          args, other = parser.parse_known_args(['update', '--fastmode', module_name])
+          obj.report = subcommand.handle(args, other)
           obj.exception = ''
           obj.success_at = datetime.now()
         except:
