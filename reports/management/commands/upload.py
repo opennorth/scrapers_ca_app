@@ -61,6 +61,7 @@ class Command(BaseCommand):
             'Photo URL',
             'Personal URL',
             'Facebook',
+            'LinkedIn',
             'Twitter',
             'YouTube',
         ]
@@ -81,13 +82,13 @@ class Command(BaseCommand):
                 for obj in module.__dict__.values():
                     division_id = getattr(obj, 'division_id', None)
                     if division_id:  # We've found the module.
-                        name = getattr(obj, 'name', None)
+                        jurisdiction_id = '{}/{}'.format(division_id.replace('ocd-division', 'ocd-jurisdiction'), getattr(obj, 'classification', 'legislature'))
 
                         rows = []
                         offices_count = 0
 
                         # Exclude party memberships.
-                        queryset = Membership.filter(organization__jurisdiction_id=obj.jurisdiction_id).exclude(role__in=('member', 'candidate'))
+                        queryset = Membership.filter(organization__jurisdiction_id=jurisdiction_id).exclude(role__in=('member', 'candidate'))
                         for membership in queryset.prefetch_related('contact_details', 'person', 'person__links', 'person__sources'):
                             person = membership.person
 
@@ -97,12 +98,15 @@ class Command(BaseCommand):
                                 party_name = None
 
                             facebook = None
+                            linkedin = None
                             twitter = None
                             youtube = None
                             for link in person.links.all():
                                 domain = '.'.join(urlsplit(link.url).netloc.split('.')[-2:])
                                 if domain == 'facebook.com':
                                     facebook = link.url
+                                elif domain == 'linkedin.com':
+                                    linkedin = link.url
                                 elif domain == 'twitter.com':
                                     twitter = link.url
                                 elif domain == 'youtube.com':
@@ -135,6 +139,7 @@ class Command(BaseCommand):
                                 person.image,  # Photo URL
                                 get_personal_url(person),  # Personal URL
                                 facebook,  # Facebook
+                                linkedin, # LinkedIn
                                 twitter,  # Twitter
                                 youtube,  # YouTube
                             ]
@@ -148,7 +153,7 @@ class Command(BaseCommand):
                                     row.append(office.get(key))
 
                             # If the person is associated to multiple boundaries.
-                            if re.search(r'\AWards \d(?:(?:,| & | and )\d+)+\Z', person['post_id']):
+                            if re.search(r'\AWards\b', person['post_id']):
                                 for district_id in re.findall(r'\d+', person['post_id']):
                                     row = row[:]
                                     row[0] = 'Ward %s' % district_id
@@ -162,6 +167,7 @@ class Command(BaseCommand):
                         for _ in range(offices_count):
                             headers += office_headers
 
+                        name = getattr(obj, 'name', None)
                         if name in names:
                             slug = names[name]
                         else:

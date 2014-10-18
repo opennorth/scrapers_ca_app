@@ -69,10 +69,12 @@ def represent(request, module_name):
     for obj in module.__dict__.values():
         division_id = getattr(obj, 'division_id', None)
         if division_id:  # We've found the module.
+            jurisdiction_id = '{}/{}'.format(division_id.replace('ocd-division', 'ocd-jurisdiction'), getattr(obj, 'classification', 'legislature'))
+
             representatives = []
 
             # Exclude party memberships.
-            queryset = Membership.objects.filter(organization__jurisdiction_id=obj.jurisdiction_id)
+            queryset = Membership.objects.filter(organization__jurisdiction_id=jurisdiction_id)
 
             if module_name.endswith('_candidates'):
                 queryset.filter(role='candidate')
@@ -108,7 +110,7 @@ def represent(request, module_name):
                 }
 
                 # @see https://github.com/opennorth/represent-canada/issues/81
-                sources = person.sources.all()
+                sources = list(person.sources.all())
                 if len(sources[0].url) <= 200:
                     representative['source_url'] = sources[0].url
 
@@ -116,8 +118,8 @@ def represent(request, module_name):
                     representative['url'] = sources[-1].url
 
                 # If the person is associated to multiple boundaries.
-                if re.search(r'\AWards \d(?:(?:,| & | and )\d+)+\Z', person['post_id']):  # @todo 0.4
-                    for district_id in re.findall(r'\d+', person['post_id']):
+                if re.search(r'\AWards\b', membership.post_id):  # @todo 0.4
+                    for district_id in re.findall(r'\d+', membership.post_id):
                         representative = representative.copy()
                         representative['district_id'] = district_id
                         representative['district_name'] = 'Ward %s' % district_id
@@ -128,19 +130,19 @@ def represent(request, module_name):
                     else:
                         geographic_code = None
                     # If the post_id is numeric.
-                    if re.search(r'\A\d+\Z', person['post_id']):
-                        representative['district_id'] = person['post_id']
+                    if re.search(r'\A\d+\Z', membership.post_id):
+                        representative['district_id'] = membership.post_id
                     # If the person has a boundary URL.
                     elif membership.extras.get('boundary_url'):
-                        representative['district_name'] = person['post_id']
-                        representative['boundary_url'] = membership['extras']['boundary_url']
+                        representative['district_name'] = membership.post_id
+                        representative['boundary_url'] = membership.extras['boundary_url']
                     # If the post_id is a census subdivision.
-                    elif person['post_id'] == obj.division_name and geographic_code:
-                        representative['district_name'] = person['post_id']
+                    elif membership.post_id == getattr(obj, 'division_name', None) and geographic_code:
+                        representative['district_name'] = membership.post_id
                         representative['boundary_url'] = '/boundaries/census-subdivisions/%s/' % geographic_code
                     else:
-                        representative['district_name'] = person['post_id']
-                        district_id = re.search(r'\A(?:District|Division|Ward) (\d+)\Z', person['post_id'])
+                        representative['district_name'] = membership.post_id
+                        district_id = re.search(r'\A(?:District|Division|Ward) (\d+)\Z', membership.post_id)
                         if district_id:
                             representative['district_id'] = district_id.group(1)
 
@@ -149,12 +151,14 @@ def represent(request, module_name):
             return HttpResponse(json.dumps(representatives), content_type='application/json')
 
 
-def get_extra(obj):
-    extra = obj.get('extras', {})
-    for link in obj.links.all():
+def get_extra(record):
+    extra = record.extras
+    for link in record.links.all():
         domain = '.'.join(urlsplit(link.url).netloc.split('.')[-2:])
         if domain == 'facebook.com':
             extra['facebook'] = link.url
+        elif domain == 'linkedin.com':
+            extra['linkedin'] = link.url
         elif domain == 'twitter.com':
             extra['twitter'] = link.url
         elif domain == 'youtube.com':

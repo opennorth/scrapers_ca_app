@@ -41,14 +41,14 @@ class Command(BaseCommand):
         # @see http://plumberjack.blogspot.ca/2010/09/unit-testing-and-logging.html
         for module_name in module_names:
             if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', '_cache', '_data', '__pycache__') and not module_name.endswith('_municipalities'):
-                obj, _ = Report.objects.get_or_create(module=module_name)
+                report, _ = Report.objects.get_or_create(module=module_name)
                 try:
                     args, other = parser.parse_known_args(['update', '--fastmode', module_name])
-                    obj.report = subcommand.handle(args, other)
-                    obj.exception = ''
-                    obj.success_at = datetime.now()
+                    report.report = subcommand.handle(args, other)
+                    report.exception = ''
+                    report.success_at = datetime.now()
                 except:
-                    obj.exception = traceback.format_exc()
-                obj.warnings = '\n'.join('%(asctime)s %(levelname)s %(name)s: %(message)s' % d for d in handler.buffer)
-                obj.save()
+                    report.exception = traceback.format_exc()
+                report.warnings = '\n'.join('%(asctime)s %(levelname)s %(name)s: %(message)s' % d for d in handler.buffer)
+                report.save()
                 handler.flush()
