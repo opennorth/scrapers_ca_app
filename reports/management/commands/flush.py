@@ -9,7 +9,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for jurisdiction_id in args:
             try:
-                Person.objects.filter(memberships__organization__jurisdiction_id=jurisdiction_id).delete()
-                Jurisdiction.objects.filter(id=jurisdiction_id).delete()  # cascades everything except Person and Division
+                qs = Person.objects.filter(memberships__organization__jurisdiction_id=jurisdiction_id)
+                print(qs.count())
+                qs.delete()
+                qs = Jurisdiction.objects.filter(id=jurisdiction_id)
+                print(qs.count())
+                qs.delete()  # cascades everything except Person and Division
             except Jurisdiction.DoesNotExist:
                 print("No Jurisdiction with id='%s'" % jurisdiction_id)

@@ -1,3 +1,8 @@
+import os
+
+DATABASE_URL = os.environ.get('DATABASE_URL', 'postgis://localhost/pupa')
+os.environ['OCD_DIVISION_CSV'] = os.environ.get('OCD_DIVISION_CSV', os.path.join(os.path.abspath(os.path.dirname(__file__)), 'scrapers/country-{}.csv'))
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
