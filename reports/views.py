@@ -129,25 +129,23 @@ def represent(request, module_name):
                         geographic_code = division_id[-7:]
                     else:
                         geographic_code = None
+                    post_label = remove_suffix_re.sub('', membership.post.label)
                     # If the post label is numeric.
-                    if re.search(r'\A\d+\Z', membership.post.label):
-                        representative['district_id'] = membership.post.label
+                    if re.search(r'\A\d+\Z', post_label):
+                        representative['district_id'] = post_label
                     # If the person has a boundary URL.
                     elif membership.extras.get('boundary_url'):
-                        representative['district_name'] = membership.post.label
+                        representative['district_name'] = post_label
                         representative['boundary_url'] = membership.extras['boundary_url']
                     # If the post label is a census subdivision.
-                    elif membership.post.label == getattr(obj, 'division_name', None) and geographic_code:
-                        representative['district_name'] = membership.post.label
+                    elif post_label == getattr(obj, 'division_name', None) and geographic_code:
+                        representative['district_name'] = post_label
                         representative['boundary_url'] = '/boundaries/census-subdivisions/%s/' % geographic_code
                     else:
-                        representative['district_name'] = membership.post.label
-                        district_id = re.search(r'\A(?:District|Division|Ward) (\d+)(?: \([^)]+\))?\Z', membership.post.label)
+                        representative['district_name'] = post_label
+                        district_id = re.search(r'\A(?:District|Division|Ward) (\d+)\Z', post_label)
                         if district_id:
                             representative['district_id'] = district_id.group(1)
-
-                    if representative['district_name']:
-                        representative['district_name'] = remove_suffix_re.sub('', representative['district_name'])
 
                     representatives.append(representative)
 
