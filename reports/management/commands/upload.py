@@ -127,7 +127,7 @@ class Command(BaseCommand):
                             # @see http://represent.opennorth.ca/api/#fields
                             sources = person.sources.all()
                             row = [
-                                remove_suffix_re.sub('', membership.post.label),  # District name # @todo 0.4
+                                remove_suffix_re.sub('', membership.post.label),  # District name
                                 membership.role,  # Elected office
                                 person.name,  # Name
                                 first_name,  # First name
