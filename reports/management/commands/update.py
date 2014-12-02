@@ -1,11 +1,12 @@
 import argparse
-from datetime import datetime
 import os
 import importlib
 import logging
 import signal
 import sys
 import traceback
+from datetime import datetime
+from optparse import make_option
 
 from django.core.management.base import BaseCommand
 
@@ -24,6 +25,11 @@ signal.signal(signal.SIGINT, signal_handler)
 class Command(BaseCommand):
     args = '<module module ...>'
     help = 'Runs Pupa scrapers'
+    option_list = BaseCommand.option_list + (
+        make_option('--fastmode', action='store_true', dest='fastmode',
+                    default=False,
+                    help='Use the cache and turn off throttling.'),
+    )
 
     def handle(self, *args, **options):
         sys.path.append(os.path.abspath('scrapers'))
@@ -36,6 +42,9 @@ class Command(BaseCommand):
         logging.config.dictConfig(pupa_settings.LOGGING)
         handler = logging.getLogger().handlers[0]
         module_names = args or os.listdir('scrapers')
+        base_args = ['update']
+        if options['fastmode']:
+            base_args.append('--fastmode')
 
         # @see http://pythonhosted.org//logutils/testing.html
         # @see http://plumberjack.blogspot.ca/2010/09/unit-testing-and-logging.html
@@ -43,7 +52,9 @@ class Command(BaseCommand):
             if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', '_cache', '_data', '__pycache__') and not module_name.endswith('_municipalities'):
                 report, _ = Report.objects.get_or_create(module=module_name)
                 try:
-                    args, other = parser.parse_known_args(['update', module_name])
+                    known_args = base_args[:]
+                    known_args.append(module_name)
+                    args, other = parser.parse_known_args(known_args)
                     report.report = subcommand.handle(args, other)
                     report.exception = ''
                     report.success_at = datetime.now()
