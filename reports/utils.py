@@ -1,4 +1,6 @@
+import re
 from collections import defaultdict
+
 from six.moves.urllib.parse import urlsplit
 
 CONTACT_DETAIL_TYPE_MAP = {
@@ -7,6 +9,8 @@ CONTACT_DETAIL_TYPE_MAP = {
     'fax': 'fax',
     'voice': 'tel',
 }
+
+remove_suffix_re = re.compile(r' \([^)]+\)\Z')
 
 
 def get_offices(record):

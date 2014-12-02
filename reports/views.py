@@ -12,7 +12,7 @@ from opencivicdata.models import Membership
 from six.moves.urllib.parse import urlsplit
 
 from reports.models import Report
-from reports.utils import get_offices, get_personal_url
+from reports.utils import get_offices, get_personal_url, remove_suffix_re
 
 
 def home(request):
@@ -102,7 +102,7 @@ def represent(request, module_name):
                     'elected_office': membership.role,
                     'party_name': party_name,
                     'email': next((contact_detail.value for contact_detail in membership.contact_details.all() if contact_detail.type == 'email'), None),
-                    'photo_url': person.image,
+                    'photo_url': person.image or None,
                     'personal_url': get_personal_url(person),
                     'gender': gender,
                     'offices': json.dumps(get_offices(membership)),
@@ -118,8 +118,8 @@ def represent(request, module_name):
                     representative['url'] = sources[-1].url
 
                 # If the person is associated to multiple boundaries.
-                if re.search(r'\AWards\b', membership.post_id):  # @todo 0.4
-                    for district_id in re.findall(r'\d+', membership.post_id):
+                if re.search(r'\AWards\b', membership.post.label):
+                    for district_id in re.findall(r'\d+', membership.post.label):
                         representative = representative.copy()
                         representative['district_id'] = district_id
                         representative['district_name'] = 'Ward %s' % district_id
@@ -129,22 +129,25 @@ def represent(request, module_name):
                         geographic_code = division_id[-7:]
                     else:
                         geographic_code = None
-                    # If the post_id is numeric.
-                    if re.search(r'\A\d+\Z', membership.post_id):
-                        representative['district_id'] = membership.post_id
+                    # If the post label is numeric.
+                    if re.search(r'\A\d+\Z', membership.post.label):
+                        representative['district_id'] = membership.post.label
                     # If the person has a boundary URL.
                     elif membership.extras.get('boundary_url'):
-                        representative['district_name'] = membership.post_id
+                        representative['district_name'] = membership.post.label
                         representative['boundary_url'] = membership.extras['boundary_url']
-                    # If the post_id is a census subdivision.
-                    elif membership.post_id == getattr(obj, 'division_name', None) and geographic_code:
-                        representative['district_name'] = membership.post_id
+                    # If the post label is a census subdivision.
+                    elif membership.post.label == getattr(obj, 'division_name', None) and geographic_code:
+                        representative['district_name'] = membership.post.label
                         representative['boundary_url'] = '/boundaries/census-subdivisions/%s/' % geographic_code
                     else:
-                        representative['district_name'] = membership.post_id
-                        district_id = re.search(r'\A(?:District|Division|Ward) (\d+)\Z', membership.post_id)
+                        representative['district_name'] = membership.post.label
+                        district_id = re.search(r'\A(?:District|Division|Ward) (\d+)(?: \([^)]+\))?\Z', membership.post.label)
                         if district_id:
                             representative['district_id'] = district_id.group(1)
+
+                    if representative['district_name']:
+                        representative['district_name'] = remove_suffix_re.sub('', representative['district_name'])
 
                     representatives.append(representative)
 

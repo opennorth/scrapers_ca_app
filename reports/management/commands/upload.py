@@ -17,7 +17,7 @@ from six import StringIO
 from six.moves.urllib.parse import urlsplit
 
 from reports.models import Report
-from reports.utils import get_offices, get_personal_url
+from reports.utils import get_offices, get_personal_url, remove_suffix_re
 
 
 class Command(BaseCommand):
@@ -127,7 +127,7 @@ class Command(BaseCommand):
                             # @see http://represent.opennorth.ca/api/#fields
                             sources = person.sources.all()
                             row = [
-                                person['post_id'],  # District name # @todo 0.4
+                                remove_suffix_re.sub('', membership.post.label),  # District name # @todo 0.4
                                 membership.role,  # Elected office
                                 person.name,  # Name
                                 first_name,  # First name

@@ -43,7 +43,7 @@ class Command(BaseCommand):
             if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', '_cache', '_data', '__pycache__') and not module_name.endswith('_municipalities'):
                 report, _ = Report.objects.get_or_create(module=module_name)
                 try:
-                    args, other = parser.parse_known_args(['update', '--fastmode', module_name])
+                    args, other = parser.parse_known_args(['update', module_name])
                     report.report = subcommand.handle(args, other)
                     report.exception = ''
                     report.success_at = datetime.now()
