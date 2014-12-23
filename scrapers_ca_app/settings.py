@@ -24,7 +24,7 @@ DEBUG = not os.getenv('PRODUCTION', False)
 
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = ['scrapers.herokuapp.com']
+ALLOWED_HOSTS = ['scrapers.herokuapp.com', 'scrapers-ca.herokuapp.com']
 
 
 # Application definition
