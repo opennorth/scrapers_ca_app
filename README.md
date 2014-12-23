@@ -63,10 +63,27 @@ from django.utils.crypto import get_random_string
 get_random_string(50, 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)')
 ```
 
+You'll need a [production tier PostgreSQL database](https://devcenter.heroku.com/articles/postgis) to use PostGIS (replace `DATABASE`):
+
+    heroku addons:add heroku-postgresql:standard-0
+    heroku pg:wait
+    heroku pg:promote DATABASE
+    heroku addons:remove heroku-postgresql:dev
+    heroku pg:psql
+
+In the PostgreSQL shell, run:
+
+    CREATE EXTENSION postgis;
+
+You'll need the [geo](https://github.com/cyberdelia/heroku-geo-buildpack/) buildpack for GeoDjango:
+
+    heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
+
 Setup the database (replace `DATABASE`):
 
     heroku pg:reset DATABASE
-    heroku run python manage.py syncdb --noinput
+    heroku run pupa dbinit ca
+    heroku run python manage.py migrate --noinput
 
 Add `python manage.py update` to the [Heroku Scheduler](https://scheduler.heroku.com/dashboard).
 
