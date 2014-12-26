@@ -1,26 +1,9 @@
 import os
-from six.moves.urllib.parse import urlsplit
-url = os.getenv('MONGOHQ_URL', 'mongodb://localhost:27017/pupa')
 
-# @see https://raw.github.com/opencivicdata/pupa/master/pupa/core/default_settings.py
-MONGO_HOST = url
-MONGO_PORT = 27017
-MONGO_DATABASE = urlsplit(url).path[1:]
+DATABASE_URL = os.environ.get('DATABASE_URL', 'postgis://localhost/pupa')
+os.environ['OCD_DIVISION_CSV'] = os.environ.get('OCD_DIVISION_CSV', os.path.join(os.path.abspath(os.path.dirname(__file__)), 'scrapers/country-{}.csv'))
 
-SCRAPELIB_RPM = 60
-SCRAPELIB_TIMEOUT = 60
-SCRAPELIB_RETRY_ATTEMPTS = 3
-SCRAPELIB_RETRY_WAIT_SECONDS = 20
-
-ENABLE_ELASTICSEARCH = False
-ELASTICSEARCH_HOST = 'localhost'
-ELASTICSEARCH_TIMEOUT = 2
-
-BILL_FILTERS = {}
-LEGISLATOR_FILTERS = {}
-EVENT_FILTERS = {}
-
-LOGGING_CONFIG = {
+LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
@@ -37,10 +20,10 @@ LOGGING_CONFIG = {
     },
     'loggers': {
         '': {
-            'handlers': ['default'], 'level': 'WARN', 'propagate': True # DEBUG
+            'handlers': ['default'], 'level': 'WARN', 'propagate': True  # DEBUG
         },
         'scrapelib': {
-            'handlers': ['default'], 'level': 'WARN', 'propagate': False # INFO
+            'handlers': ['default'], 'level': 'WARN', 'propagate': False  # INFO
         },
         'requests': {
             'handlers': ['default'], 'level': 'WARN', 'propagate': False

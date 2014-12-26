@@ -24,13 +24,15 @@ DEBUG = not os.getenv('PRODUCTION', False)
 
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = ['scrapers.herokuapp.com']
+ALLOWED_HOSTS = ['scrapers.herokuapp.com', 'scrapers-ca.herokuapp.com']
 
 
 # Application definition
 
 INSTALLED_APPS = (
     'django.contrib.staticfiles',
+    'opencivicdata.apps.BaseConfig',
+    'pupa',
     'reports',
 )
 
@@ -81,7 +83,8 @@ STATIC_URL = '/static/'
 
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
-DATABASES = {'default': dj_database_url.config(default='postgres://localhost/pupa')}
+DATABASES = {'default': dj_database_url.config(default='postgis://localhost/pupa')}
+DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
