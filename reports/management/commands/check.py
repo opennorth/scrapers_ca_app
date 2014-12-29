@@ -32,7 +32,6 @@ class Command(BaseCommand):
             memberships = Membership.objects
             contact_details = MembershipContactDetail.objects
 
-        jurisdiction_ids = jurisdictions.values_list('id', flat=True)
         post_memberships_count = posts.values('id').annotate(count=Count('memberships'))
 
         # Validate the number of organizations per jurisdiction.
@@ -77,11 +76,39 @@ class Command(BaseCommand):
         self.report_count('membership contact details with the same email', results)
 
         # Validate presence of email contact detail.
+        jurisdiction_with_no_email = [
+            # Javascript-encoded email
+            'ocd-jurisdiction/country:ca/csd:1217030/legislature',  # Cape Breton
+            # Webform email
+            'ocd-jurisdiction/country:ca/csd:1310032/legislature',  # Fredericton
+            'ocd-jurisdiction/country:ca/csd:2423027/legislature',  # Québec
+            'ocd-jurisdiction/country:ca/csd:2464008/legislature',  # Terrebonne
+            'ocd-jurisdiction/country:ca/csd:2466097/legislature',  # Pointe-Claire
+            'ocd-jurisdiction/country:ca/csd:3530016/legislature',  # Waterloo
+            'ocd-jurisdiction/country:ca/csd:3530035/legislature',  # Woolwich
+            'ocd-jurisdiction/country:ca/csd:4706027/legislature',  # Regina
+            'ocd-jurisdiction/country:ca/csd:4806016/legislature',  # Calgary
+        ]
+        leaders_with_no_email = [
+            'ocd-jurisdiction/country:ca/cd:3521/legislature',  # Peel
+            'ocd-jurisdiction/country:ca/csd:2437067/legislature',  # Trois-Rivières
+            'ocd-jurisdiction/country:ca/csd:2456083/legislature',  # Saint-Jean-sur-Richelieu
+            'ocd-jurisdiction/country:ca/csd:2494068/legislature',  # Saguenay
+            'ocd-jurisdiction/country:ca/csd:3520005/legislature',  # Toronto
+            'ocd-jurisdiction/country:ca/csd:3521024/legislature',  # Caledon
+            'ocd-jurisdiction/country:ca/csd:3530013/legislature',  # Kitchener
+            'ocd-jurisdiction/country:ca/csd:4711066/legislature',  # Saskatoon
+            'ocd-jurisdiction/country:ca/csd:4811061/legislature',  # Edmonton
+            'ocd-jurisdiction/country:ca/csd:4816037/legislature',  # Wood Buffalo
+            'ocd-jurisdiction/country:ca/csd:5909052/legislature',  # Abbotsford
+            'ocd-jurisdiction/country:ca/csd:5915004/legislature',  # Surrey
+        ]
+        jurisdiction_ids = jurisdictions.exclude(id__in=jurisdiction_with_no_email).values_list('id', flat=True)
         for jurisdiction_id in jurisdiction_ids:
             for organization in organizations.filter(jurisdiction_id=jurisdiction_id):
                 # It's ridiculous that Django can't do a LEFT OUTER JOIN with a WHERE clause.
                 memberships_with_no_email = sum(not membership.contact_details.filter(type='email').count() for membership in organization.memberships.all())
-                if memberships_with_no_email:
+                if memberships_with_no_email > 1 or memberships_with_no_email and jurisdiction_id not in leaders_with_no_email:
                     log.error('%2d memberships have no email in %s' % (memberships_with_no_email, organization.name))
 
     def repeated(self, results):
