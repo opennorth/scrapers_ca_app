@@ -153,8 +153,8 @@ class Command(BaseCommand):
                                     row.append(office.get(key))
 
                             # If the person is associated to multiple boundaries.
-                            if re.search(r'\AWards\b', person['post_id']):
-                                for district_id in re.findall(r'\d+', person['post_id']):
+                            if re.search(r'\AWards\b', membership.post.label):
+                                for district_id in re.findall(r'\d+', membership.post.label):
                                     row = row[:]
                                     row[0] = 'Ward %s' % district_id
                                     rows.append(row)
