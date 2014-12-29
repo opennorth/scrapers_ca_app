@@ -1,5 +1,9 @@
+import logging
+
 from django.core.management.base import BaseCommand
 from opencivicdata.models import Jurisdiction, Person
+
+log = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -16,6 +20,6 @@ class Command(BaseCommand):
                 qs = Jurisdiction.objects.filter(id=jurisdiction_id)
                 jurisdiction_count = qs.count()
                 qs.delete()  # cascades everything except Person and Division
-                print("%s: %s people in %s jurisdiction" % (jurisdiction_id, people_count, jurisdiction_count))
+                log.info("%s: %s people in %s jurisdiction" % (jurisdiction_id, people_count, jurisdiction_count))
             except Jurisdiction.DoesNotExist:
-                print("No Jurisdiction with id='%s'" % jurisdiction_id)
+                log.error("No Jurisdiction with id='%s'" % jurisdiction_id)

@@ -87,9 +87,13 @@ Setup the database (replace `DATABASE`):
 
 Add `python manage.py update` to the [Heroku Scheduler](https://scheduler.heroku.com/dashboard).
 
+### Checking consistency
+
+    python manage.py check
+
 ### Eliminating duplicates
 
-If, while developing your scraper, you create duplicates, you may need to:
+If a scraper creates duplicates, you may need to:
 
     python manage.py flush JURISDICTION-ID-OR-DIVISION-ID
 
