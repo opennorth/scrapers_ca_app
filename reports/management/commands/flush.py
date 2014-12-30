@@ -1,25 +1,17 @@
-import logging
+import os
+import sys
 
 from django.core.management.base import BaseCommand
-from opencivicdata.models import Jurisdiction, Person
 
-log = logging.getLogger(__name__)
+from reports.utils import flush
 
 
 class Command(BaseCommand):
-    args = '<division-id ...>'
+    args = '<module module ...>'
     help = 'Deletes all documents from one jurisdiction'
 
     def handle(self, *args, **options):
-        for division_id in args:
-            try:
-                jurisdiction_id = '{}/{}'.format(division_id.replace('ocd-division', 'ocd-jurisdiction'), 'legislature')
-                qs = Person.objects.filter(memberships__organization__jurisdiction_id=jurisdiction_id)
-                people_count = qs.count()
-                qs.delete()
-                qs = Jurisdiction.objects.filter(id=jurisdiction_id)
-                jurisdiction_count = qs.count()
-                qs.delete()  # cascades everything except Person and Division
-                log.info("%s: %s people in %s jurisdiction" % (jurisdiction_id, people_count, jurisdiction_count))
-            except Jurisdiction.DoesNotExist:
-                log.error("No Jurisdiction with id='%s'" % jurisdiction_id)
+        sys.path.append(os.path.abspath('scrapers'))
+
+        for module_name in args:
+            flush(module_name)

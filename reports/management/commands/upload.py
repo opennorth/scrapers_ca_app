@@ -139,7 +139,7 @@ class Command(BaseCommand):
                                 person.image,  # Photo URL
                                 get_personal_url(person),  # Personal URL
                                 facebook,  # Facebook
-                                linkedin, # LinkedIn
+                                linkedin,  # LinkedIn
                                 twitter,  # Twitter
                                 youtube,  # YouTube
                             ]

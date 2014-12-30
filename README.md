@@ -95,7 +95,7 @@ Add `python manage.py update` to the [Heroku Scheduler](https://scheduler.heroku
 
 If a scraper creates duplicates, you may need to:
 
-    python manage.py flush JURISDICTION-ID-OR-DIVISION-ID
+    python manage.py flush MODULE_NAME
 
 ## Troubleshooting
 

@@ -1,6 +1,9 @@
+import logging
+import importlib
 import re
 from collections import defaultdict
 
+from opencivicdata.models import Jurisdiction, Person
 from six.moves.urllib.parse import urlsplit
 
 CONTACT_DETAIL_TYPE_MAP = {
@@ -9,6 +12,8 @@ CONTACT_DETAIL_TYPE_MAP = {
     'fax': 'fax',
     'voice': 'tel',
 }
+
+log = logging.getLogger(__name__)
 
 remove_suffix_re = re.compile(r' \([^)]+\)\Z')
 
@@ -29,3 +34,26 @@ def get_personal_url(record):
         if domain not in ('facebook.com', 'linkedin.com', 'twitter.com', 'youtube.com'):
             return link.url
     return None
+
+
+def flush(module_name):
+    try:
+        division_id = module_name_to_division_id(module_name)
+        jurisdiction_id = '{}/{}'.format(division_id.replace('ocd-division', 'ocd-jurisdiction'), 'legislature')
+        qs = Person.objects.filter(memberships__organization__jurisdiction_id=jurisdiction_id)
+        people_count = qs.count()
+        qs.delete()
+        qs = Jurisdiction.objects.filter(id=jurisdiction_id)
+        jurisdiction_count = qs.count()
+        qs.delete()  # cascades everything except Person and Division
+        log.info("%s: %s people in %s jurisdiction" % (jurisdiction_id, people_count, jurisdiction_count))
+    except Jurisdiction.DoesNotExist:
+        log.error("No Jurisdiction with id='%s'" % jurisdiction_id)
+
+
+def module_name_to_division_id(module_name):
+    module = importlib.import_module(module_name)
+    for obj in module.__dict__.values():
+        division_id = getattr(obj, 'division_id', None)
+        if division_id:
+            return division_id

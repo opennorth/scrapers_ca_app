@@ -9,9 +9,11 @@ from datetime import datetime
 from optparse import make_option
 
 from django.core.management.base import BaseCommand
+from django.db import transaction
 
 import pupa_settings
 from reports.models import Report
+from reports.utils import flush
 
 pid = os.getpid()
 
@@ -52,12 +54,14 @@ class Command(BaseCommand):
             if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', '_cache', '_data', '__pycache__') and not module_name.endswith('_municipalities'):
                 report, _ = Report.objects.get_or_create(module=module_name)
                 try:
-                    known_args = base_args[:]
-                    known_args.append(module_name)
-                    args, other = parser.parse_known_args(known_args)
-                    report.report = subcommand.handle(args, other)
-                    report.exception = ''
-                    report.success_at = datetime.now()
+                    with transaction.atomic():
+                        flush(module_name)
+                        known_args = base_args[:]
+                        known_args.append(module_name)
+                        args, other = parser.parse_known_args(known_args)
+                        report.report = subcommand.handle(args, other)
+                        report.exception = ''
+                        report.success_at = datetime.now()
                 except:
                     report.exception = traceback.format_exc()
                 report.warnings = '\n'.join('%(asctime)s %(levelname)s %(name)s: %(message)s' % d for d in handler.buffer)
