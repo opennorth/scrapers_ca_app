@@ -10,11 +10,13 @@ from reports.models import Report
 from reports.utils import module_name_to_division_id
 
 class Command(BaseCommand):
-    args = '<module module ...>'
+    args = '<population-threshold module module ...>'
     help = 'Reports statuses of scrapers'
 
     def handle(self, *args, **options):
         sys.path.append(os.path.abspath('scrapers'))
+
+        threshold = args and args.pop(0) or 50000
 
         module_names = args or os.listdir('scrapers')
 
@@ -55,5 +57,5 @@ class Command(BaseCommand):
                 except Report.DoesNotExist:
                     status = 'unknown'
                 population = populations.get(identifier, 0)
-                if population < 50000:
+                if population < threshold:
                     print('%-32s %-7s %8d' % (module_name, status, population))
