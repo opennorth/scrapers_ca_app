@@ -88,7 +88,7 @@ class Command(BaseCommand):
                         offices_count = 0
 
                         # Exclude party memberships.
-                        queryset = Membership.filter(organization__jurisdiction_id=jurisdiction_id).exclude(role__in=('member', 'candidate'))
+                        queryset = Membership.objects.filter(organization__jurisdiction_id=jurisdiction_id).exclude(role__in=('member', 'candidate'))
                         for membership in queryset.prefetch_related('contact_details', 'person', 'person__links', 'person__sources'):
                             person = membership.person
 
