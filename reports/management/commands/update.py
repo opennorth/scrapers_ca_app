@@ -26,7 +26,7 @@ signal.signal(signal.SIGINT, signal_handler)
 
 class Command(BaseCommand):
     args = '<module module ...>'
-    help = 'Runs Pupa scrapers'
+    help = 'Scrapes documents for jurisdictions'
     option_list = BaseCommand.option_list + (
         make_option('--fastmode', action='store_true', dest='fastmode',
                     default=False,

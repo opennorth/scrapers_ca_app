@@ -1,4 +1,6 @@
 import logging
+import os
+import sys
 from collections import Counter
 
 from django.db.models import Count
@@ -6,18 +8,22 @@ from django.core.management.base import BaseCommand
 from opencivicdata.models import Membership, Organization, Person, Post, MembershipContactDetail
 from opencivicdata.models.jurisdiction import Jurisdiction
 
+from reports.utils import module_name_to_division_id
+
 log = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    args = '<division-id>'
-    help = 'Checks the consistency of the database'
+    args = '<module>'
+    help = 'Checks the consistency of documents per jurisdiction'
 
     def handle(self, *args, **options):
+        sys.path.append(os.path.abspath('scrapers'))
+
         empty_organizations = {'Parliament of Canada', 'Senate'}
 
         if args:
-            division_id = args[0]
+            division_id = module_name_to_division_id(args[0])
             jurisdictions = Jurisdiction.objects.filter(division_id=division_id)
             organizations = Organization.objects.filter(jurisdiction__in=jurisdictions)
             posts = Post.objects.filter(organization__in=organizations)

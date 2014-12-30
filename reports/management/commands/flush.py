@@ -8,7 +8,7 @@ from reports.utils import flush
 
 class Command(BaseCommand):
     args = '<module module ...>'
-    help = 'Deletes all documents from one jurisdiction'
+    help = 'Deletes documents by jurisdiction'
 
     def handle(self, *args, **options):
         sys.path.append(os.path.abspath('scrapers'))
