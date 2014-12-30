@@ -16,8 +16,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         sys.path.append(os.path.abspath('scrapers'))
 
-        threshold = args and args.pop(0) or 50000
-
+        args = list(args)
+        threshold = args and int(args.pop(0)) or 50000
         module_names = args or os.listdir('scrapers')
 
         populations = {}
