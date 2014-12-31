@@ -125,7 +125,7 @@ class Command(BaseCommand):
                                 first_name, last_name = None, person.name
 
                             # @see http://represent.opennorth.ca/api/#fields
-                            sources = person.sources.all()
+                            sources = list(person.sources.all())
                             row = [
                                 remove_suffix_re.sub('', membership.post.label),  # District name
                                 membership.role,  # Elected office
