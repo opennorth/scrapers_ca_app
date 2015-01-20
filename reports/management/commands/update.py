@@ -64,6 +64,6 @@ class Command(BaseCommand):
                         report.success_at = datetime.now()
                 except:
                     report.exception = traceback.format_exc()
-                report.warnings = '\n'.join('%(asctime)s %(levelname)s %(name)s: %(message)s' % d for d in handler.buffer)
+                report.warnings = '\n'.join('%(asctime)s %(levelname)s %(name)s: %(message)s' % d for d in handler.buffer if ' people in ' not in d['message'])
                 report.save()
                 handler.flush()
