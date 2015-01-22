@@ -50,24 +50,24 @@ class Command(BaseCommand):
 
         default_headers = [
             'District name',
-            'Elected office',
-            'Name',
+            'Primary role',
+            'Name',  # not in CSV schema
             'First name',
             'Last name',
             'Gender',
             'Party name',
             'Email',
-            'URL',
             'Photo URL',
-            'Personal URL',
+            'Source URL',
+            'Website',
             'Facebook',
-            'LinkedIn',
             'Twitter',
+            'LinkedIn',
             'YouTube',
         ]
         office_headers = [
-            'Office type',
-            'Address',
+            'Office type',  # not in CSV schema
+            'Address',  # not in CSV schema
             'Phone',
             'Fax',
         ]
@@ -135,12 +135,12 @@ class Command(BaseCommand):
                                 gender,  # Gender
                                 party_name,  # Party name
                                 next((contact_detail.value for contact_detail in membership.contact_details.all() if contact_detail.type == 'email'), None),  # Email
-                                sources[-1].url if len(sources) > 1 else None,  # URL
                                 person.image,  # Photo URL
-                                get_personal_url(person),  # Personal URL
+                                sources[-1].url if len(sources) > 1 else None,  # Source URL
+                                get_personal_url(person),  # Website
                                 facebook,  # Facebook
-                                linkedin,  # LinkedIn
                                 twitter,  # Twitter
+                                linkedin,  # LinkedIn
                                 youtube,  # YouTube
                             ]
 
