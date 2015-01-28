@@ -4,8 +4,7 @@ gunicorn==19.0.0
 
 # API
 represent-boundaries==0.6.4
--e git+git://github.com/jpmckinney/imago.git@locksmith#egg=imago
-DjangoRestless==0.0.9  # missing from imago
+-e git+git://github.com/opencivicdata/imago.git@master#egg=imago
 
 # Management
 logutils==0.3.3
