@@ -141,9 +141,6 @@ LOGGING = {
     },
 }
 
-# @see https://devcenter.heroku.com/articles/django-assets#whitenoise
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-
 # @see https://github.com/opencivicdata/imago/blob/master/README.md#getting-started
 os.environ['OCD_DIVISION_CSV'] = os.environ.get('OCD_DIVISION_CSV', os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(__file__))), 'scrapers/country-{}.csv'))
 IMAGO_COUNTRY = 'ca'

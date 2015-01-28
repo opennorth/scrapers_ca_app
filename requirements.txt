@@ -1,8 +1,6 @@
 # @see https://devcenter.heroku.com/articles/getting-started-with-django#requirements-txt
+dj-static==0.0.6
 gunicorn==19.0.0
-
-# @see https://devcenter.heroku.com/articles/django-assets#whitenoise
-whitenoise==1.0.6
 
 # API
 represent-boundaries==0.6.4
