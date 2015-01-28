@@ -31,8 +31,9 @@ ALLOWED_HOSTS = ['scrapers.herokuapp.com', 'scrapers-ca.herokuapp.com']
 
 INSTALLED_APPS = (
     'django.contrib.staticfiles',
+    'boundaries',
     'opencivicdata.apps.BaseConfig',
-    'pupa',
+    'imago',
     'reports',
 )
 
@@ -139,3 +140,9 @@ LOGGING = {
         },
     },
 }
+
+# @see https://github.com/opencivicdata/imago/blob/master/README.md#getting-started
+os.environ['OCD_DIVISION_CSV'] = os.environ.get('OCD_DIVISION_CSV', os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(__file__))), 'scrapers/country-{}.csv'))
+IMAGO_COUNTRY = 'ca'
+
+from scrapers_ca_app.mappings import IMAGO_BOUNDARY_MAPPINGS

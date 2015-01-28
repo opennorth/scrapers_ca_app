@@ -10,6 +10,7 @@ from six import StringIO
 from reports.models import Report
 from reports.utils import module_name_to_division_id
 
+
 class Command(BaseCommand):
     args = '<population-threshold module module ...>'
     help = 'Reports statuses of scrapers'
