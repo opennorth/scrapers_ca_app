@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['scrapers.herokuapp.com', 'scrapers-ca.herokuapp.com']
 
 INSTALLED_APPS = (
     'django.contrib.staticfiles',
-    # 'boundaries',
+    'boundaries',
     'opencivicdata.apps.BaseConfig',
     # 'imago',
     'reports',
