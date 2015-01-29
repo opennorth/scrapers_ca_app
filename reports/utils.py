@@ -15,7 +15,7 @@ CONTACT_DETAIL_TYPE_MAP = {
 
 log = logging.getLogger(__name__)
 
-remove_suffix_re = re.compile(r' \([^)\d]+\)\Z')
+remove_suffix_re = re.compile(r' \(\D[^)]+\)\Z')
 
 
 def get_offices(record):
