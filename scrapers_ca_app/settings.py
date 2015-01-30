@@ -33,7 +33,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'boundaries',
     'opencivicdata.apps.BaseConfig',
-    # 'imago',
+    'imago',
     'reports',
 )
 
