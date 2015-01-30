@@ -18,7 +18,7 @@ from reports.utils import get_offices, get_personal_url, remove_suffix_re
 def home(request):
     sys.path.append(os.path.abspath('scrapers'))
 
-    data = json.loads(requests.get('http://represent.opennorth.ca/representative-sets/?limit=0').text)
+    data = json.loads(requests.get('https://represent.opennorth.ca/representative-sets/?limit=0').text)
 
     names = {}
     for obj in data['objects']:
@@ -96,7 +96,7 @@ def represent(request, module_name):
                 else:
                     gender = None
 
-                # @see http://represent.opennorth.ca/api/#fields
+                # @see https://represent.opennorth.ca/api/#fields
                 representative = {
                     'name': person.name,
                     'elected_office': membership.role,

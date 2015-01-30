@@ -21,7 +21,7 @@ class Command(BaseCommand):
         mappings = {}
 
         divisions = list(Division.all('ca'))  # cache all divisions
-        for obj in requests.get('http://represent.opennorth.ca/boundary-sets/?limit=0').json()['objects']:
+        for obj in requests.get('https://represent.opennorth.ca/boundary-sets/?limit=0').json()['objects']:
             slug = obj['url'].split('/')[2]
             if obj['url'] in ('/boundary-sets/census-divisions/', '/boundary-sets/census-subdivisions/'):
                 continue

@@ -124,7 +124,7 @@ class Command(BaseCommand):
                             else:
                                 first_name, last_name = None, person.name
 
-                            # @see http://represent.opennorth.ca/api/#fields
+                            # @see https://represent.opennorth.ca/api/#fields
                             sources = list(person.sources.all())
                             row = [
                                 remove_suffix_re.sub('', membership.post.label),  # District name

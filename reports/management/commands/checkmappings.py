@@ -15,7 +15,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         ids = set(division.id for division in Division.all('ca'))
         for slug, data in settings.IMAGO_BOUNDARY_MAPPINGS.items():
-            url = 'http://represent.opennorth.ca/boundaries/{}/?limit=0'.format(slug)
+            url = 'https://represent.opennorth.ca/boundaries/{}/?limit=0'.format(slug)
             for obj in requests.get(url).json()['objects']:
                 if callable(data['boundary_key']):
                     expected = data['prefix'] + data['boundary_key'](obj)
