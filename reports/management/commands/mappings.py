@@ -29,7 +29,7 @@ class Command(BaseCommand):
                 prefix = 'ocd-division/country:ca/ed:'
                 boundary_key = 'external_id'
             else:
-                url = 'http://represent.opennorth.ca{}'.format(obj['url'])
+                url = 'https://represent.opennorth.ca{}'.format(obj['url'])
                 boundary_set = requests.get(url).json()
 
                 if boundary_set['extra'].get('ocd_division'):
