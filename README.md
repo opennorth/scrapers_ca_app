@@ -2,7 +2,7 @@
 
 [![Dependency Status](https://gemnasium.com/opennorth/scrapers_ca_app.png)](https://gemnasium.com/opennorth/scrapers_ca_app)
 
-This Django project runs the [Canadian legislative scrapers](http://github.com/opencivicdata/scrapers-ca), displays the status of each scraper, and returns the scraped data as JSON.
+This Django project runs the [Canadian legislative scrapers](https://github.com/opencivicdata/scrapers-ca), displays the status of each scraper, and returns the scraped data as JSON.
 
 ## Development
 
@@ -105,6 +105,6 @@ If a scraper creates duplicates, you may need to:
 
 ## Bugs? Questions?
 
-This repository is on GitHub: [http://github.com/opennorth/scrapers_ca_app](http://github.com/opennorth/scrapers_ca_app), where your contributions, forks, bug reports, feature requests, and feedback are greatly welcomed.
+This repository is on GitHub: [https://github.com/opennorth/scrapers_ca_app](https://github.com/opennorth/scrapers_ca_app), where your contributions, forks, bug reports, feature requests, and feedback are greatly welcomed.
 
 Copyright (c) 2013 Open North Inc., released under the MIT license

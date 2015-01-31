@@ -37,7 +37,7 @@ def home(request):
                     if division_id:  # We've found the module.
                         name = getattr(obj, 'name', None)
                         if name in names:
-                            if names[name].startswith('http://scrapers.herokuapp.com/represent/'):
+                            if names[name].startswith('https://scrapers.herokuapp.com/represent/'):
                                 report.icon = 'noop'
                             else:
                                 report.icon = 'replace'
