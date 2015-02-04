@@ -8,7 +8,7 @@ import requests
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.template import RequestContext
-from opencivicdata.models import Membership
+from opencivicdata.models import Division, Membership
 from six.moves.urllib.parse import urlsplit
 
 from reports.models import Report
@@ -117,21 +117,30 @@ def represent(request, module_name):
                 if len(sources) > 1:
                     representative['url'] = sources[-1].url
 
+                match = re.search(r'^(\S+) (Ward \d+)$', membership.post.label)
+
+                # If the person is part of a regional council.
+                if match:
+                    parent = Division.objects.get(subtype1='csd', subtype2='', name=match.group(1))
+                    division = Division.objects.get(subtype1='csd', subid1=parent.subid1, name=match.group(2))
+                    representative['district_name'] = membership.post.label
+                    representative['boundary_url'] = division.id
+                    representatives.append(representative)
                 # If the person is associated to multiple boundaries.
-                if re.search(r'\AWards\b', membership.post.label):
+                elif re.search(r'^Wards\b', membership.post.label):
                     for district_id in re.findall(r'\d+', membership.post.label):
                         representative = representative.copy()
                         representative['district_id'] = district_id
                         representative['district_name'] = 'Ward %s' % district_id
                         representatives.append(representative)
                 else:
-                    if re.search('\Aocd-division/country:ca/csd:(\d{7})\Z', division_id):
+                    if re.search('^ocd-division/country:ca/csd:(\d{7})\Z', division_id):
                         geographic_code = division_id[-7:]
                     else:
                         geographic_code = None
                     post_label = remove_suffix_re.sub('', membership.post.label)
                     # If the post label is numeric.
-                    if re.search(r'\A\d+\Z', post_label):
+                    if re.search(r'^\d+\Z', post_label):
                         representative['district_id'] = post_label
                     # If the person has a boundary URL.
                     elif membership.extras.get('boundary_url'):
@@ -143,7 +152,7 @@ def represent(request, module_name):
                         representative['boundary_url'] = '/boundaries/census-subdivisions/%s/' % geographic_code
                     else:
                         representative['district_name'] = post_label
-                        district_id = re.search(r'\A(?:District|Division|Ward) (\d+)\Z', post_label)
+                        district_id = re.search(r'^(?:District|Division|Ward) (\d+)\Z', post_label)
                         if district_id:
                             representative['district_id'] = district_id.group(1)
 
