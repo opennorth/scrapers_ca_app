@@ -5,8 +5,9 @@ import re
 import sys
 
 import requests
-from django.shortcuts import render_to_response
+from django.conf import settings
 from django.http import HttpResponse
+from django.shortcuts import render_to_response
 from django.template import RequestContext
 from opencivicdata.models import Division, Membership
 from six.moves.urllib.parse import urlsplit
@@ -123,8 +124,9 @@ def represent(request, module_name):
                 if match:
                     parent = Division.objects.get(subtype1='csd', subtype2='', name=match.group(1))
                     division = Division.objects.get(subtype1='csd', subid1=parent.subid1, name=match.group(2))
+                    boundary_set_slug = next((k for k, v in settings.IMAGO_BOUNDARY_MAPPINGS.items() if v['prefix'].startswith(parent.id)), None)
                     representative['district_name'] = membership.post.label
-                    representative['boundary_url'] = division.id
+                    representative['boundary_url'] = '/boundaries/{}/ward-{}/'.format(boundary_set_slug, division.subid2)
                     representatives.append(representative)
                 # If the person is associated to multiple boundaries.
                 elif re.search(r'^Wards\b', membership.post.label):
