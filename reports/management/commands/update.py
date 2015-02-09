@@ -44,9 +44,10 @@ class Command(BaseCommand):
         logging.config.dictConfig(pupa_settings.LOGGING)
         handler = logging.getLogger().handlers[0]
         module_names = args or os.listdir('scrapers')
-        base_args = ['update']
+        prepend_args = ['update']
         if options['fastmode']:
-            base_args.append('--fastmode')
+            prepend_args.append('--fastmode')
+        append_args = ['people']
 
         # @see https://pythonhosted.org//logutils/testing.html
         # @see http://plumberjack.blogspot.ca/2010/09/unit-testing-and-logging.html
@@ -56,8 +57,9 @@ class Command(BaseCommand):
                 try:
                     with transaction.atomic():
                         flush(module_name)
-                        known_args = base_args[:]
+                        known_args = prepend_args[:]
                         known_args.append(module_name)
+                        known_args.append(append_args)
                         args, other = parser.parse_known_args(known_args)
                         report.report = subcommand.handle(args, other)
                         report.exception = ''
