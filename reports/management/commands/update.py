@@ -59,7 +59,7 @@ class Command(BaseCommand):
                         flush(module_name)
                         known_args = prepend_args[:]
                         known_args.append(module_name)
-                        known_args.append(append_args)
+                        known_args.extend(append_args)
                         args, other = parser.parse_known_args(known_args)
                         report.report = subcommand.handle(args, other)
                         report.exception = ''
