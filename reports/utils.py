@@ -3,7 +3,7 @@ import importlib
 import re
 from collections import defaultdict
 
-from opencivicdata.models import Jurisdiction, Person
+from opencivicdata.models import Jurisdiction, Person, Post
 from six.moves.urllib.parse import urlsplit
 
 CONTACT_DETAIL_TYPE_MAP = {
@@ -42,11 +42,11 @@ def flush(module_name):
         jurisdiction_id = '{}/{}'.format(division_id.replace('ocd-division', 'ocd-jurisdiction'), 'legislature')
         qs = Person.objects.filter(memberships__organization__jurisdiction_id=jurisdiction_id)
         people_count = qs.count()
+        qs.delete()  # cascades Membership
+        qs = Post.objects.filter(organization__jurisdiction_id=jurisdiction_id)
+        posts_count = qs.count()
         qs.delete()
-        qs = Jurisdiction.objects.filter(id=jurisdiction_id)
-        jurisdiction_count = qs.count()
-        qs.delete()  # cascades everything except Person and Division
-        log.info("%s: %s people in %s jurisdiction" % (jurisdiction_id, people_count, jurisdiction_count))
+        log.info("%s: %d people, %d posts" % (jurisdiction_id, people_count, posts_count))
     except Jurisdiction.DoesNotExist:
         log.error("No Jurisdiction with id='%s'" % jurisdiction_id)
 
