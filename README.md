@@ -6,7 +6,7 @@ This Django project runs the [Canadian legislative scrapers](https://github.com/
 
 ## Development
 
-Follow the instructions in the [Python Quick Start Guide](https://github.com/opennorth/opennorth.ca/wiki/Python-Quick-Start%3A-OS-X) to install Homebrew, Git, PostgreSQL, Python and virtualenv.
+Follow the instructions in the [Python Quick Start Guide](https://github.com/opennorth/wiki/wiki/Python-Quick-Start%3A-OS-X) to install Homebrew, Git, PostgreSQL, Python and virtualenv.
 
     mkvirtualenv scrapers_ca_app
     git clone git@github.com:opennorth/scrapers_ca_app.git
