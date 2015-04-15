@@ -1,4 +1,5 @@
 import logging
+import operator
 import os
 import sys
 from collections import Counter
@@ -42,6 +43,7 @@ class Command(BaseCommand):
 
         # Validate the number of organizations per jurisdiction.
         results = jurisdictions.values('id').annotate(count=Count('organizations')).exclude(count=1)
+        # The Parliament of Canada has three organizations.
         if len(results) > 1 or results and results[0] != {'count': 3, 'id': 'ocd-jurisdiction/country:ca/legislature'}:
             log.error('%d jurisdictions do not have one organization' % len(results))
             for result in results:
@@ -130,6 +132,6 @@ class Command(BaseCommand):
     def report_count(self, message, results):
         if results:
             log.error('%d %s:' % (len(results), message))
-            for value, count in results.items():
+            for value, count in sorted(results.items(), key=operator.itemgetter(1), reverse=True):
                 log.info('%d %s' % (count, value))
             log.info('---')
