@@ -120,7 +120,7 @@ def represent(request, module_name):
 
                 match = re.search(r'^(\S+) (Ward \d+)$', membership.post.label)
 
-                # If the person is part of a regional council.
+                # If the person is part of Peel Regional Council.
                 if match:
                     parent = Division.objects.get(subtype1='csd', subtype2='', name=match.group(1))
                     division = Division.objects.get(subtype1='csd', subid1=parent.subid1, name=match.group(2))
@@ -138,6 +138,8 @@ def represent(request, module_name):
                 else:
                     if re.search('^ocd-division/country:ca/csd:(\d{7})\Z', division_id):
                         geographic_code = division_id[-7:]
+                    elif re.search('^ocd-division/country:ca/cd:(\d{4})\Z', division_id):
+                        geographic_code = division_id[-4:]
                     else:
                         geographic_code = None
                     post_label = remove_suffix_re.sub('', membership.post.label)
@@ -151,7 +153,10 @@ def represent(request, module_name):
                     # If the post label is a census subdivision.
                     elif post_label == getattr(obj, 'division_name', None) and geographic_code:
                         representative['district_name'] = post_label
-                        representative['boundary_url'] = '/boundaries/census-subdivisions/%s/' % geographic_code
+                        if len(geographic_code) == 7:
+                            representative['boundary_url'] = '/boundaries/census-subdivisions/%s/' % geographic_code
+                        elif len(geographic_code) == 4:
+                            representative['boundary_url'] = '/boundaries/census-divisions/%s/' % geographic_code
                     else:
                         representative['district_name'] = post_label
                         district_id = re.search(r'^(?:District|Division|Ward) (\d+)\Z', post_label)
