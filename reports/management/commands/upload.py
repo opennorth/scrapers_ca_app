@@ -61,6 +61,7 @@ class Command(BaseCommand):
             'Source URL',
             'Website',
             'Facebook',
+            'Instagram',
             'Twitter',
             'LinkedIn',
             'YouTube',
@@ -98,6 +99,7 @@ class Command(BaseCommand):
                                 party_name = None
 
                             facebook = None
+                            instagram = None
                             linkedin = None
                             twitter = None
                             youtube = None
@@ -105,6 +107,8 @@ class Command(BaseCommand):
                                 domain = '.'.join(urlsplit(link.url).netloc.split('.')[-2:])
                                 if domain == 'facebook.com':
                                     facebook = link.url
+                                elif domain == 'instagram.com':
+                                    instagram = link.url
                                 elif domain == 'linkedin.com':
                                     linkedin = link.url
                                 elif domain == 'twitter.com':
@@ -139,6 +143,7 @@ class Command(BaseCommand):
                                 sources[-1].url if len(sources) > 1 else None,  # Source URL
                                 get_personal_url(person),  # Website
                                 facebook,  # Facebook
+                                instagram,  # Instagram
                                 twitter,  # Twitter
                                 linkedin,  # LinkedIn
                                 youtube,  # YouTube
