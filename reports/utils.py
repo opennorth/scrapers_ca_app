@@ -3,7 +3,7 @@ import importlib
 import re
 from collections import defaultdict
 
-from opencivicdata.models import Jurisdiction, Person, Post
+from opencivicdata.models import Jurisdiction, Membership, Post
 from six.moves.urllib.parse import urlsplit
 
 CONTACT_DETAIL_TYPE_MAP = {
@@ -39,13 +39,22 @@ def get_personal_url(record):
 def flush(module_name):
     try:
         jurisdiction_id = module_name_to_metadata(module_name)['jurisdiction_id']
-        qs = Person.objects.filter(memberships__organization__jurisdiction_id=jurisdiction_id)
-        people_count = qs.count()
-        qs.delete()  # cascades Membership
+
+        qs = Membership.objects.filter(organization__jurisdiction_id=jurisdiction_id)
+
+        if module_name.endswith('_candidates'):
+            qs.filter(role='candidate')
+        else:
+            qs.exclude(role__in=('member', 'candidate'))
+
+        memberships_count = qs.count()
+        qs.delete()
+
         qs = Post.objects.filter(organization__jurisdiction_id=jurisdiction_id)
         posts_count = qs.count()
         qs.delete()
-        log.info("%s: %d people, %d posts" % (jurisdiction_id, people_count, posts_count))
+
+        log.info("%s: %d memberships, %d posts" % (jurisdiction_id, memberships_count, posts_count))
     except Jurisdiction.DoesNotExist:
         log.error("No Jurisdiction with id='%s'" % jurisdiction_id)
 
