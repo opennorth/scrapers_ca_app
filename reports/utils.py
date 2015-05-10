@@ -38,8 +38,7 @@ def get_personal_url(record):
 
 def flush(module_name):
     try:
-        division_id = module_name_to_division_id(module_name)
-        jurisdiction_id = '{}/{}'.format(division_id.replace('ocd-division', 'ocd-jurisdiction'), 'legislature')
+        jurisdiction_id = module_name_to_metadata(module_name)['jurisdiction_id']
         qs = Person.objects.filter(memberships__organization__jurisdiction_id=jurisdiction_id)
         people_count = qs.count()
         qs.delete()  # cascades Membership
@@ -51,9 +50,16 @@ def flush(module_name):
         log.error("No Jurisdiction with id='%s'" % jurisdiction_id)
 
 
-def module_name_to_division_id(module_name):
+def module_name_to_metadata(module_name):
     module = importlib.import_module(module_name)
     for obj in module.__dict__.values():
         division_id = getattr(obj, 'division_id', None)
         if division_id:
-            return division_id
+            return {
+                'division_id': division_id,
+                'division_name': getattr(obj, 'division_name', None),
+                'name': getattr(obj, 'name', None),
+                'url': getattr(obj, 'url', None),
+                'classification': getattr(obj, 'classification', None),
+                'jurisdiction_id': '{}/{}'.format(division_id.replace('ocd-division', 'ocd-jurisdiction'), getattr(obj, 'classification', 'legislature')),
+            }

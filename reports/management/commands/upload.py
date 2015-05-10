@@ -17,7 +17,7 @@ from six import StringIO
 from six.moves.urllib.parse import urlsplit
 
 from reports.models import Report
-from reports.utils import get_offices, get_personal_url, remove_suffix_re
+from reports.utils import get_offices, get_personal_url, module_name_to_metadata, remove_suffix_re
 
 
 class Command(BaseCommand):
@@ -79,117 +79,113 @@ class Command(BaseCommand):
         reports = Report.objects.filter(exception='').exclude(module__endswith='_candidates').exclude(module__endswith='_municipalities').order_by('module')
         for report in reports:
             try:
-                module = importlib.import_module(report.module)
-                for obj in module.__dict__.values():
-                    division_id = getattr(obj, 'division_id', None)
-                    if division_id:  # We've found the module.
-                        jurisdiction_id = '{}/{}'.format(division_id.replace('ocd-division', 'ocd-jurisdiction'), getattr(obj, 'classification', 'legislature'))
+                metadata = module_name_to_metadata(report.module)
 
-                        rows = []
-                        offices_count = 0
+                rows = []
+                offices_count = 0
 
-                        # Exclude party memberships.
-                        queryset = Membership.objects.filter(organization__jurisdiction_id=jurisdiction_id).exclude(role__in=('member', 'candidate'))
-                        for membership in queryset.prefetch_related('contact_details', 'person', 'person__links', 'person__sources'):
-                            person = membership.person
+                # Exclude party memberships.
+                queryset = Membership.objects.filter(organization__jurisdiction_id=metadata['jurisdiction_id']).exclude(role__in=('member', 'candidate'))
+                for membership in queryset.prefetch_related('contact_details', 'person', 'person__links', 'person__sources'):
+                    person = membership.person
 
-                            try:
-                                party_name = Membership.objects.get(organization__classification='party', role='member', person=person).organization.name
-                            except Membership.DoesNotExist:
-                                party_name = None
+                    try:
+                        party_name = Membership.objects.get(organization__classification='party', role='member', person=person).organization.name
+                    except Membership.DoesNotExist:
+                        party_name = None
 
-                            facebook = None
-                            instagram = None
-                            linkedin = None
-                            twitter = None
-                            youtube = None
-                            for link in person.links.all():
-                                domain = '.'.join(urlsplit(link.url).netloc.split('.')[-2:])
-                                if domain == 'facebook.com':
-                                    facebook = link.url
-                                elif domain == 'instagram.com':
-                                    instagram = link.url
-                                elif domain == 'linkedin.com':
-                                    linkedin = link.url
-                                elif domain == 'twitter.com':
-                                    twitter = link.url
-                                elif domain == 'youtube.com':
-                                    youtube = link.url
+                    facebook = None
+                    instagram = None
+                    linkedin = None
+                    twitter = None
+                    youtube = None
+                    for link in person.links.all():
+                        domain = '.'.join(urlsplit(link.url).netloc.split('.')[-2:])
+                        if domain == 'facebook.com':
+                            facebook = link.url
+                        elif domain == 'instagram.com':
+                            instagram = link.url
+                        elif domain == 'linkedin.com':
+                            linkedin = link.url
+                        elif domain == 'twitter.com':
+                            twitter = link.url
+                        elif domain == 'youtube.com':
+                            youtube = link.url
 
-                            if person.gender == 'male':
-                                gender = 'M'
-                            elif person.gender == 'female':
-                                gender = 'F'
-                            else:
-                                gender = None
+                    if person.gender == 'male':
+                        gender = 'M'
+                    elif person.gender == 'female':
+                        gender = 'F'
+                    else:
+                        gender = None
 
-                            if ' ' in person.name:
-                                first_name, last_name = person.name.rsplit(' ', 1)
-                            else:
-                                first_name, last_name = None, person.name
+                    if ' ' in person.name:
+                        first_name, last_name = person.name.rsplit(' ', 1)
+                    else:
+                        first_name, last_name = None, person.name
 
-                            # @see https://represent.opennorth.ca/api/#fields
-                            sources = list(person.sources.all())
-                            row = [
-                                remove_suffix_re.sub('', membership.post.label),  # District name
-                                membership.role,  # Elected office
-                                person.name,  # Name
-                                first_name,  # First name
-                                last_name,  # Last name
-                                gender,  # Gender
-                                party_name,  # Party name
-                                next((contact_detail.value for contact_detail in membership.contact_details.all() if contact_detail.type == 'email'), None),  # Email
-                                person.image,  # Photo URL
-                                sources[-1].url if len(sources) > 1 else None,  # Source URL
-                                get_personal_url(person),  # Website
-                                facebook,  # Facebook
-                                instagram,  # Instagram
-                                twitter,  # Twitter
-                                linkedin,  # LinkedIn
-                                youtube,  # YouTube
-                            ]
+                    # @see https://represent.opennorth.ca/api/#fields
+                    sources = list(person.sources.all())
+                    row = [
+                        remove_suffix_re.sub('', membership.post.label),  # District name
+                        membership.role,  # Elected office
+                        person.name,  # Name
+                        first_name,  # First name
+                        last_name,  # Last name
+                        gender,  # Gender
+                        party_name,  # Party name
+                        next((contact_detail.value for contact_detail in membership.contact_details.all() if contact_detail.type == 'email'), None),  # Email
+                        person.image,  # Photo URL
+                        sources[-1].url if len(sources) > 1 else None,  # Source URL
+                        get_personal_url(person),  # Website
+                        facebook,  # Facebook
+                        instagram,  # Instagram
+                        twitter,  # Twitter
+                        linkedin,  # LinkedIn
+                        youtube,  # YouTube
+                    ]
 
-                            offices = get_offices(membership)
-                            if len(offices) > offices_count:
-                                offices_count = len(offices)
+                    offices = get_offices(membership)
+                    if len(offices) > offices_count:
+                        offices_count = len(offices)
 
-                            for office in offices:
-                                for key in ('type', 'postal', 'tel', 'fax'):
-                                    row.append(office.get(key))
+                    for office in offices:
+                        for key in ('type', 'postal', 'tel', 'fax'):
+                            row.append(office.get(key))
 
-                            # If the person is associated to multiple boundaries.
-                            if re.search(r'\AWards\b', membership.post.label):
-                                for district_id in re.findall(r'\d+', membership.post.label):
-                                    row = row[:]
-                                    row[0] = 'Ward %s' % district_id
-                                    rows.append(row)
-                            else:
-                                rows.append(row)
+                    # If the person is associated to multiple boundaries.
+                    if re.search(r'\AWards\b', membership.post.label):
+                        for district_id in re.findall(r'\d+', membership.post.label):
+                            row = row[:]
+                            row[0] = 'Ward %s' % district_id
+                            rows.append(row)
+                    else:
+                        rows.append(row)
 
-                        rows.sort()
+                rows.sort()
 
-                        headers = default_headers[:]
-                        for _ in range(offices_count):
-                            headers += office_headers
+                headers = default_headers[:]
+                for _ in range(offices_count):
+                    headers += office_headers
 
-                        name = getattr(obj, 'name', None)
-                        if name in names:
-                            slug = names[name]
-                        else:
-                            slug = slugify(name)
+                name = metadata['name']
+                if name in names:
+                    slug = names[name]
+                else:
+                    slug = slugify(name)
 
-                        io = StringIO()
-                        body = csv.writer(io)
-                        body.writerow(headers)
-                        body.writerows(rows)
-                        save('csv/%s.csv' % slug, codecs.encode(io.getvalue(), 'windows-1252'))
+                io = StringIO()
+                body = csv.writer(io)
+                body.writerow(headers)
+                body.writerows(rows)
+                save('csv/%s.csv' % slug, codecs.encode(io.getvalue(), 'windows-1252'))
 
-                        if offices_count > max_offices_count:
-                            max_offices_count = offices_count
+                if offices_count > max_offices_count:
+                    max_offices_count = offices_count
 
-                        for row in rows:
-                            row.insert(0, name)
-                            all_rows.append(row)
+                for row in rows:
+                    row.insert(0, name)
+                    all_rows.append(row)
             except ImportError:
                 report.delete()  # delete reports for old modules
 

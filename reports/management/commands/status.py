@@ -8,7 +8,7 @@ from opencivicdata.divisions import Division
 from six import StringIO
 
 from reports.models import Report
-from reports.utils import module_name_to_division_id
+from reports.utils import module_name_to_metadata
 
 
 class Command(BaseCommand):
@@ -46,7 +46,7 @@ class Command(BaseCommand):
 
         for module_name in module_names:
             if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', '_cache', '_data', '__pycache__', 'disabled'):
-                division_id = module_name_to_division_id(module_name)
+                division_id = module_name_to_metadata(module_name)['division_id']
                 try:
                     report = Report.objects.get(module=module_name)
                     if report.exception:

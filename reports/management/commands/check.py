@@ -9,7 +9,7 @@ from django.core.management.base import BaseCommand
 from opencivicdata.models import Membership, Organization, Person, Post, MembershipContactDetail
 from opencivicdata.models.jurisdiction import Jurisdiction
 
-from reports.utils import module_name_to_division_id
+from reports.utils import module_name_to_metadata
 
 log = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ class Command(BaseCommand):
         empty_organizations = {'Parliament of Canada', 'Senate'}
 
         if args:
-            division_id = module_name_to_division_id(args[0])
+            division_id = module_name_to_metadata(args[0])['division_id']
             jurisdictions = Jurisdiction.objects.filter(division_id=division_id)
             organizations = Organization.objects.filter(jurisdiction__in=jurisdictions)
             posts = Post.objects.filter(organization__in=organizations)
