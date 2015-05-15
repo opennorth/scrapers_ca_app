@@ -3,7 +3,8 @@ import importlib
 import re
 from collections import defaultdict
 
-from opencivicdata.models import Jurisdiction, Membership, Post
+from django.db.models import Count
+from opencivicdata.models import Jurisdiction, Membership, Organization, Person, Post
 from six.moves.urllib.parse import urlsplit
 
 CONTACT_DETAIL_TYPE_MAP = {
@@ -54,11 +55,29 @@ def flush(module_name):
         posts_count = qs.count()
         qs.delete()
 
-        qs = Person.objects.filter(memberships__id=None)
-        people_count = qs.count()
+        people_count = 0
+
+        # Get IDs of people with party memberships.
+        ids = Person.objects.filter(memberships__organization__jurisdiction_id=None).values_list('id', flat=True)
+        # Get IDs of people with only party memberships.
+        ids = Person.objects.values('id').filter(id__in=ids).annotate(count=Count('memberships')).filter(count=1).values_list('id', flat=True)
+
+        # Delete people with only party memberships.
+        qs = Person.objects.filter(id__in=ids)
+        people_count += qs.count()
         qs.delete()
 
-        log.info("%s: %d people, %d memberships, %d posts" % (jurisdiction_id, people_count, memberships_count, posts_count))
+        # Delete people without memberships.
+        qs = Person.objects.filter(memberships__id=None)
+        people_count += qs.count()
+        qs.delete()
+
+        # Delete parties without members.
+        qs = Organization.objects.filter(jurisdiction_id=None, memberships__id=None)
+        organization_count = qs.count()
+        qs.delete()
+
+        log.info("%s: %d people, %d memberships, %d posts, %d parties" % (jurisdiction_id, people_count, memberships_count, posts_count, organization_count))
     except Jurisdiction.DoesNotExist:
         log.error("No Jurisdiction with id='%s'" % jurisdiction_id)
 
