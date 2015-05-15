@@ -57,7 +57,7 @@ class Command(BaseCommand):
 
         # Validate the number of memberships per post.
         results = Counter(post_memberships_count.filter(count=0).values_list('organization__name', flat=True))
-        self.report_count('organizations have posts with no memberships', results)
+        self.report_count('organizations have posts with no memberships (seats may be vacant)', results)
         results = Counter(post_memberships_count.filter(count__gt=1).values_list('organization__name', flat=True))
         self.report_count('organizations have posts with many memberships', results)
 
