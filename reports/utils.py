@@ -54,7 +54,11 @@ def flush(module_name):
         posts_count = qs.count()
         qs.delete()
 
-        log.info("%s: %d memberships, %d posts" % (jurisdiction_id, memberships_count, posts_count))
+        qs = Person.objects.filter(memberships__id=None)
+        people_count = qs.count()
+        qs.delete()
+
+        log.info("%s: %d people, %d memberships, %d posts" % (jurisdiction_id, people_count, memberships_count, posts_count))
     except Jurisdiction.DoesNotExist:
         log.error("No Jurisdiction with id='%s'" % jurisdiction_id)
 
