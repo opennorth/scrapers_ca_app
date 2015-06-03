@@ -89,6 +89,8 @@ def represent(request, module_name):
         else:
             gender = None
 
+        incumbent = person.extras.pop('incumbent', None)
+
         # @see https://represent.opennorth.ca/api/#fields
         representative = {
             'name': person.name,
@@ -110,9 +112,8 @@ def represent(request, module_name):
         if len(sources) > 1:
             representative['url'] = sources[-1].url
 
-        if person.extras.get('incumbent'):
+        if incumbent:
             representative['incumbent'] = True
-            del person.extras['incumbent']
 
         match = re.search(r'^(\S+) (Ward \d+)$', membership.post.label)
 
