@@ -112,6 +112,7 @@ def represent(request, module_name):
 
         if person.extras.get('incumbent'):
             representative['incumbent'] = True
+            del person.extras['incumbent']
 
         match = re.search(r'^(\S+) (Ward \d+)$', membership.post.label)
 
