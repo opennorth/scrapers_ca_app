@@ -110,6 +110,9 @@ def represent(request, module_name):
         if len(sources) > 1:
             representative['url'] = sources[-1].url
 
+        if person.extras['incumbent']:
+            representative['incumbent'] = True
+
         match = re.search(r'^(\S+) (Ward \d+)$', membership.post.label)
 
         # If the person is part of Peel Regional Council.
