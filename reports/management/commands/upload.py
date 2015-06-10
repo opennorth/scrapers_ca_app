@@ -101,7 +101,7 @@ class Command(BaseCommand):
                     youtube = None
                     for link in person.links.all():
                         domain = '.'.join(urlsplit(link.url).netloc.split('.')[-2:])
-                        if domain == 'facebook.com':
+                        if domain in ('facebook.com', 'fb.com'):
                             facebook = link.url
                         elif domain == 'instagram.com':
                             instagram = link.url

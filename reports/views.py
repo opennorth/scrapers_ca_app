@@ -170,9 +170,7 @@ def get_extra(record):
     extra = record.extras
     for link in record.links.all():
         domain = '.'.join(urlsplit(link.url).netloc.split('.')[-2:])
-        if domain == 'facebook.com':
-            extra['facebook'] = link.url
-        if domain == 'fb.com':
+        if domain in ('facebook.com', 'fb.com'):
             extra['facebook'] = link.url
         elif domain == 'instagram.com':
             extra['instagram'] = link.url

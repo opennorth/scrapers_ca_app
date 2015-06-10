@@ -32,7 +32,7 @@ def get_offices(record):
 def get_personal_url(record):
     for link in record.links.all():
         domain = '.'.join(urlsplit(link.url).netloc.split('.')[-2:])
-        if domain not in ('facebook.com', 'instagram.com', 'linkedin.com', 'twitter.com', 'youtube.com'):
+        if domain not in ('facebook.com', 'fb.com', 'instagram.com', 'linkedin.com', 'twitter.com', 'youtube.com'):
             return link.url
     return None
 
