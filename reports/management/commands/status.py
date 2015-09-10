@@ -13,7 +13,7 @@ from reports.utils import module_name_to_metadata
 
 class Command(BaseCommand):
     args = '<population-threshold module module ...>'
-    help = 'Reports statuses of scrapers'
+    help = 'Reports statuses of scrapers, with the population as an indication of priority'
 
     def handle(self, *args, **options):
         sys.path.append(os.path.abspath('scrapers'))
