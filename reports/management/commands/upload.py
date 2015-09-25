@@ -70,7 +70,7 @@ class Command(BaseCommand):
             try:
                 body = codecs.encode(body, 'windows-1252')
             except UnicodeEncodeError as e:
-                log.error('UnicodeEncodeError: {}'.format(e))
+                log.error('{}: UnicodeEncodeError: {}'.format(key, e))
             # with open(key, 'w') as f:
             #     f.write(body)
             k = Key(bucket)
@@ -212,10 +212,9 @@ class Command(BaseCommand):
         reports = queryset.exclude(module__endswith='_candidates').order_by('module')
         for report in reports:
             rows, offices_count = process(report)
-
+            all_rows += rows
             if offices_count > max_offices_count:
                 max_offices_count = offices_count
-                all_rows += rows
 
         headers = ['Organization'] + self.default_headers
         for _ in range(max_offices_count):
