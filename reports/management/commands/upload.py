@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import codecs
 import csv
 import importlib
+import logging
 import os
 import re
 import sys
@@ -18,6 +19,8 @@ from six.moves.urllib.parse import urlsplit
 
 from reports.models import Report
 from reports.utils import get_offices, get_personal_url, module_name_to_metadata, remove_suffix_re
+
+log = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -63,10 +66,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         def save(key, io):
-            # body = io.getvalue()
+            body = io.getvalue()
+            try:
+                body = codecs.encode(body, 'windows-1252')
+            except UnicodeEncodeError as e:
+                log.error('UnicodeEncodeError: {}'.format(e))
             # with open(key, 'w') as f:
             #     f.write(body)
-            body = codecs.encode(io.getvalue(), 'windows-1252')
             k = Key(bucket)
             k.key = key
             k.set_contents_from_string(body)
@@ -179,7 +185,6 @@ class Command(BaseCommand):
                 body.writerow(headers)
                 body.writerows(rows)
                 key = 'csv/{}/{}.csv'.format('candidates' if candidates else 'representatives', slug)
-                print(key)
                 save(key, io)
 
                 for row in rows:
