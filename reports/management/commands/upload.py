@@ -23,69 +23,69 @@ from reports.utils import get_offices, get_personal_url, module_name_to_metadata
 class Command(BaseCommand):
     help = 'Generates and uploads CSV files to S3'
 
+    names = {
+        'Parliament of Canada': 'house-of-commons',
+        'Legislative Assembly of Alberta': 'alberta-legislature',
+        'Legislative Assembly of British Columbia': 'bc-legislature',
+        'Legislative Assembly of Manitoba': 'manitoba-legislature',
+        'Legislative Assembly of New Brunswick': 'new-brunswick-legislature',
+        'Newfoundland and Labrador House of Assembly': 'newfoundland-labrador-legislature',
+        'Nova Scotia House of Assembly': 'nova-scotia-legislature',
+        'Legislative Assembly of Ontario': 'ontario-legislature',
+        'Legislative Assembly of Prince Edward Island': 'pei-legislature',
+        'Assemblée nationale du Québec': 'quebec-assemblee-nationale',
+        'Legislative Assembly of Saskatchewan': 'saskatchewan-legislature',
+    }
+    default_headers = [
+        'District name',
+        'Primary role',
+        'Name',  # not in CSV schema
+        'First name',
+        'Last name',
+        'Gender',
+        'Party name',
+        'Email',
+        'Photo URL',
+        'Source URL',
+        'Website',
+        'Facebook',
+        'Instagram',
+        'Twitter',
+        'LinkedIn',
+        'YouTube',
+    ]
+    office_headers = [
+        'Office type',  # not in CSV schema
+        'Address',  # not in CSV schema
+        'Phone',
+        'Fax',
+    ]
+
     def handle(self, *args, **options):
-        def save(key, body):
+        def save(key, io):
+            # body = io.getvalue()
+            # with open(key, 'w') as f:
+            #     f.write(body)
+            body = codecs.encode(io.getvalue(), 'windows-1252')
             k = Key(bucket)
             k.key = key
             k.set_contents_from_string(body)
             k.set_acl('public-read')
 
-        sys.path.append(os.path.abspath('scrapers'))
+        def process(report, *, candidates=False):
+            rows = []
+            offices_count = 0
 
-        bucket = S3Connection().get_bucket('represent.opennorth.ca')
-
-        names = {
-            'Parliament of Canada': 'house-of-commons',
-            'Legislative Assembly of Alberta': 'alberta-legislature',
-            'Legislative Assembly of British Columbia': 'bc-legislature',
-            'Legislative Assembly of Manitoba': 'manitoba-legislature',
-            'Legislative Assembly of New Brunswick': 'new-brunswick-legislature',
-            'Newfoundland and Labrador House of Assembly': 'newfoundland-labrador-legislature',
-            'Nova Scotia House of Assembly': 'nova-scotia-legislature',
-            'Legislative Assembly of Ontario': 'ontario-legislature',
-            'Legislative Assembly of Prince Edward Island': 'pei-legislature',
-            'Assemblée nationale du Québec': 'quebec-assemblee-nationale',
-            'Legislative Assembly of Saskatchewan': 'saskatchewan-legislature',
-        }
-
-        default_headers = [
-            'District name',
-            'Primary role',
-            'Name',  # not in CSV schema
-            'First name',
-            'Last name',
-            'Gender',
-            'Party name',
-            'Email',
-            'Photo URL',
-            'Source URL',
-            'Website',
-            'Facebook',
-            'Instagram',
-            'Twitter',
-            'LinkedIn',
-            'YouTube',
-        ]
-        office_headers = [
-            'Office type',  # not in CSV schema
-            'Address',  # not in CSV schema
-            'Phone',
-            'Fax',
-        ]
-
-        all_rows = []
-        max_offices_count = 0
-
-        reports = Report.objects.filter(exception='').exclude(module__endswith='_candidates').exclude(module__endswith='_municipalities').order_by('module')
-        for report in reports:
             try:
                 metadata = module_name_to_metadata(report.module)
 
-                rows = []
-                offices_count = 0
-
                 # Exclude party memberships.
-                queryset = Membership.objects.filter(organization__jurisdiction_id=metadata['jurisdiction_id']).exclude(role__in=('member', 'candidate'))
+                queryset = Membership.objects.filter(organization__jurisdiction_id=metadata['jurisdiction_id'])
+                if candidates:
+                    queryset = queryset.filter(role='candidate')
+                else:
+                    queryset = queryset.exclude(role__in=('member', 'candidate'))
+
                 for membership in queryset.prefetch_related('contact_details', 'person', 'person__links', 'person__sources'):
                     person = membership.person
 
@@ -157,20 +157,20 @@ class Command(BaseCommand):
                     if re.search(r'\AWards\b', membership.post.label):
                         for district_id in re.findall(r'\d+', membership.post.label):
                             row = row[:]
-                            row[0] = 'Ward %s' % district_id
+                            row[0] = 'Ward {}'.format(district_id)
                             rows.append(row)
                     else:
                         rows.append(row)
 
                 rows.sort()
 
-                headers = default_headers[:]
+                headers = self.default_headers[:]
                 for _ in range(offices_count):
-                    headers += office_headers
+                    headers += self.office_headers
 
                 name = metadata['name']
-                if name in names:
-                    slug = names[name]
+                if self.names.get(name):
+                    slug = self.names[name]
                 else:
                     slug = slugify(name)
 
@@ -178,23 +178,46 @@ class Command(BaseCommand):
                 body = csv.writer(io)
                 body.writerow(headers)
                 body.writerows(rows)
-                save('csv/%s.csv' % slug, codecs.encode(io.getvalue(), 'windows-1252'))
-
-                if offices_count > max_offices_count:
-                    max_offices_count = offices_count
+                key = 'csv/{}/{}.csv'.format('candidates' if candidates else 'representatives', slug)
+                print(key)
+                save(key, io)
 
                 for row in rows:
                     row.insert(0, name)
-                    all_rows.append(row)
             except ImportError:
                 report.delete()  # delete reports for old modules
 
-        headers = ['Organization'] + default_headers
+            return [rows, offices_count]
+
+        sys.path.append(os.path.abspath('scrapers'))
+
+        bucket = S3Connection().get_bucket('represent.opennorth.ca')
+
+        queryset = Report.objects.filter(exception='').exclude(module__endswith='_municipalities')
+
+        # Candidates.
+        reports = queryset.filter(module__endswith='_candidates').order_by('module')
+        for report in reports:
+            process(report, candidates=True)
+
+        # Representatives.
+        all_rows = []
+        max_offices_count = 0
+
+        reports = queryset.exclude(module__endswith='_candidates').order_by('module')
+        for report in reports:
+            rows, offices_count = process(report)
+
+            if offices_count > max_offices_count:
+                max_offices_count = offices_count
+                all_rows += rows
+
+        headers = ['Organization'] + self.default_headers
         for _ in range(max_offices_count):
-            headers += office_headers
+            headers += self.office_headers
 
         io = StringIO()
         body = csv.writer(io)
         body.writerow(headers)
         body.writerows(all_rows)
-        save('csv/complete.csv', codecs.encode(io.getvalue(), 'windows-1252'))
+        save('csv/representatives/complete.csv', io)
