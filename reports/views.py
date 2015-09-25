@@ -130,7 +130,7 @@ def represent(request, module_name):
             for district_id in re.findall(r'\d+', membership.post.label):
                 representative = representative.copy()
                 representative['district_id'] = district_id
-                representative['district_name'] = 'Ward %s' % district_id
+                representative['district_name'] = 'Ward {}'.format(district_id)
                 representatives.append(representative)
         else:
             division_id = metadata['division_id']
@@ -152,9 +152,9 @@ def represent(request, module_name):
             elif post_label == metadata['division_name'] and geographic_code:
                 representative['district_name'] = post_label
                 if len(geographic_code) == 7:
-                    representative['boundary_url'] = '/boundaries/census-subdivisions/%s/' % geographic_code
+                    representative['boundary_url'] = '/boundaries/census-subdivisions/{}/'.format(geographic_code)
                 elif len(geographic_code) == 4:
-                    representative['boundary_url'] = '/boundaries/census-divisions/%s/' % geographic_code
+                    representative['boundary_url'] = '/boundaries/census-divisions/{}/'.format(geographic_code)
             else:
                 representative['district_name'] = post_label
                 district_id = re.search(r'^(?:District|Division|Ward) (\d+)\Z', post_label)

@@ -45,9 +45,9 @@ class Command(BaseCommand):
         results = jurisdictions.values('id').annotate(count=Count('organizations')).exclude(count=1)
         # The Parliament of Canada has three organizations.
         if len(results) > 1 or results and results[0] != {'count': 3, 'id': 'ocd-jurisdiction/country:ca/legislature'}:
-            log.error('%d jurisdictions do not have one organization' % len(results))
+            log.error('{} jurisdictions do not have one organization'.format(len(results)))
             for result in results:
-                log.info('%d %s' % (result['count'], result['id']))
+                log.info('{} {}'.format(result['count'], result['id']))
 
         # Validate the presence of posts and memberships on organizations.
         results = set(organizations.values('id').exclude(classification='party').annotate(count=Count('posts')).filter(count=0).values_list('name', flat=True)) - empty_organizations
@@ -117,21 +117,21 @@ class Command(BaseCommand):
                 # It's ridiculous that Django can't do a LEFT OUTER JOIN with a WHERE clause.
                 memberships_with_no_email = sum(not membership.contact_details.filter(type='email').count() for membership in organization.memberships.all())
                 if memberships_with_no_email > 1 or memberships_with_no_email and jurisdiction_id not in leaders_with_no_email:
-                    log.error('%2d memberships have no email in %s' % (memberships_with_no_email, organization.name))
+                    log.error('{:2} memberships have no email in {}'.format(memberships_with_no_email, organization.name))
 
     def repeated(self, results):
         return {value: count for value, count in Counter(results).items() if count > 1}
 
     def report_value(self, message, results):
         if results:
-            log.error('%d %s:' % (len(results), message))
+            log.error('{} {}:'.format(len(results), message))
             for value in results:
                 log.info(value)
             log.info('---')
 
     def report_count(self, message, results):
         if results:
-            log.error('%d %s:' % (len(results), message))
+            log.error('{} {}:'.format(len(results), message))
             for value, count in sorted(results.items(), key=operator.itemgetter(1), reverse=True):
-                log.info('%d %s' % (count, value))
+                log.info('{} {}'.format(count, value))
             log.info('---')
