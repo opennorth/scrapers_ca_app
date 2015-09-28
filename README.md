@@ -48,6 +48,8 @@ Start the web app:
 
 ## Deployment
 
+    heroku apps:create
+
 Add configuration variables (replace `REPLACE`):
 
     heroku config:set PRODUCTION=1
