@@ -73,11 +73,11 @@ def represent(request, module_name):
     else:
         queryset.exclude(role__in=('member', 'candidate'))
 
-    for membership in queryset.prefetch_related('contact_details', 'person', 'person__links', 'person__sources'):
+    for membership in queryset.prefetch_related('contact_details', 'person', 'person__links', 'person__sources', 'post'):
         person = membership.person
 
         try:
-            party_name = Membership.objects.get(organization__classification='party', role='member', person=person).organization.name
+            party_name = Membership.objects.select_related('organization').get(organization__classification='party', role='member', person=person).organization.name
         except Membership.DoesNotExist:
             party_name = None
 
