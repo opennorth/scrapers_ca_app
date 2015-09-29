@@ -1,8 +1,6 @@
 # DO NOT EDIT THIS AUTO-GENERATED FILE
 import re
 
-from django.template.defaultfilters import slugify
-
 leading_zero_re = re.compile(r'^0+')
 invalid_re = re.compile(r'[^a-z\d._~-]')
 leading_district_re = re.compile(r'^District ')
