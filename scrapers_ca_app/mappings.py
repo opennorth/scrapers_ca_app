@@ -416,11 +416,6 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2493005/quartier:',
     },
-    'desjardins-districts': {
-        'boundary_key': 'external_id',
-        'key': 'id',
-        'prefix': 'ocd-division/country:ca/csd:2493005/quartier:',
-    },
     'deux-montagnes-districts': {
         'boundary_key': 'external_id',
         'key': 'id',
@@ -852,16 +847,6 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'prefix': 'ocd-division/country:ca/csd:2467055/district:',
     },
     'les-cedres-districts': {
-        'boundary_key': 'external_id',
-        'key': 'id',
-        'prefix': 'ocd-division/country:ca/csd:2471050/district:',
-    },
-    'les-chutes-de-la-chaudiere-est-districts': {
-        'boundary_key': 'external_id',
-        'key': 'id',
-        'prefix': 'ocd-division/country:ca/csd:2471050/district:',
-    },
-    'les-chutes-de-la-chaudiere-ouest-districts': {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2471050/district:',

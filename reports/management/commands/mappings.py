@@ -26,8 +26,12 @@ class Command(BaseCommand):
             if obj['url'] in ('/boundary-sets/census-divisions/', '/boundary-sets/census-subdivisions/'):
                 continue
             if obj['url'] in ('/boundary-sets/federal-electoral-districts/', '/boundary-sets/federal-electoral-districts-next-election/'):
-                prefix = 'ocd-division/country:ca/ed:'
-                boundary_key = 'external_id'
+                mappings[slug] = {
+                    'key': 'id',
+                    'prefix': 'ocd-division/country:ca/ed:',
+                    'boundary_key': 'external_id',
+                }
+                continue
             else:
                 url = 'https://represent.opennorth.ca{}'.format(obj['url'])
                 boundary_set = requests.get(url).json()
@@ -80,14 +84,14 @@ class Command(BaseCommand):
                                 else:
                                     boundary_key = 'matcher'
                                 break
+
+                    mappings[slug] = {
+                        'key': 'id',
+                        'prefix': prefix,
+                        'boundary_key': boundary_key,
+                    }
                 except (ValueError, KeyError):
                     log.warn('No division {} for {}'.format(division_id, url))
-
-            mappings[slug] = {
-                'key': 'id',
-                'prefix': prefix,
-                'boundary_key': boundary_key,
-            }
 
         with open(os.path.join(settings.BASE_DIR, 'mappings.py'), 'w') as f:
             f.write("# DO NOT EDIT THIS AUTO-GENERATED FILE\n")
