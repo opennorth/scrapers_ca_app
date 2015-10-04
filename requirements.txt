@@ -3,7 +3,7 @@ dj-static==0.0.6
 gunicorn==19.0.0
 
 # API
-represent-boundaries==0.6.5
+represent-boundaries==0.7.1
 -e git+git://github.com/opencivicdata/imago.git@master#egg=imago
 
 # Management
