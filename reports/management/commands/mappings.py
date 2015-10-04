@@ -80,8 +80,8 @@ class Command(BaseCommand):
                                 else:
                                     boundary_key = 'matcher'
                                 break
-                except KeyError:
-                    log.warn('No division for {}'.format(url))
+                except (ValueError, KeyError):
+                    log.warn('No division {} for {}'.format(division_id, url))
 
             mappings[slug] = {
                 'key': 'id',

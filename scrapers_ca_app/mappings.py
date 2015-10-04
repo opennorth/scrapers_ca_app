@@ -1,6 +1,8 @@
 # DO NOT EDIT THIS AUTO-GENERATED FILE
 import re
 
+from django.template.defaultfilters import slugify
+
 leading_zero_re = re.compile(r'^0+')
 invalid_re = re.compile(r'[^a-z\d._~-]')
 leading_district_re = re.compile(r'^District ')
@@ -119,6 +121,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:1314025/ward:',
     },
+    'belleville-wards': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:3512005/ward:',
+    },
     'beloeil-districts': {
         'boundary_key': 'external_id',
         'key': 'id',
@@ -158,6 +165,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:4704058/division:',
+    },
+    'bonnyville-no-87-wards': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:4812004/ward:',
     },
     'boucherville-districts': {
         'boundary_key': 'external_id',
@@ -814,20 +826,15 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2452007/district:',
     },
-    'le-plateau-mont-royal-districts': {
-        'boundary_key': 'external_id',
-        'key': 'id',
-        'prefix': 'ocd-division/country:ca/csd:2466023/district:',
-    },
-    'le-sud-ouest-districts': {
-        'boundary_key': 'external_id',
-        'key': 'id',
-        'prefix': 'ocd-division/country:ca/csd:2466023/district:',
-    },
     'le-vieux-longueuil-districts': {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2458227/district:',
+    },
+    'leduc-county-divisions': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:4811012/division:',
     },
     'lennoxville-districts': {
         'boundary_key': 'external_id',
@@ -1203,6 +1210,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2471070/district:',
+    },
+    'plateau-mont-royal-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:2466023/district:',
     },
     'plessisville-districts': {
         'boundary_key': 'external_id',
@@ -1963,6 +1975,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:4811052/ward:',
+    },
+    'sud-ouest-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:2466023/district:',
     },
     'summerside-wards': {
         'boundary_key': 'external_id',
