@@ -84,27 +84,27 @@ class Command(BaseCommand):
 
         # Validate the uniqueness of names and images.
         people_without_repetition = people.exclude(memberships__organization__jurisdiction_id__in=jurisdiction_with_repetition.keys())
-        results = self.repeated(people_without_repetition.exclude(image='').values_list('image', flat=True))
-        self.report_count('people have the same image', results)
         results = self.repeated(people_without_repetition.values_list('name', flat=True))
-        self.report_count('people have the same name', results)
+        self.report_count('names are repeated across people', results)
+        results = self.repeated(people_without_repetition.exclude(image='').values_list('image', flat=True))
+        self.report_count('images are repeated across people', results)
         for jurisdiction_id, threshold in jurisdiction_with_repetition.items():
             people_with_repetition = people.filter(memberships__organization__jurisdiction_id=jurisdiction_id)
-            results = self.repeated(people_with_repetition.exclude(image='').values_list('image', flat=True), threshold=threshold)
-            self.report_count('people have the same image in {}'.format(jurisdiction_id), results)
             results = self.repeated(people_with_repetition.values_list('name', flat=True), threshold=threshold)
-            self.report_count('people have the same name in {}'.format(jurisdiction_id), results)
+            self.report_count('names are repeated across people in {}'.format(jurisdiction_id), results)
+            results = self.repeated(people_with_repetition.exclude(image='').values_list('image', flat=True), threshold=threshold)
+            self.report_count('images are repeated across people in {}'.format(jurisdiction_id), results)
 
         # Validate the uniqueness of link URLs.
         results = self.repeated(people.exclude(links__url=None).values_list('links__url', flat=True))
-        self.report_count('people have the same link URL', results)
+        self.report_count('link URLs are repeated across people', results)
 
         # Validate the uniqueness of email contact detail values.
         results = self.repeated(contact_details.filter(type='email').exclude(membership__organization__jurisdiction_id__in=jurisdiction_with_repetition.keys()).values_list('value', flat=True))
-        self.report_count('membership contact details with the same email', results)
+        self.report_count('emails are repeated across membership contact details', results)
         for jurisdiction_id, threshold in jurisdiction_with_repetition.items():
             results = self.repeated(contact_details.filter(type='email').filter(membership__organization__jurisdiction_id=jurisdiction_id).values_list('value', flat=True), threshold=threshold)
-            self.report_count('membership contact details with the same email in {}'.format(jurisdiction_id), results)
+            self.report_count('emails are repeated across membership contact details in {}'.format(jurisdiction_id), results)
 
         # Validate presence of email contact detail.
         jurisdiction_with_no_email = [
