@@ -35,21 +35,7 @@ class Command(BaseCommand):
             else:
                 url = 'https://represent.opennorth.ca{}'.format(obj['url'])
                 boundary_set = requests.get(url).json()
-
-                if boundary_set['extra'].get('ocd_division'):
-                    division_id = boundary_set['extra']['ocd_division']
-                elif boundary_set['extra'].get('geographic_code'):
-                    geographic_code = boundary_set['extra']['geographic_code']
-                    geographic_code_length = len(geographic_code)
-                    if geographic_code_length == 7:
-                        division_id = 'ocd-division/country:ca/csd:{}'.format(geographic_code)
-                    elif geographic_code_length == 4:
-                        division_id = 'ocd-division/country:ca/cd:{}'.format(geographic_code)
-                    elif geographic_code_length == 2:
-                        division_id = next((division for division in divisions if division.attrs['sgc'] == geographic_code), None).id
-                    else:
-                        log.error('Unrecognized geographic_code {}'.format(geographic_code))
-                        continue
+                division_id = boundary_set['extra']['division_id']
 
                 try:
                     division = Division.get(division_id)
