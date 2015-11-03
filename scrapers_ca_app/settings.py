@@ -30,6 +30,8 @@ ALLOWED_HOSTS = ['scrapers.herokuapp.com', 'scrapers-ca.herokuapp.com']
 # Application definition
 
 INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
     'django.contrib.staticfiles',
     'boundaries',
     'opencivicdata.apps.BaseConfig',
