@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'boundaries',
     'opencivicdata.apps.BaseConfig',
     'imago',
+    'pupa',
     'reports',
 )
 
