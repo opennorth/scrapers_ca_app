@@ -27,11 +27,13 @@ signal.signal(signal.SIGINT, signal_handler)
 class Command(BaseCommand):
     args = '<module module ...>'
     help = 'Scrapes documents for jurisdictions'
-    option_list = BaseCommand.option_list + (
-        make_option('--fastmode', action='store_true', dest='fastmode',
-                    default=False,
-                    help='Use the cache and turn off throttling.'),
-    )
+
+    def add_arguments(self, parser):
+        parser.add_argument('--fastmode',
+            action='store_true',
+            dest='fastmode',
+            default=False,
+            help='Use the cache and turn off throttling.')
 
     def handle(self, *args, **options):
         sys.path.append(os.path.abspath('scrapers'))
