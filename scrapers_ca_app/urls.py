@@ -1,9 +1,10 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
+from reports import views
 
-urlpatterns = patterns('',
-    ('', include('imago.urls')),
-    url(r'^report/(?P<module_name>[a-z0-9_]+)/$', 'reports.views.report', name='report'),
-    url(r'^represent/(?P<module_name>[a-z0-9_]+)/$', 'reports.views.represent', name='represent'),
-    url(r'^warnings/$', 'reports.views.warnings', name='warnings'),
-    url(r'^$', 'reports.views.home', name='home'),
-)
+urlpatterns = [
+    url('', include('imago.urls')),
+    url(r'^report/(?P<module_name>[a-z0-9_]+)/$', views.report, name='report'),
+    url(r'^represent/(?P<module_name>[a-z0-9_]+)/$', views.represent, name='represent'),
+    url(r'^warnings/$', views.warnings, name='warnings'),
+    url(r'^$', views.home, name='home'),
+]
