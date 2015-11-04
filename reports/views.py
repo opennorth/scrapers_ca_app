@@ -76,6 +76,12 @@ def represent(request, module_name):
     for membership in queryset.prefetch_related('contact_details', 'person', 'person__links', 'person__sources', 'post'):
         person = membership.person
 
+        # Not sure why this is necessary.
+        if not isinstance(membership.extras, dict):
+            membership.extras = json.loads(membership.extras)
+        if not isinstance(person.extras, dict):
+            person.extras = json.loads(person.extras)
+
         try:
             party_name = Membership.objects.select_related('organization').get(organization__classification='party', role='member', person=person).organization.name
         except Membership.DoesNotExist:
