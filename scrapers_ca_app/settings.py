@@ -148,4 +148,9 @@ LOGGING = {
 os.environ['OCD_DIVISION_CSV'] = os.environ.get('OCD_DIVISION_CSV', os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(__file__))), 'scrapers/country-{}.csv'))
 IMAGO_COUNTRY = 'ca'
 
+if os.getenv('PRODUCTION', False):
+    SSL_VERIFY = '/usr/lib/ssl/certs/ca-certificates.crt'
+else:
+    SSL_VERIFY = True
+
 from scrapers_ca_app.mappings import IMAGO_BOUNDARY_MAPPINGS

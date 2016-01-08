@@ -3,6 +3,7 @@ import os
 import sys
 
 import requests
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from opencivicdata.divisions import Division
 from six import StringIO
@@ -33,7 +34,7 @@ class Command(BaseCommand):
 
         populations = {}
         for url in urls:
-            response = requests.get(url)
+            response = requests.get(url, verify=settings.SSL_VERIFY)
             response.encoding = 'ISO-8859-1'
             reader = csv.reader(StringIO(response.text))
             next(reader)  # title
