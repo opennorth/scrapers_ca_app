@@ -54,6 +54,7 @@ Start the web app:
 Add configuration variables (replace `REPLACE`):
 
     heroku config:set PRODUCTION=1
+    heroku config:set SSL_VERIFY=1
     heroku config:set AWS_ACCESS_KEY_ID=REPLACE
     heroku config:set AWS_SECRET_ACCESS_KEY=REPLACE
     heroku config:set DJANGO_SECRET_KEY=REPLACE
