@@ -36,13 +36,10 @@ class Command(BaseCommand):
         memberships = Membership.objects.filter(person_id__in=people)
         contact_details = MembershipContactDetail.objects.filter(membership__in=memberships)
 
+        # A person has multiple memberships.
         jurisdiction_with_repetition = {
-            # Regions
-            'ocd-jurisdiction/country:ca/cd:3521/legislature': 4,
-            'ocd-jurisdiction/country:ca/cd:3526/legislature': 1,
-            'ocd-jurisdiction/country:ca/cd:3530/legislature': 1,
-            # Brampton
-            'ocd-jurisdiction/country:ca/csd:3521010/legislature': 4,
+            'ocd-jurisdiction/country:ca/cd:3521/legislature': 4,  # Peel, due to Brampton
+            'ocd-jurisdiction/country:ca/csd:3521010/legislature': 4,  # Brampton
         }
 
         post_memberships_count = posts.values('id').annotate(count=Count('memberships'))
