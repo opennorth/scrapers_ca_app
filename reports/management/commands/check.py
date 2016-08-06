@@ -56,7 +56,7 @@ class Command(BaseCommand):
                 log.info('{} {}'.format(result['count'], result['id']))
 
         # Validate the presence of posts and memberships on organizations.
-        results = set(organizations.values('id').exclude(classification='party').annotate(count=Count('posts')).filter(count=0).values_list('name', flat=True)) - empty_organizations
+        results = set(organizations.values('id').exclude(classification__in=('committee', 'party')).annotate(count=Count('posts')).filter(count=0).values_list('name', flat=True)) - empty_organizations
         self.report_value('non-party organizations have no posts', results)
         results = set(organizations.values('id').annotate(count=Count('memberships')).filter(count=0).values_list('name', flat=True)) - empty_organizations
         self.report_value('organizations have no memberships', results)
@@ -68,7 +68,7 @@ class Command(BaseCommand):
         self.report_count('organizations have posts with many memberships', results)
 
         # Validate the presence of posts on memberships.
-        results = Counter(memberships.filter(post_id=None).exclude(organization__classification='party').values_list('organization__name', flat=True))
+        results = Counter(memberships.filter(post_id=None).exclude(organization__classification__in=('committee', 'party')).values_list('organization__name', flat=True))
         self.report_count('non-party organizations have memberships with no posts', results)
 
         # Validate that people have at most one post-membership.
