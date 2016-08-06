@@ -60,16 +60,19 @@ class Command(BaseCommand):
                     else:
                         prefix = '{}/{}:'.format(division_id, subtypes.pop())
 
-                    boundary_key = 'external_id'
-                    for child in division.children():
-                        if child._type not in exclude:
-                            type_id = child.id.rsplit(':', 1)[1]
-                            if not numeric_re.search(type_id):
-                                if len(type_id) in (1, 3):  # Lunenburg 1-letter identifiers, BC uses 3-letter identifiers
-                                    boundary_key = 'lower'
-                                else:
-                                    boundary_key = 'matcher'
-                                break
+                    if division_id == 'ocd-division/country:ca':
+                        boundary_key = 'suffix("-2013")'
+                    else:
+                        boundary_key = 'external_id'
+                        for child in division.children():
+                            if child._type not in exclude:
+                                type_id = child.id.rsplit(':', 1)[1]
+                                if not numeric_re.search(type_id):
+                                    if len(type_id) in (1, 3):  # Lunenburg 1-letter identifiers, BC uses 3-letter identifiers
+                                        boundary_key = 'lower'
+                                    else:
+                                        boundary_key = 'matcher'
+                                    break
 
                     mappings[slug] = {
                         'key': 'id',
@@ -90,6 +93,7 @@ class Command(BaseCommand):
             f.write("leading_district_re = re.compile(r'^District ')\n")
             f.write("lower = lambda boundary: boundary['external_id'].lower()\n\n")
             f.write("matcher = lambda boundary: leading_district_re.sub('', leading_zero_re.sub('', invalid_re.sub('~', boundary['name'].lower().replace(' ', '_'))))\n\n")
+            f.write("suffix = lambda suffix: lambda boundary: boundary['external_id'] + suffix\n\n")
 
             f.write('IMAGO_BOUNDARY_MAPPINGS = {\n')
             for slug, data in OrderedDict(sorted(mappings.items())).items():

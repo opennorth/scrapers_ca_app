@@ -10,6 +10,8 @@ lower = lambda boundary: boundary['external_id'].lower()
 
 matcher = lambda boundary: leading_district_re.sub('', leading_zero_re.sub('', invalid_re.sub('~', boundary['name'].lower().replace(' ', '_'))))
 
+suffix = lambda suffix: lambda boundary: boundary['external_id'] + suffix
+
 IMAGO_BOUNDARY_MAPPINGS = {
     'acton-vale-districts': {
         'boundary_key': 'external_id',
@@ -187,6 +189,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'prefix': 'ocd-division/country:ca/csd:3529006/ward:',
     },
     'british-columbia-electoral-districts': {
+        'boundary_key': lower,
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/province:bc/ed:',
+    },
+    'british-columbia-electoral-districts-2015-redistribution': {
         'boundary_key': lower,
         'key': 'id',
         'prefix': 'ocd-division/country:ca/province:bc/ed:',
@@ -501,11 +508,6 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'key': 'id',
         'prefix': 'ocd-division/country:ca/ed:',
     },
-    'federal-electoral-districts-next-election': {
-        'boundary_key': 'external_id',
-        'key': 'id',
-        'prefix': 'ocd-division/country:ca/ed:',
-    },
     'fish-creek-no-402-divisions': {
         'boundary_key': 'external_id',
         'key': 'id',
@@ -585,6 +587,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2458227/district:',
+    },
+    'grimsby-wards': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:3526065/ward:',
     },
     'guelph-wards': {
         'boundary_key': 'external_id',
@@ -880,6 +887,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2471060/district:',
+    },
+    'lincoln-wards': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:3526057/ward:',
     },
     'lislet-districts': {
         'boundary_key': 'external_id',
@@ -1877,6 +1889,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'prefix': 'ocd-division/country:ca/csd:2470052/district:',
     },
     'saskatchewan-electoral-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/province:sk/ed:',
+    },
+    'saskatchewan-electoral-districts-representation-act-2012': {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/province:sk/ed:',
