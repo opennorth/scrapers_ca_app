@@ -112,10 +112,14 @@ class Command(BaseCommand):
             'ocd-jurisdiction/country:ca/csd:2423027/legislature',  # Québec
             'ocd-jurisdiction/country:ca/csd:2464008/legislature',  # Terrebonne
             'ocd-jurisdiction/country:ca/csd:2466097/legislature',  # Pointe-Claire
+            'ocd-jurisdiction/country:ca/csd:3524009/legislature',  # Milton
             'ocd-jurisdiction/country:ca/csd:3530016/legislature',  # Waterloo
+            'ocd-jurisdiction/country:ca/csd:3530027/legislature',  # Wellesley
             'ocd-jurisdiction/country:ca/csd:3530035/legislature',  # Woolwich
             'ocd-jurisdiction/country:ca/csd:4706027/legislature',  # Regina
+            'ocd-jurisdiction/country:ca/csd:4711066/legislature',  # Saskatoon
             'ocd-jurisdiction/country:ca/csd:4806016/legislature',  # Calgary
+            'ocd-jurisdiction/country:ca/csd:5909052/legislature',  # Abbotsford
         ]
         leaders_with_no_email = [
             'ocd-jurisdiction/country:ca/cd:3521/legislature',  # Peel
@@ -125,7 +129,6 @@ class Command(BaseCommand):
             'ocd-jurisdiction/country:ca/csd:3520005/legislature',  # Toronto
             'ocd-jurisdiction/country:ca/csd:3521024/legislature',  # Caledon
             'ocd-jurisdiction/country:ca/csd:3530013/legislature',  # Kitchener
-            'ocd-jurisdiction/country:ca/csd:4711066/legislature',  # Saskatoon
             'ocd-jurisdiction/country:ca/csd:4811061/legislature',  # Edmonton
             'ocd-jurisdiction/country:ca/csd:4816037/legislature',  # Wood Buffalo
             'ocd-jurisdiction/country:ca/csd:5909052/legislature',  # Abbotsford
