@@ -108,10 +108,8 @@ class Command(BaseCommand):
             # Javascript-encoded email
             'ocd-jurisdiction/country:ca/csd:1217030/legislature',  # Cape Breton
             # Webform email
-            'ocd-jurisdiction/country:ca/csd:1310032/legislature',  # Fredericton
             'ocd-jurisdiction/country:ca/csd:2423027/legislature',  # Québec
             'ocd-jurisdiction/country:ca/csd:2464008/legislature',  # Terrebonne
-            'ocd-jurisdiction/country:ca/csd:2466097/legislature',  # Pointe-Claire
             'ocd-jurisdiction/country:ca/csd:3524009/legislature',  # Milton
             'ocd-jurisdiction/country:ca/csd:3530016/legislature',  # Waterloo
             'ocd-jurisdiction/country:ca/csd:3530027/legislature',  # Wellesley
