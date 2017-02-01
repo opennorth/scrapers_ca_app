@@ -6,7 +6,6 @@ import signal
 import sys
 import traceback
 from datetime import datetime
-from optparse import make_option
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -21,6 +20,7 @@ pid = os.getpid()
 def signal_handler(signalnum, handler):
     os.kill(pid, signal.SIGKILL)
 
+
 signal.signal(signal.SIGINT, signal_handler)
 
 
@@ -29,11 +29,13 @@ class Command(BaseCommand):
     help = 'Scrapes documents for jurisdictions'
 
     def add_arguments(self, parser):
-        parser.add_argument('--fastmode',
+        parser.add_argument(
+            '--fastmode',
             action='store_true',
             dest='fastmode',
             default=False,
-            help='Use the cache and turn off throttling.')
+            help='Use the cache and turn off throttling.'
+        )
 
     def handle(self, *args, **options):
         sys.path.append(os.path.abspath('scrapers'))

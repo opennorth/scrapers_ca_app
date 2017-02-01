@@ -1,16 +1,22 @@
 # DO NOT EDIT THIS AUTO-GENERATED FILE
 import re
 
-from django.template.defaultfilters import slugify
-
 leading_zero_re = re.compile(r'^0+')
 invalid_re = re.compile(r'[^a-z\d._~-]')
 leading_district_re = re.compile(r'^District ')
-lower = lambda boundary: boundary['external_id'].lower()
 
-matcher = lambda boundary: leading_district_re.sub('', leading_zero_re.sub('', invalid_re.sub('~', boundary['name'].lower().replace(' ', '_'))))
 
-suffix = lambda suffix: lambda boundary: boundary['external_id'] + suffix
+def lower(boundary):
+    return boundary['external_id'].lower()
+
+
+def matcher(boundary):
+    return leading_district_re.sub('', leading_zero_re.sub('', invalid_re.sub('~', boundary['name'].lower().replace(' ', '_'))))
+
+
+def suffix(suffix):
+    return lambda boundary: boundary['external_id'] + suffix
+
 
 IMAGO_BOUNDARY_MAPPINGS = {
     'acton-vale-districts': {
