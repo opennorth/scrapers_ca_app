@@ -109,9 +109,9 @@ If a scraper creates duplicates, you may need to:
 
 ## Troubleshooting
 
-* Make sure PostgreSQL is running. If you use Homebrew, you can find instructions with:
+Make sure PostgreSQL is running. If you use Homebrew, you can find instructions with:
 
-        brew info postgres
+    brew info postgres
 
 ## Bugs? Questions?
 
