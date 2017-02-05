@@ -109,10 +109,8 @@ def represent(request, module_name):
             'extra': json.dumps(get_extra(person)),
         }
 
-        # @see https://github.com/opennorth/represent-canada/issues/81
         sources = list(person.sources.all())
-        if len(sources[0].url) <= 200:
-            representative['source_url'] = sources[0].url
+        representative['source_url'] = sources[0].url
 
         if len(sources) > 1:
             representative['url'] = sources[-1].url
