@@ -74,10 +74,15 @@ def flush(module_name):
 
         # Delete parties without members.
         qs = Organization.objects.filter(jurisdiction_id=None, memberships__id=None)
-        organization_count = qs.count()
+        parties_count = qs.count()
         qs.delete()
 
-        log.info("{}: {} people, {} memberships, {} posts, {} parties".format(jurisdiction_id, people_count, memberships_count, posts_count, organization_count))
+        # Delete organizations.
+        qs = Organization.objects.filter(jurisdiction_id=jurisdiction_id)
+        organizations_count = qs.count()
+        qs.delete()
+
+        log.info("{}: {} people, {} memberships, {} posts, {} parties, {} organizations".format(jurisdiction_id, people_count, memberships_count, posts_count, parties_count, organizations_count))
     except Jurisdiction.DoesNotExist:
         log.error("No Jurisdiction with id='{}'".format(jurisdiction_id))
 
