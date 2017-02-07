@@ -11,7 +11,7 @@ def lower(boundary):
 
 
 def matcher(boundary):
-    return leading_district_re.sub('', leading_zero_re.sub('', invalid_re.sub('~', boundary['name'].lower().replace(' ', '_'))))
+    return leading_zero_re.sub('', invalid_re.sub('~', leading_district_re.sub('', boundary['name']).lower().replace(' ', '_')))
 
 
 def suffix(suffix):
@@ -74,6 +74,21 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2466023/district:',
     },
+    'annapolis-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/cd:1205/district:',
+    },
+    'argyle-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:1202001/district:',
+    },
+    'atholville-wards': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:1314013/ward:',
+    },
     'baie-comeau-districts': {
         'boundary_key': 'external_id',
         'key': 'id',
@@ -88,6 +103,16 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2488022/district:',
+    },
+    'barrie-wards': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:3543042/ward:',
+    },
+    'barrington-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:1201001/district:',
     },
     'bas-caraquet-wards': {
         'boundary_key': 'external_id',
@@ -138,11 +163,6 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2457040/district:',
-    },
-    'beresford-wards': {
-        'boundary_key': matcher,
-        'key': 'id',
-        'prefix': 'ocd-division/country:ca/csd:1315015/ward:',
     },
     'berthierville-districts': {
         'boundary_key': 'external_id',
@@ -349,10 +369,20 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2462047/district:',
     },
+    'chester-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:1206009/district:',
+    },
     'chicoutimi-districts': {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2494068/district:',
+    },
+    'clare-districts': {
+        'boundary_key': matcher,
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:1203001/district:',
     },
     'clarington-wards': {
         'boundary_key': 'external_id',
@@ -378,6 +408,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2403010/district:',
+    },
+    'colchester-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/cd:1210/district:',
     },
     'compton-districts': {
         'boundary_key': 'external_id',
@@ -419,6 +454,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2446080/quartier:',
     },
+    'cumberland-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/cd:1211/district:',
+    },
     'delson-quartiers': {
         'boundary_key': 'external_id',
         'key': 'id',
@@ -438,6 +478,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:1307045/ward:',
+    },
+    'digby-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:1203004/district:',
     },
     'dollard-des-ormeaux-districts': {
         'boundary_key': 'external_id',
@@ -510,7 +555,12 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'prefix': 'ocd-division/country:ca/csd:2446112/district:',
     },
     'federal-electoral-districts': {
-        'boundary_key': 'external_id',
+        'boundary_key': suffix("-2013"),
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/ed:',
+    },
+    'federal-electoral-districts-2003-representation-order': {
+        'boundary_key': suffix("-2013"),
         'key': 'id',
         'prefix': 'ocd-division/country:ca/ed:',
     },
@@ -609,6 +659,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:4708009/division:',
     },
+    'guysborough-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:1213004/district:',
+    },
     'haldimand-county-wards': {
         'boundary_key': 'external_id',
         'key': 'id',
@@ -618,6 +673,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:1209034/district:',
+    },
+    'halton-hills-wards': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:3524015/ward:',
     },
     'hamilton-wards': {
         'boundary_key': 'external_id',
@@ -649,6 +709,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2469055/quartier:',
     },
+    'inverness-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/cd:1215/district:',
+    },
     'jacques-cartier-districts': {
         'boundary_key': 'external_id',
         'key': 'id',
@@ -673,6 +738,16 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:1314019/ward:',
+    },
+    'king-wards': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:3519049/ward:',
+    },
+    'kings-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/cd:1207/district:',
     },
     'kingsley-no-124-divisions': {
         'boundary_key': 'external_id',
@@ -920,7 +995,7 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'prefix': 'ocd-division/country:ca/csd:2458227/district:',
     },
     'lunenburg-districts': {
-        'boundary_key': lower,
+        'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:1206001/district:',
     },
@@ -1104,7 +1179,22 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'key': 'id',
         'prefix': 'ocd-division/country:ca/province:nb/ed:',
     },
+    'new-brunswick-electoral-districts-2006': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/province:nb/ed:',
+    },
+    'new-glasgow-wards': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:1212014/ward:',
+    },
     'newfoundland-and-labrador-electoral-districts': {
+        'boundary_key': matcher,
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/province:nl/ed:',
+    },
+    'newfoundland-and-labrador-electoral-districts-2006': {
         'boundary_key': matcher,
         'key': 'id',
         'prefix': 'ocd-division/country:ca/province:nl/ed:',
@@ -1113,6 +1203,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:3519048/ward:',
+    },
+    'norfolk-county-wards': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:3528052/ward:',
     },
     'north-dumfries-wards': {
         'boundary_key': 'external_id',
@@ -1160,7 +1255,12 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'prefix': 'ocd-division/country:ca/csd:2472032/district:',
     },
     'ontario-electoral-districts': {
-        'boundary_key': 'external_id',
+        'boundary_key': suffix("-2015"),
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/province:on/ed:',
+    },
+    'ontario-electoral-districts-representation-act-2015': {
+        'boundary_key': suffix("-2015"),
         'key': 'id',
         'prefix': 'ocd-division/country:ca/province:on/ed:',
     },
@@ -1289,6 +1389,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'key': 'id',
         'prefix': 'ocd-division/country:ca/province:qc/ed:',
     },
+    'queens-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:1204010/district:',
+    },
     'ragueneau-districts': {
         'boundary_key': 'external_id',
         'key': 'id',
@@ -1324,6 +1429,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:3519038/ward:',
     },
+    'richmond-ns-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/cd:1216/district:',
+    },
     'rigaud-districts': {
         'boundary_key': 'external_id',
         'key': 'id',
@@ -1353,6 +1463,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2443027/district:',
+    },
+    'rocky-view-county-divisions': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:4806014/division:',
     },
     'rosemontla-petite-patrie-districts': {
         'boundary_key': 'external_id',
@@ -1894,7 +2009,7 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2470052/district:',
     },
-    'saskatchewan-electoral-districts': {
+    'saskatchewan-electoral-districts-representation-act-2002': {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/province:sk/ed:',
@@ -1933,6 +2048,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2436033/district:',
+    },
+    'shelburne-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:1201006/district:',
     },
     'sherbrooke-boroughs': {
         'boundary_key': 'external_id',
@@ -1973,6 +2093,16 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:1001519/ward:',
+    },
+    'st-marys-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:1213001/district:',
+    },
+    'stellarton-wards': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:1212009/ward:',
     },
     'stratford-wards': {
         'boundary_key': 'external_id',
@@ -2039,6 +2169,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2437067/district:',
     },
+    'truro-wards': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:1210006/ward:',
+    },
     'upper-miramichi-wards': {
         'boundary_key': 'external_id',
         'key': 'id',
@@ -2088,6 +2223,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2466023/district:',
+    },
+    'victoria-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/cd:1218/district:',
     },
     'victoriaville-districts': {
         'boundary_key': 'external_id',
@@ -2144,6 +2284,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:2477060/district:',
     },
+    'west-hants-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:1208001/district:',
+    },
     'westmount-districts': {
         'boundary_key': 'external_id',
         'key': 'id',
@@ -2158,6 +2303,11 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:3518009/ward:',
+    },
+    'whitchurch-stouffville-wards': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:3519044/ward:',
     },
     'willowdale-no-153-divisions': {
         'boundary_key': 'external_id',
@@ -2188,5 +2338,10 @@ IMAGO_BOUNDARY_MAPPINGS = {
         'boundary_key': 'external_id',
         'key': 'id',
         'prefix': 'ocd-division/country:ca/csd:3530035/ward:',
+    },
+    'yarmouth-districts': {
+        'boundary_key': 'external_id',
+        'key': 'id',
+        'prefix': 'ocd-division/country:ca/csd:1202004/district:',
     },
 }

@@ -14,7 +14,6 @@ numeric_re = re.compile('^[\d.]+$')
 
 
 class Command(BaseCommand):
-    args = '<module>'
     help = 'Generate mappings between boundary sets and divisions'
 
     def handle(self, *args, **options):
@@ -25,11 +24,11 @@ class Command(BaseCommand):
             slug = obj['url'].split('/')[2]
             if obj['url'] in ('/boundary-sets/census-divisions/', '/boundary-sets/census-subdivisions/'):
                 continue
-            if obj['url'] in ('/boundary-sets/federal-electoral-districts/', '/boundary-sets/federal-electoral-districts-next-election/'):
+            if obj['url'] in ('/boundary-sets/federal-electoral-districts-2003-representation-order/', '/boundary-sets/federal-electoral-districts/'):
                 mappings[slug] = {
                     'key': 'id',
                     'prefix': 'ocd-division/country:ca/ed:',
-                    'boundary_key': 'external_id',
+                    'boundary_key': 'suffix("-2013")',
                 }
                 continue
             else:
@@ -43,9 +42,9 @@ class Command(BaseCommand):
                         division = division.parent
                         division_id = division.id
                         exclude = ('place', 'borough')
-                    elif 'boroughs' in obj['name']:
+                    elif 'boroughs' in obj['name'] and 'districts' not in obj['name']:
                         exclude = ('place', 'district')
-                    elif 'districts' in obj['name']:
+                    elif 'districts' in obj['name'] and 'boroughs' not in obj['name']:
                         exclude = ('place', 'borough')
                     else:
                         exclude = ('place',)
@@ -62,13 +61,15 @@ class Command(BaseCommand):
 
                     if division_id == 'ocd-division/country:ca':
                         boundary_key = 'suffix("-2013")'
+                    elif division_id == 'ocd-division/country:ca/province:on':
+                        boundary_key = 'suffix("-2015")'
                     else:
                         boundary_key = 'external_id'
                         for child in division.children():
                             if child._type not in exclude:
                                 type_id = child.id.rsplit(':', 1)[1]
                                 if not numeric_re.search(type_id):
-                                    if len(type_id) in (1, 3):  # Lunenburg 1-letter identifiers, BC uses 3-letter identifiers
+                                    if len(type_id) in (1, 3):  # BC uses 3-letter identifiers
                                         boundary_key = 'lower'
                                     else:
                                         boundary_key = 'matcher'
@@ -86,20 +87,18 @@ class Command(BaseCommand):
             f.write("# DO NOT EDIT THIS AUTO-GENERATED FILE\n")
             f.write("import re\n\n")
 
-            f.write("from django.template.defaultfilters import slugify\n\n")
-
             f.write("leading_zero_re = re.compile(r'^0+')\n")
             f.write("invalid_re = re.compile(r'[^a-z\d._~-]')\n")
-            f.write("leading_district_re = re.compile(r'^District ')\n")
-            f.write("lower = lambda boundary: boundary['external_id'].lower()\n\n")
-            f.write("matcher = lambda boundary: leading_district_re.sub('', leading_zero_re.sub('', invalid_re.sub('~', boundary['name'].lower().replace(' ', '_'))))\n\n")
-            f.write("suffix = lambda suffix: lambda boundary: boundary['external_id'] + suffix\n\n")
+            f.write("leading_district_re = re.compile(r'^District ')\n\n\n")
+            f.write("def lower(boundary):\n    return boundary['external_id'].lower()\n\n\n")
+            f.write("def matcher(boundary):\n    return leading_zero_re.sub('', invalid_re.sub('~', leading_district_re.sub('', boundary['name']).lower().replace(' ', '_')))\n\n\n")
+            f.write("def suffix(suffix):\n    return lambda boundary: boundary['external_id'] + suffix\n\n\n")
 
             f.write('IMAGO_BOUNDARY_MAPPINGS = {\n')
             for slug, data in OrderedDict(sorted(mappings.items())).items():
                 f.write("    '{}': {{\n".format(slug))
                 for key, value in OrderedDict(sorted(data.items())).items():
-                    if key == 'boundary_key' and value in ('lower', 'matcher'):
+                    if key == 'boundary_key' and value in ('lower', 'matcher') or 'suffix' in value:
                         f.write("        '{}': {},\n".format(key, value))
                     else:
                         f.write("        '{}': '{}',\n".format(key, value))

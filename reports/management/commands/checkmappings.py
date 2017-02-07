@@ -9,7 +9,6 @@ log = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    args = '<module>'
     help = 'Check mappings between remote boundary sets and divisions'
 
     def handle(self, *args, **options):
