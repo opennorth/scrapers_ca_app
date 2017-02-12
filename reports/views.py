@@ -29,9 +29,9 @@ def home(request):
 
     reports = Report.objects.order_by('module').all()
     for report in reports:
-        if not report.exception:
-            try:
-                name = module_name_to_metadata(report.module)['name']
+        try:
+            name = module_name_to_metadata(report.module)['name']
+            if not report.exception:
                 if name in names:
                     if names[name].startswith('https://scrapers.herokuapp.com/represent/'):
                         report.icon = 'noop'
@@ -39,8 +39,8 @@ def home(request):
                         report.icon = 'replace'
                 else:
                     report.icon = 'add'
-            except ImportError:
-                report.delete()  # delete reports for old modules
+        except ImportError:
+            report.delete()  # delete reports for old modules
 
     return render_to_response('index.html', RequestContext(request, {
         'exceptions': Report.objects.exclude(exception='').count(),
