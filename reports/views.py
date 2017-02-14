@@ -2,13 +2,13 @@ import json
 import os
 import re
 import sys
+from urllib.parse import urlsplit
 
 import requests
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render
 from opencivicdata.models import Division, Membership
-from six.moves.urllib.parse import urlsplit
 
 from reports.models import Report
 from reports.utils import get_offices, get_personal_url, module_name_to_metadata, remove_suffix_re
@@ -21,6 +21,7 @@ def home(request):
 
     names = {}
     for obj in data['objects']:
+        # The `ca` scraper has "Parliament of Canada" as the root organization.
         if obj['name'] == 'House of Commons':
             names['Parliament of Canada'] = obj['data_url']
         else:
@@ -68,8 +69,10 @@ def represent(request, module_name):
     queryset = Membership.objects.filter(organization__jurisdiction_id=metadata['jurisdiction_id'])
 
     if module_name.endswith('_candidates'):
+        # Include only candidates.
         queryset.filter(role='candidate')
     else:
+        # Exclude candidates and party memberships.
         queryset.exclude(role__in=('member', 'candidate'))
 
     for membership in queryset.prefetch_related('contact_details', 'person', 'person__links', 'person__sources', 'post'):
@@ -93,6 +96,7 @@ def represent(request, module_name):
         else:
             gender = None
 
+        # Candidates only.
         incumbent = person.extras.pop('incumbent', None)
 
         # @see https://represent.opennorth.ca/api/#fields
@@ -109,9 +113,12 @@ def represent(request, module_name):
         }
 
         sources = list(person.sources.all())
+
+        # The first URL ought to be the most generic source.
         representative['source_url'] = sources[0].url
 
         if len(sources) > 1:
+            # The last URL ought to be the most specific source.
             representative['url'] = sources[-1].url
 
         if incumbent:
@@ -127,6 +134,7 @@ def represent(request, module_name):
             representative['district_name'] = membership.post.label
             representative['boundary_url'] = '/boundaries/{}/ward-{}/'.format(boundary_set_slug, division.subid2)
             representatives.append(representative)
+
         # If the person is associated to multiple boundaries.
         elif re.search(r'^Wards\b', membership.post.label):
             for district_id in re.findall(r'\d+', membership.post.label):
@@ -134,29 +142,36 @@ def represent(request, module_name):
                 representative['district_id'] = district_id
                 representative['district_name'] = 'Ward {}'.format(district_id)
                 representatives.append(representative)
+
         else:
             division_id = metadata['division_id']
+
             if re.search('^ocd-division/country:ca/csd:(\d{7})\Z', division_id):
                 geographic_code = division_id[-7:]
             elif re.search('^ocd-division/country:ca/cd:(\d{4})\Z', division_id):
                 geographic_code = division_id[-4:]
             else:
                 geographic_code = None
+
             post_label = remove_suffix_re.sub('', membership.post.label)
+
             # If the post label is numeric.
             if re.search(r'^\d+\Z', post_label):
                 representative['district_id'] = post_label
+
             # If the person has a boundary URL.
             elif membership.extras.get('boundary_url'):
                 representative['district_name'] = post_label
                 representative['boundary_url'] = membership.extras['boundary_url']
-            # If the post label is a census subdivision.
+
+            # If the post label is a Census geographic name.
             elif post_label == metadata['division_name'] and geographic_code:
                 representative['district_name'] = post_label
                 if len(geographic_code) == 7:
                     representative['boundary_url'] = '/boundaries/census-subdivisions/{}/'.format(geographic_code)
                 elif len(geographic_code) == 4:
                     representative['boundary_url'] = '/boundaries/census-divisions/{}/'.format(geographic_code)
+
             else:
                 representative['district_name'] = post_label
                 district_id = re.search(r'^(?:District|Division|Ward) (\d+)\Z', post_label)

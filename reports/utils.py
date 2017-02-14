@@ -2,10 +2,10 @@ import logging
 import importlib
 import re
 from collections import defaultdict
+from urllib.parse import urlsplit
 
 from django.db.models import Count
 from opencivicdata.models import Jurisdiction, Membership, Organization, Person, Post
-from six.moves.urllib.parse import urlsplit
 
 CONTACT_DETAIL_TYPE_MAP = {
     'address': 'postal',

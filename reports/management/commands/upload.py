@@ -1,5 +1,4 @@
 # coding: utf-8
-from __future__ import unicode_literals
 
 import codecs
 import csv
@@ -7,14 +6,14 @@ import logging
 import os
 import re
 import sys
+from io import StringIO
+from urllib.parse import urlsplit
 
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
 from opencivicdata.models import Membership
-from six import StringIO
-from six.moves.urllib.parse import urlsplit
 
 from reports.models import Report
 from reports.utils import get_offices, get_personal_url, module_name_to_metadata, remove_suffix_re

@@ -1,12 +1,12 @@
 import csv
 import os
 import sys
+from io import StringIO
 
 import requests
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from opencivicdata.divisions import Division
-from six import StringIO
 
 from reports.models import Report
 from reports.utils import module_name_to_metadata
