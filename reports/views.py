@@ -6,8 +6,7 @@ import sys
 import requests
 from django.conf import settings
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 from opencivicdata.models import Division, Membership
 from six.moves.urllib.parse import urlsplit
 
@@ -42,16 +41,16 @@ def home(request):
         except ImportError:
             report.delete()  # delete reports for old modules
 
-    return render_to_response('index.html', RequestContext(request, {
+    return render(request, 'index.html', {
         'exceptions': Report.objects.exclude(exception='').count(),
         'reports': reports,
-    }))
+    })
 
 
 def warnings(request):
-    return render_to_response('warnings.html', RequestContext(request, {
+    return render(request, 'warnings.html', {
         'reports': Report.objects.order_by('module').all(),
-    }))
+    })
 
 
 def report(request, module_name):
