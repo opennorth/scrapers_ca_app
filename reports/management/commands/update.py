@@ -25,10 +25,10 @@ signal.signal(signal.SIGINT, signal_handler)
 
 
 class Command(BaseCommand):
-    args = '<module module ...>'
     help = 'Scrapes documents for jurisdictions'
 
     def add_arguments(self, parser):
+        parser.add_argument('module', nargs='*')
         parser.add_argument(
             '--fastmode',
             action='store_true',
@@ -47,7 +47,7 @@ class Command(BaseCommand):
 
         logging.config.dictConfig(pupa_settings.LOGGING)
         handler = logging.getLogger().handlers[0]
-        module_names = args or os.listdir('scrapers')
+        module_names = options['module'] or os.listdir('scrapers')
         prepend_args = ['update']
         if options['fastmode']:
             prepend_args.append('--fastmode')

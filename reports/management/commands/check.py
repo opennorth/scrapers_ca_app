@@ -15,16 +15,18 @@ log = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    args = '<module>'
     help = 'Checks the consistency of documents per jurisdiction'
+
+    def add_arguments(self, parser):
+        parser.add_argument('module', nargs='?')
 
     def handle(self, *args, **options):
         sys.path.append(os.path.abspath('scrapers'))
 
         empty_organizations = {'Parliament of Canada', 'Senate'}
 
-        if args:
-            division_id = module_name_to_metadata(args[0])['division_id']
+        if options['module']:
+            division_id = module_name_to_metadata(options['module'])['division_id']
             jurisdictions = Jurisdiction.objects.filter(division_id=division_id)
         else:
             # Exclude candidate scrapers.
