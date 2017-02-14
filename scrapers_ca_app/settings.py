@@ -43,7 +43,6 @@ INSTALLED_APPS = (
 
 # @see https://docs.djangoproject.com/en/1.10/topics/http/middleware/#upgrading-middleware Django 1.10
 MIDDLEWARE_CLASSES = (
-    # @see https://docs.djangoproject.com/en/1.7/ref/middleware/#django.middleware.gzip.GZipMiddleware
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
