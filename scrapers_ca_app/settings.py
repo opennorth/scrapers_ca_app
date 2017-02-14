@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'reports',
 )
 
+# @see https://docs.djangoproject.com/en/1.10/topics/http/middleware/#upgrading-middleware Django 1.10
 MIDDLEWARE_CLASSES = (
     # @see https://docs.djangoproject.com/en/1.7/ref/middleware/#django.middleware.gzip.GZipMiddleware
     'django.middleware.gzip.GZipMiddleware',
@@ -118,7 +119,7 @@ STATICFILES_DIRS = (
 
 # Error reporting.
 ADMINS = (
-    ('James McKinney', 'james@opennorth.ca'),
+    ('Represent admins', 'represent@opennorth.ca'),
 )
 
 # @see https://sendgrid.com/docs/Integrate/Frameworks/django.html
