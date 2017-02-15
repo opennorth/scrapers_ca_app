@@ -160,7 +160,7 @@ def represent(request, module_name):
                 representative['district_id'] = post_label
 
             # If the person has a boundary URL.
-            elif membership.extras.get('boundary_url'):
+            elif 'boundary_url' in membership.extras:
                 representative['district_name'] = post_label
                 representative['boundary_url'] = membership.extras['boundary_url']
 

@@ -121,7 +121,7 @@ class Command(BaseCommand):
             'ocd-jurisdiction/country:ca/csd:4806016/legislature',  # Calgary
             'ocd-jurisdiction/country:ca/csd:5909052/legislature',  # Abbotsford
         ]
-        leaders_with_no_email = [
+        leaders_with_no_email = {
             'ocd-jurisdiction/country:ca/cd:3521/legislature',  # Peel
             'ocd-jurisdiction/country:ca/csd:2437067/legislature',  # Trois-Rivières
             'ocd-jurisdiction/country:ca/csd:2456083/legislature',  # Saint-Jean-sur-Richelieu
@@ -133,7 +133,7 @@ class Command(BaseCommand):
             'ocd-jurisdiction/country:ca/csd:4816037/legislature',  # Wood Buffalo
             'ocd-jurisdiction/country:ca/csd:5909052/legislature',  # Abbotsford
             'ocd-jurisdiction/country:ca/csd:5915004/legislature',  # Surrey
-        ]
+        }
         jurisdiction_ids = jurisdictions.exclude(id__in=jurisdiction_with_no_email).values_list('id', flat=True)
         for jurisdiction_id in jurisdiction_ids:
             for organization in organizations.filter(jurisdiction_id=jurisdiction_id):

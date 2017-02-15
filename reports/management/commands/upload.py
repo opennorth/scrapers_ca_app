@@ -173,7 +173,7 @@ class Command(BaseCommand):
                     headers += self.office_headers
 
                 name = metadata['name']
-                if self.names.get(name):
+                if name in self.names:
                     slug = self.names[name]
                 else:
                     slug = slugify(name)
