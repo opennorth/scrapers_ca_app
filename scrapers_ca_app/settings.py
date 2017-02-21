@@ -34,9 +34,7 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
-    'boundaries',
     'opencivicdata.apps.BaseConfig',
-    'imago',
     'pupa',
     'reports',
 )
@@ -159,13 +157,9 @@ LOGGING = {
     },
 }
 
-# @see https://github.com/opencivicdata/imago/blob/master/README.md#getting-started
 os.environ['OCD_DIVISION_CSV'] = os.environ.get('OCD_DIVISION_CSV', os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(__file__))), 'scrapers/country-{}.csv'))
-IMAGO_COUNTRY = 'ca'
 
 if os.getenv('SSL_VERIFY', False):
     SSL_VERIFY = '/usr/lib/ssl/certs/ca-certificates.crt'
 else:
     SSL_VERIFY = True
-
-from scrapers_ca_app.mappings import IMAGO_BOUNDARY_MAPPINGS

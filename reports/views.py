@@ -130,7 +130,7 @@ def represent(request, module_name):
         if match:
             parent = Division.objects.get(subtype1='csd', subtype2='', name=match.group(1))
             division = Division.objects.get(subtype1='csd', subid1=parent.subid1, name=match.group(2))
-            boundary_set_slug = next((k for k, v in settings.IMAGO_BOUNDARY_MAPPINGS.items() if v['prefix'].startswith(parent.id)), None)
+            boundary_set_slug = '{}-wards'.format(parent.name.lower())
             representative['district_name'] = membership.post.label
             representative['boundary_url'] = '/boundaries/{}/ward-{}/'.format(boundary_set_slug, division.subid2)
             representatives.append(representative)
