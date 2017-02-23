@@ -39,12 +39,12 @@ INSTALLED_APPS = (
     'reports',
 )
 
-# @see https://docs.djangoproject.com/en/1.10/topics/http/middleware/#upgrading-middleware Django 1.10
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+]
 
 ROOT_URLCONF = 'scrapers_ca_app.urls'
 
