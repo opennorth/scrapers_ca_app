@@ -64,13 +64,13 @@
         </td>
         <td style="white-space: nowrap">
           {% if report.success_at %}
-          <abbr class="timeago" title="{{ report.success_at|date:"c" }}">
+          <abbr class="timeago" title="{{ report.success_at|date:"Y-m-d H:i:sO" }}">
             {{ report.success_at|date:"Y-m-d H:i:s" }}
           </abbr>
           {% endif %}
         </td>
         <td style="white-space: nowrap">
-          <abbr class="timeago" title="{{ report.updated_at|date:"c" }}">
+          <abbr class="timeago" title="{{ report.updated_at|date:"Y-m-d H:i:sO" }}">
             {{ report.updated_at|date:"Y-m-d H:i:s" }}
           </abbr>
         </td>
