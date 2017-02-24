@@ -56,7 +56,7 @@ class Command(BaseCommand):
         # @see https://pythonhosted.org//logutils/testing.html
         # @see http://plumberjack.blogspot.ca/2010/09/unit-testing-and-logging.html
         for module_name in module_names:
-            if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', '_cache', '_data', '__pycache__', 'disabled'):
+            if os.path.isdir(os.path.join('scrapers', module_name)) and os.path.isfile(os.path.join('scrapers', module_name, '__init__.py')):
                 report, _ = Report.objects.get_or_create(module=module_name)
                 try:
                     with transaction.atomic():

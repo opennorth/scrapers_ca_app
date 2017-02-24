@@ -48,7 +48,7 @@ class Command(BaseCommand):
                     break
 
         for module_name in module_names:
-            if os.path.isdir(os.path.join('scrapers', module_name)) and module_name not in ('.git', '_cache', '_data', '__pycache__', 'disabled'):
+            if os.path.isdir(os.path.join('scrapers', module_name)) and os.path.isfile(os.path.join('scrapers', module_name, '__init__.py')):
                 division_id = module_name_to_metadata(module_name)['division_id']
                 try:
                     report = Report.objects.get(module=module_name)
@@ -59,9 +59,7 @@ class Command(BaseCommand):
                 except Report.DoesNotExist:
                     status = 'unknown'
 
-                sgc = Division.get(division_id).attrs['sgc'] or division_id.rsplit('/', 1)[-1].split(':', 1)[-1]
-                if sgc == 'ca':
-                    sgc = '01'
+                sgc = Division.get(division_id).attrs['sgc'] or division_id.rsplit(':', 1)[1]
 
                 population = populations.get(sgc, 0)
                 if not threshold or population < threshold:
