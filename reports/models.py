@@ -1,6 +1,6 @@
 # coding: utf-8
 from django.db import models
-from jsonfield import JSONField
+from django.contrib.postgres.fields import JSONField
 
 
 class Report(models.Model):

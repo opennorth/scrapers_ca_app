@@ -3,7 +3,15 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import jsonfield.fields
+
+
+class JSONField(models.TextField):
+    """Mocks jsonfield 0.92's column-type behaviour"""
+    def db_type(self, connection):
+        if connection.vendor == 'postgresql' and connection.pg_version >= 90300:
+            return 'json'
+        else:
+            return super(JSONField, self).db_type(connection)
 
 
 class Migration(migrations.Migration):
@@ -19,7 +27,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('module', models.CharField(max_length=100)),
-                ('report', jsonfield.fields.JSONField(null=True)),
+                ('report', JSONField(null=True)),
                 ('warnings', models.TextField()),
                 ('exception', models.TextField()),
                 ('updated_at', models.DateTimeField(auto_now=True)),

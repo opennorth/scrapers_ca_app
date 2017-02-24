@@ -28,8 +28,8 @@ Create a database (`dropdb pupa` if it already exists):
 
     dropdb pupa
     createdb pupa
-    pupa dbinit ca
     python manage.py migrate --noinput
+    pupa dbinit ca
 
 Run all the scrapers:
 
