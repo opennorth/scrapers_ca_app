@@ -42,7 +42,7 @@ class Command(BaseCommand):
             reader = csv.DictReader(StringIO(response.text))
             for row in reader:
                 if row:
-                    populations[row['Geographic name, english']] = int(row['Population, 2016'] or 0)
+                    populations[row['Geographic code']] = int(row['Population, 2016'] or 0)
                 else:
                     break
 
