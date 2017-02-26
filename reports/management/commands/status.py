@@ -25,25 +25,24 @@ class Command(BaseCommand):
         threshold = options['threshold']
         module_names = options['module'] or os.listdir('scrapers')
 
+        # @see http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/hlt-fst/pd-pl/index-eng.cfm
         urls = [
             # Provinces and territories
-            'https://www12.statcan.gc.ca/census-recensement/2011/dp-pd/hlt-fst/pd-pl/FullFile.cfm?T=101&LANG=Eng&OFT=CSV&OFN=98-310-XWE2011002-101.CSV',
+            'http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/hlt-fst/pd-pl/Tables/CompFile.cfm?Lang=Eng&T=101&OFT=FULLCSV',
             # Census subdivisions
-            'https://www12.statcan.gc.ca/census-recensement/2011/dp-pd/hlt-fst/pd-pl/FullFile.cfm?T=701&LANG=Eng&OFT=CSV&OFN=98-310-XWE2011002-701.CSV',
+            'http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/hlt-fst/pd-pl/Tables/CompFile.cfm?Lang=Eng&T=701&OFT=FULLCSV',
             # Census divisions
-            'https://www12.statcan.gc.ca/census-recensement/2011/dp-pd/hlt-fst/pd-pl/FullFile.cfm?T=301&LANG=Eng&OFT=CSV&OFN=98-310-XWE2011002-301.CSV',
+            'http://www12.statcan.gc.ca/census-recensement/2016/dp-pd/hlt-fst/pd-pl/Tables/CompFile.cfm?Lang=Eng&T=301&OFT=FULLCSV',
         ]
 
         populations = {}
         for url in urls:
             response = requests.get(url, verify=settings.SSL_VERIFY)
-            response.encoding = 'ISO-8859-1'
-            reader = csv.reader(StringIO(response.text))
-            next(reader)  # title
-            next(reader)  # headers
+            response.encoding = 'iso-8859-1'
+            reader = csv.DictReader(StringIO(response.text))
             for row in reader:
                 if row:
-                    populations[row[0]] = int(row[4] or 0)
+                    populations[row['Geographic name, english']] = int(row['Population, 2016'] or 0)
                 else:
                     break
 
