@@ -33,7 +33,11 @@
               <span class="glyphicon glyphicon-info-sign"></span>
             </a>
           {% endif %}
-          {% if not report.exception %}
+          {% if report.exception %}
+            <a href="{% url 'run' report.module %}" title="Run the scraper" rel="nofollow">
+              <span class="glyphicon glyphicon-refresh"></span>
+            </a>
+          {% else %}
             <a href="{% url 'represent' report.module %}" title="Download Represent JSON">
               <span class="glyphicon glyphicon-export"></span>
             </a>

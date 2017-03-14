@@ -7,11 +7,11 @@ from urllib.parse import urlsplit
 import requests
 from django.conf import settings
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from opencivicdata.models import Division, Membership
 
 from reports.models import Report
-from reports.utils import get_offices, get_personal_url, module_name_to_metadata, remove_suffix_re
+from reports.utils import get_offices, get_personal_url, module_name_to_metadata, remove_suffix_re, scrape_configuration, scrape_people
 
 
 def home(request):
@@ -56,6 +56,13 @@ def warnings(request):
 
 def report(request, module_name):
     return HttpResponse(json.dumps(Report.objects.get(module=module_name).report), content_type='application/json')
+
+
+def run(request, module_name):
+    sys.path.append(os.path.abspath('scrapers'))
+    parser, subcommand, handler = scrape_configuration()
+    scrape_people(module_name, parser, subcommand, handler)
+    return redirect('home')
 
 
 def represent(request, module_name):
