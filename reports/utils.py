@@ -1,5 +1,6 @@
-import logging
+import argparse
 import importlib
+import logging
 import re
 import traceback
 from collections import defaultdict
@@ -10,6 +11,7 @@ from django.db import transaction
 from django.db.models import Count
 from opencivicdata.models import Jurisdiction, Membership, Organization, Person, Post
 
+import pupa_settings
 from reports.models import Report
 
 CONTACT_DETAIL_TYPE_MAP = {
@@ -42,20 +44,36 @@ def get_personal_url(record):
     return None
 
 
-def scrape(module_name, parser, subcommand, handler, prepend_args, append_args):
+def scrape_configuration():
+    # @see https://github.com/opencivicdata/pupa/blob/master/pupa/cli/__main__.py
+    parser = argparse.ArgumentParser('pupa')
+    subparsers = parser.add_subparsers(dest='subcommand')
+    subcommand = importlib.import_module('pupa.cli.commands.update').Command(subparsers)
+
+    logging.config.dictConfig(pupa_settings.LOGGING)
+    handler = logging.getLogger().handlers[0]
+
+    return (parser, subcommand, handler)
+
+
+def scrape_people(module_name, parser, subcommand, handler, extra_args=[]):
+    default_args = ['update']
+    default_args.extend(extra_args)
     report, _ = Report.objects.get_or_create(module=module_name)
+
     try:
         with transaction.atomic():
             flush(module_name)
-            known_args = prepend_args[:]
+            known_args = default_args[:]
             known_args.append(module_name)
-            known_args.extend(append_args)
+            known_args.append('people')
             args, other = parser.parse_known_args(known_args)
             report.report = subcommand.handle(args, other)
             report.exception = ''
             report.success_at = datetime.now()
     except:
         report.exception = traceback.format_exc()
+
     report.warnings = '\n'.join('%(asctime)s %(levelname)s %(name)s: %(message)s' % d for d in handler.buffer if ' memberships, ' not in d['message'])
     report.save()
     handler.flush()
