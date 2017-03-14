@@ -4,15 +4,11 @@ import importlib
 import logging
 import signal
 import sys
-import traceback
-from datetime import datetime
 
 from django.core.management.base import BaseCommand
-from django.db import transaction
 
 import pupa_settings
-from reports.models import Report
-from reports.utils import flush
+from reports.utils import scrape
 
 pid = os.getpid()
 
@@ -56,20 +52,5 @@ class Command(BaseCommand):
         # @see https://pythonhosted.org//logutils/testing.html
         # @see http://plumberjack.blogspot.ca/2010/09/unit-testing-and-logging.html
         for module_name in module_names:
-            if os.path.isdir(os.path.join('scrapers', module_name)) and os.path.isfile(os.path.join('scrapers', module_name, '__init__.py')):
-                report, _ = Report.objects.get_or_create(module=module_name)
-                try:
-                    with transaction.atomic():
-                        flush(module_name)
-                        known_args = prepend_args[:]
-                        known_args.append(module_name)
-                        known_args.extend(append_args)
-                        args, other = parser.parse_known_args(known_args)
-                        report.report = subcommand.handle(args, other)
-                        report.exception = ''
-                        report.success_at = datetime.now()
-                except:
-                    report.exception = traceback.format_exc()
-                report.warnings = '\n'.join('%(asctime)s %(levelname)s %(name)s: %(message)s' % d for d in handler.buffer if ' memberships, ' not in d['message'])
-                report.save()
-                handler.flush()
+            if os.path.isfile(os.path.join('scrapers', module_name, '__init__.py')):
+                scrape(module_name, parser, subcommand, handler, prepend_args, append_args)

@@ -1,11 +1,16 @@
 import logging
 import importlib
 import re
+import traceback
 from collections import defaultdict
+from datetime import datetime
 from urllib.parse import urlsplit
 
+from django.db import transaction
 from django.db.models import Count
 from opencivicdata.models import Jurisdiction, Membership, Organization, Person, Post
+
+from reports.models import Report
 
 CONTACT_DETAIL_TYPE_MAP = {
     'address': 'postal',
@@ -35,6 +40,25 @@ def get_personal_url(record):
         if domain not in ('facebook.com', 'fb.com', 'instagram.com', 'linkedin.com', 'twitter.com', 'youtube.com'):
             return link.url
     return None
+
+
+def scrape(module_name, parser, subcommand, handler, prepend_args, append_args):
+    report, _ = Report.objects.get_or_create(module=module_name)
+    try:
+        with transaction.atomic():
+            flush(module_name)
+            known_args = prepend_args[:]
+            known_args.append(module_name)
+            known_args.extend(append_args)
+            args, other = parser.parse_known_args(known_args)
+            report.report = subcommand.handle(args, other)
+            report.exception = ''
+            report.success_at = datetime.now()
+    except:
+        report.exception = traceback.format_exc()
+    report.warnings = '\n'.join('%(asctime)s %(levelname)s %(name)s: %(message)s' % d for d in handler.buffer if ' memberships, ' not in d['message'])
+    report.save()
+    handler.flush()
 
 
 def flush(module_name):

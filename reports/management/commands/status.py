@@ -47,7 +47,7 @@ class Command(BaseCommand):
                     break
 
         for module_name in module_names:
-            if os.path.isdir(os.path.join('scrapers', module_name)) and os.path.isfile(os.path.join('scrapers', module_name, '__init__.py')):
+            if os.path.isfile(os.path.join('scrapers', module_name, '__init__.py')):
                 division_id = module_name_to_metadata(module_name)['division_id']
                 try:
                     report = Report.objects.get(module=module_name)
