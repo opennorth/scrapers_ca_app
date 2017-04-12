@@ -28,7 +28,7 @@ LOGGING = {
         'requests': {
             'handlers': ['default'], 'level': 'WARN', 'propagate': False
         },
-        'boto': {
+        'boto3': {
             'handlers': ['default'], 'level': 'WARN', 'propagate': False
         },
     },

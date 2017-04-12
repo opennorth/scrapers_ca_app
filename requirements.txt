@@ -3,7 +3,7 @@ dj-static==0.0.6
 gunicorn==19.3.0
 
 # Management
-boto==2.33.0
+boto3==1.4.4
 logutils==0.3.3
 
 -r scrapers/requirements.txt

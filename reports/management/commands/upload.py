@@ -9,8 +9,7 @@ import sys
 from io import StringIO
 from urllib.parse import urlsplit
 
-from boto.s3.connection import S3Connection
-from boto.s3.key import Key
+import boto3
 from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
 from opencivicdata.models import Membership
@@ -71,10 +70,9 @@ class Command(BaseCommand):
                 log.error('{}: UnicodeEncodeError: {}'.format(key, e))
             # with open(key, 'w') as f:
             #     f.write(body)
-            k = Key(bucket)
-            k.key = key
-            k.set_contents_from_string(body)
-            k.set_acl('public-read')
+            k = s3.Object(bucket, key)
+            k.put(Body=body)
+            k.Acl().put(ACL='public-read')
 
         def process(report, *, candidates=False):
             rows = []
@@ -194,7 +192,8 @@ class Command(BaseCommand):
 
         sys.path.append(os.path.abspath('scrapers'))
 
-        bucket = S3Connection().get_bucket('represent.opennorth.ca')
+        s3 = boto3.resource('s3')
+        bucket = s3.Bucket('represent.opennorth.ca')
 
         queryset = Report.objects.filter(exception='').exclude(module__endswith='_municipalities')
 
