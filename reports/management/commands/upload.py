@@ -70,7 +70,7 @@ class Command(BaseCommand):
                 log.error('{}: UnicodeEncodeError: {}'.format(key, e))
             # with open(key, 'w') as f:
             #     f.write(body)
-            k = s3.Object(bucket, key)
+            k = s3.Object('represent.opennorth.ca', key)
             k.put(Body=body)
             k.Acl().put(ACL='public-read')
 
@@ -193,7 +193,6 @@ class Command(BaseCommand):
         sys.path.append(os.path.abspath('scrapers'))
 
         s3 = boto3.resource('s3')
-        bucket = s3.Bucket('represent.opennorth.ca')
 
         queryset = Report.objects.filter(exception='').exclude(module__endswith='_municipalities')
 
