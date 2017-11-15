@@ -8,7 +8,7 @@ import requests
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from opencivicdata.models import Division, Membership
+from opencivicdata.core.models import Division, Membership
 
 from reports.models import Report
 from reports.utils import get_offices, get_personal_url, module_name_to_metadata, remove_suffix_re, scrape_configuration, scrape_people

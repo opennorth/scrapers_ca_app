@@ -6,8 +6,7 @@ from collections import Counter
 
 from django.db.models import Count
 from django.core.management.base import BaseCommand
-from opencivicdata.models import Membership, Organization, Person, Post, MembershipContactDetail
-from opencivicdata.models.jurisdiction import Jurisdiction
+from opencivicdata.core.models import Jurisdiction, Membership, Organization, Person, Post, MembershipContactDetail
 
 from reports.utils import module_name_to_metadata
 

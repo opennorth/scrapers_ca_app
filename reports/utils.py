@@ -9,7 +9,7 @@ from urllib.parse import urlsplit
 
 from django.db import transaction
 from django.db.models import Count
-from opencivicdata.models import Jurisdiction, Membership, Organization, Person, Post
+from opencivicdata.core.models import Jurisdiction, Membership, Organization, Person, Post
 
 import pupa_settings
 from reports.models import Report

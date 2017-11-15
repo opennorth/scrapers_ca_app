@@ -12,7 +12,7 @@ from urllib.parse import urlsplit
 import boto3
 from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
-from opencivicdata.models import Membership
+from opencivicdata.core.models import Membership
 
 from reports.models import Report
 from reports.utils import get_offices, get_personal_url, module_name_to_metadata, remove_suffix_re
