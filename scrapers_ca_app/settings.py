@@ -35,7 +35,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
     'opencivicdata.core.apps.BaseConfig',
-    # 'opencivicdata.legislative.apps.BaseConfig',
+    'opencivicdata.legislative.apps.BaseConfig',
     'pupa',
     'reports',
 )
