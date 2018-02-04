@@ -87,7 +87,7 @@ You'll need the [geo](https://github.com/cyberdelia/heroku-geo-buildpack/) build
 Setup the database (replace `DATABASE`):
 
     heroku pg:reset DATABASE
-    heroku run "OCD_DIVISION_CSV='scrapers/country-ca.csv' pupa dbinit ca"
+    heroku run pupa dbinit ca
     heroku run python manage.py migrate --noinput
 
 Add to the [Heroku Scheduler](https://scheduler.heroku.com/dashboard):
