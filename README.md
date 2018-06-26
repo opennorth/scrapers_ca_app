@@ -81,8 +81,8 @@ In the PostgreSQL shell, run:
 
 You'll need the [geo](https://github.com/cyberdelia/heroku-geo-buildpack/) buildpack for GeoDjango:
 
-    heroku buildpacks:set heroku/python
-    heroku buildpacks:add https://github.com/cyberdelia/heroku-geo-buildpack
+    heroku buildpacks:set https://github.com/cyberdelia/heroku-geo-buildpack.git
+    heroku buildpacks:add heroku/python
 
 Setup the database (replace `DATABASE`):
 
