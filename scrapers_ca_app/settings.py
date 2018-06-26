@@ -106,6 +106,10 @@ import dj_database_url
 DATABASES = {'default': dj_database_url.config(default='postgis://localhost/pupa')}
 DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
+# @see https://devcenter.heroku.com/articles/postgis#geodjango-setup
+GDAL_LIBRARY_PATH = os.getenv('GDAL_LIBRARY_PATH')
+GEOS_LIBRARY_PATH = os.getenv('GEOS_LIBRARY_PATH')
+
 # Honor the 'X-Forwarded-Proto' header for `request.is_secure()`.
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
