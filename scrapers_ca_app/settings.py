@@ -25,7 +25,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', '4y+vddl4y0&h)kl2hmo1iv8_8*s#fta#rt)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = not os.getenv('PRODUCTION', False)
 
-ALLOWED_HOSTS = ['scrapers.herokuapp.com', 'scrapers-ca.herokuapp.com']
+ALLOWED_HOSTS = ['scrapers.herokuapp.com', 'scrapers-ca.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
