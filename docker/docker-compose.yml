@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  scrapers-ca-app:
+    build: .
+    volumes:
+      - "../:/src/scrapers-ca-app"
+    ports:
+      - "80"
+    working_dir: /src/scrapers-ca-app
+    restart: always
+    command: "tail -f /dev/null"
