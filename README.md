@@ -94,8 +94,6 @@ Add to the [Heroku Scheduler](https://scheduler.heroku.com/dashboard):
 
     python manage.py update
     python manage.py upload
-    python manage.py check
-    cd scrapers && pupa update ca_on_toronto bills
 
 ### Checking consistency
 
