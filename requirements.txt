@@ -1,6 +1,6 @@
 # @see https://devcenter.heroku.com/articles/getting-started-with-django#requirements-txt
 dj-static==0.0.6
-gunicorn==19.9.0
+gunicorn==22.0.0
 
 # Management
 boto3==1.4.4
