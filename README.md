@@ -95,11 +95,19 @@ Add to the [Heroku Scheduler](https://scheduler.heroku.com/dashboard):
     python manage.py update
     python manage.py upload
 
-### Checking consistency
+### Run scrapers
+
+    heroku run python manage.py update my_scraper
+
+### Load divisions
+
+    heroku run python manage.py loaddivisions ca
+
+### Check consistency
 
     python manage.py check
 
-### Eliminating duplicates
+### Eliminate duplicates
 
 If a scraper creates duplicates, you may need to:
 
