@@ -103,6 +103,10 @@ Add to the [Heroku Scheduler](https://scheduler.heroku.com/dashboard):
 
     heroku run python manage.py loaddivisions ca
 
+Or:
+
+    heroku run python manage.py loaddivisions --sync ca
+
 ### Check consistency
 
     python manage.py check
