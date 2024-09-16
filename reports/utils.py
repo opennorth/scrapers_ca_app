@@ -1,10 +1,10 @@
 import argparse
+import datetime
 import importlib
 import logging
 import re
 import traceback
 from collections import defaultdict
-from datetime import datetime
 from urllib.parse import urlsplit
 
 from django.db import transaction
@@ -72,7 +72,7 @@ def scrape_people(module_name, parser, subcommand, handler, extra_args=None):
             args, other = parser.parse_known_args(known_args)
             report.report = subcommand.handle(args, other)
             report.exception = ''
-            report.success_at = datetime.now()
+            report.success_at = datetime.datetime.now(datetime.timezone.utc)
     except Exception:
         report.exception = traceback.format_exc()
 
@@ -126,9 +126,17 @@ def flush(module_name):
         organizations_count = qs.count()
         qs.delete()
 
-        log.info(f"{jurisdiction_id}: {people_count} people, {memberships_count} memberships, {posts_count} posts, {parties_count} parties, {organizations_count} organizations")
+        log.info(
+            "%s: %s people, %s memberships, %s posts, %s parties, %s organizations",
+            jurisdiction_id,
+            people_count,
+            memberships_count,
+            posts_count,
+            parties_count,
+            organizations_count,
+        )
     except Jurisdiction.DoesNotExist:
-        log.exception(f"No Jurisdiction with id='{jurisdiction_id}'")
+        log.exception("No Jurisdiction with id='%s'", jurisdiction_id)
 
 
 def module_name_to_metadata(module_name):

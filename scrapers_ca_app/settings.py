@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', '4y+vddl4y0&h)kl2hmo1iv8_8*s#fta#rt)3-)cel_51ysdu41')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not os.getenv('PRODUCTION', False)
+DEBUG = not os.getenv('PRODUCTION', '')
 
 ALLOWED_HOSTS = ['scrapers.herokuapp.com', 'scrapers-ca.herokuapp.com', '127.0.0.1']
 
@@ -165,4 +165,4 @@ LOGGING = {
 
 os.environ['OCD_DIVISION_CSV'] = os.environ.get('OCD_DIVISION_CSV', os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(__file__))), 'scrapers/country-{}.csv'))
 
-SSL_VERIFY = '/usr/lib/ssl/certs/ca-certificates.crt' if os.getenv('SSL_VERIFY', False) else True
+SSL_VERIFY = '/usr/lib/ssl/certs/ca-certificates.crt' if os.getenv('SSL_VERIFY', '') else True

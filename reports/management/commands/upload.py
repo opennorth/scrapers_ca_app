@@ -17,57 +17,55 @@ from reports.utils import get_offices, get_personal_url, module_name_to_metadata
 
 log = logging.getLogger(__name__)
 
+names = {
+    'Parliament of Canada': 'house-of-commons',
+    'Legislative Assembly of Alberta': 'alberta-legislature',
+    'Legislative Assembly of British Columbia': 'bc-legislature',
+    'Legislative Assembly of Manitoba': 'manitoba-legislature',
+    'Legislative Assembly of New Brunswick': 'new-brunswick-legislature',
+    'Newfoundland and Labrador House of Assembly': 'newfoundland-labrador-legislature',
+    'Nova Scotia House of Assembly': 'nova-scotia-legislature',
+    'Legislative Assembly of Ontario': 'ontario-legislature',
+    'Legislative Assembly of Prince Edward Island': 'pei-legislature',
+    'Assemblée nationale du Québec': 'quebec-assemblee-nationale',
+    'Legislative Assembly of Saskatchewan': 'saskatchewan-legislature',
+}
+default_headers = [
+    'District name',
+    'Primary role',
+    'Name',  # not in CSV schema
+    'First name',
+    'Last name',
+    'Gender',
+    'Party name',
+    'Email',
+    'Photo URL',
+    'Source URL',
+    'Website',
+    'Facebook',
+    'Instagram',
+    'Twitter',
+    'LinkedIn',
+    'YouTube',
+]
+office_headers = [
+    'Office type',  # not in CSV schema
+    'Address',  # not in CSV schema
+    'Phone',
+    'Fax',
+]
+
 
 class Command(BaseCommand):
     help = 'Generates and uploads CSV files to S3'
-
-    names = {
-        'Parliament of Canada': 'house-of-commons',
-        'Legislative Assembly of Alberta': 'alberta-legislature',
-        'Legislative Assembly of British Columbia': 'bc-legislature',
-        'Legislative Assembly of Manitoba': 'manitoba-legislature',
-        'Legislative Assembly of New Brunswick': 'new-brunswick-legislature',
-        'Newfoundland and Labrador House of Assembly': 'newfoundland-labrador-legislature',
-        'Nova Scotia House of Assembly': 'nova-scotia-legislature',
-        'Legislative Assembly of Ontario': 'ontario-legislature',
-        'Legislative Assembly of Prince Edward Island': 'pei-legislature',
-        'Assemblée nationale du Québec': 'quebec-assemblee-nationale',
-        'Legislative Assembly of Saskatchewan': 'saskatchewan-legislature',
-    }
-    default_headers = [
-        'District name',
-        'Primary role',
-        'Name',  # not in CSV schema
-        'First name',
-        'Last name',
-        'Gender',
-        'Party name',
-        'Email',
-        'Photo URL',
-        'Source URL',
-        'Website',
-        'Facebook',
-        'Instagram',
-        'Twitter',
-        'LinkedIn',
-        'YouTube',
-    ]
-    office_headers = [
-        'Office type',  # not in CSV schema
-        'Address',  # not in CSV schema
-        'Phone',
-        'Fax',
-    ]
 
     def handle(self, *args, **options):
         def save(key, io):
             body = io.getvalue()
             try:
                 body = codecs.encode(body, 'windows-1252')
-            except UnicodeEncodeError as e:
+            except UnicodeEncodeError:
                 log.exception(key)
-            # with open(key, 'w') as f:
-            #     f.write(body)
             k = s3.Object('represent.opennorth.ca', key)
             k.put(Body=body)
             k.Acl().put(ACL='public-read')
@@ -148,9 +146,7 @@ class Command(BaseCommand):
                     offices = get_offices(membership)
                     offices_count = max(len(offices), offices_count)
 
-                    for office in offices:
-                        for key in ('type', 'postal', 'tel', 'fax'):
-                            row.append(office.get(key))
+                    row.extend(office.get(key) for office in offices for key in ('type', 'postal', 'tel', 'fax'))
 
                     # If the person is associated to multiple boundaries.
                     if re.search(r'\AWards\b', membership.post.label):

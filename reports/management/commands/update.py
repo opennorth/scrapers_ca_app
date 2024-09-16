@@ -9,7 +9,7 @@ from reports.utils import scrape_configuration, scrape_people
 pid = os.getpid()
 
 
-def signal_handler(signalnum, handler):
+def signal_handler(signalnum, handler):  # noqa: ARG001
     os.kill(pid, signal.SIGKILL)
 
 
