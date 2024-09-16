@@ -11,7 +11,14 @@ from django.shortcuts import redirect, render
 from opencivicdata.core.models import Division, Membership
 
 from reports.models import Report
-from reports.utils import get_offices, get_personal_url, module_name_to_metadata, remove_suffix_re, scrape_configuration, scrape_people
+from reports.utils import (
+    get_offices,
+    get_personal_url,
+    module_name_to_metadata,
+    remove_suffix_re,
+    scrape_configuration,
+    scrape_people,
+)
 
 
 def home(request):
@@ -153,9 +160,9 @@ def represent(request, module_name):
         else:
             division_id = metadata['division_id']
 
-            if re.search('^ocd-division/country:ca/csd:(\d{7})\Z', division_id):
+            if re.search(r'^ocd-division/country:ca/csd:(\d{7})\Z', division_id):
                 geographic_code = division_id[-7:]
-            elif re.search('^ocd-division/country:ca/cd:(\d{4})\Z', division_id):
+            elif re.search(r'^ocd-division/country:ca/cd:(\d{4})\Z', division_id):
                 geographic_code = division_id[-4:]
             else:
                 geographic_code = None

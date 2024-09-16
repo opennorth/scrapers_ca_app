@@ -71,7 +71,7 @@ def scrape_people(module_name, parser, subcommand, handler, extra_args=[]):
             report.report = subcommand.handle(args, other)
             report.exception = ''
             report.success_at = datetime.now()
-    except:
+    except Exception:
         report.exception = traceback.format_exc()
 
     report.warnings = '\n'.join('%(asctime)s %(levelname)s %(name)s: %(message)s' % d for d in handler.buffer if ' memberships, ' not in d['message'])

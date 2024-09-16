@@ -1,0 +1,8 @@
+# @see https://devcenter.heroku.com/articles/getting-started-with-django#requirements-txt
+-r scrapers/requirements.txt
+boto3
+dj-database-url
+dj-static
+gunicorn
+logutils
+psycopg2
