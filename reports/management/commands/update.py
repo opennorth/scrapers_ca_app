@@ -36,10 +36,7 @@ class Command(BaseCommand):
 
         module_names = options['module'] or os.listdir('scrapers')
 
-        if options['fastmode']:
-            extra_args = ['--fastmode']
-        else:
-            extra_args = []
+        extra_args = ['--fastmode'] if options['fastmode'] else []
 
         # @see https://pythonhosted.org//logutils/testing.html
         # @see http://plumberjack.blogspot.ca/2010/09/unit-testing-and-logging.html

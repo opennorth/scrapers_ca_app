@@ -56,7 +56,9 @@ def scrape_configuration():
     return (parser, subcommand, handler)
 
 
-def scrape_people(module_name, parser, subcommand, handler, extra_args=[]):
+def scrape_people(module_name, parser, subcommand, handler, extra_args=None):
+    if extra_args is None:
+        extra_args = []
     default_args = ['update']
     default_args.extend(extra_args)
     report, _ = Report.objects.get_or_create(module=module_name)
@@ -74,7 +76,7 @@ def scrape_people(module_name, parser, subcommand, handler, extra_args=[]):
     except Exception:
         report.exception = traceback.format_exc()
 
-    report.warnings = '\n'.join('%(asctime)s %(levelname)s %(name)s: %(message)s' % d for d in handler.buffer if ' memberships, ' not in d['message'])
+    report.warnings = '\n'.join('{asctime} {levelname} {name}: {message}'.format(**d) for d in handler.buffer if ' memberships, ' not in d['message'])
     report.save()
     handler.flush()
 
@@ -126,7 +128,7 @@ def flush(module_name):
 
         log.info(f"{jurisdiction_id}: {people_count} people, {memberships_count} memberships, {posts_count} posts, {parties_count} parties, {organizations_count} organizations")
     except Jurisdiction.DoesNotExist:
-        log.error(f"No Jurisdiction with id='{jurisdiction_id}'")
+        log.exception(f"No Jurisdiction with id='{jurisdiction_id}'")
 
 
 def module_name_to_metadata(module_name):
@@ -142,3 +144,4 @@ def module_name_to_metadata(module_name):
                 'classification': getattr(obj, 'classification', None),
                 'jurisdiction_id': '{}/{}'.format(division_id.replace('ocd-division', 'ocd-jurisdiction'), getattr(obj, 'classification', 'legislature')),
             }
+    return None

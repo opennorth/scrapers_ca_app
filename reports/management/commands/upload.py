@@ -65,7 +65,7 @@ class Command(BaseCommand):
             try:
                 body = codecs.encode(body, 'windows-1252')
             except UnicodeEncodeError as e:
-                log.error(f'{key}: UnicodeEncodeError: {e}')
+                log.exception(key)
             # with open(key, 'w') as f:
             #     f.write(body)
             k = s3.Object('represent.opennorth.ca', key)
@@ -168,10 +168,7 @@ class Command(BaseCommand):
                     headers += self.office_headers
 
                 name = metadata['name']
-                if name in self.names:
-                    slug = self.names[name]
-                else:
-                    slug = slugify(name)
+                slug = self.names[name] if name in self.names else slugify(name)
 
                 io = StringIO()
                 body = csv.writer(io)
@@ -208,7 +205,7 @@ class Command(BaseCommand):
             all_rows += rows
             max_offices_count = max(offices_count, max_offices_count)
 
-        headers = ['Organization'] + self.default_headers
+        headers = ['Organization', *self.default_headers]
         for _ in range(max_offices_count):
             headers += self.office_headers
 

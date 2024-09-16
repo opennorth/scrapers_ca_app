@@ -51,10 +51,7 @@ class Command(BaseCommand):
                 division_id = module_name_to_metadata(module_name)['division_id']
                 try:
                     report = Report.objects.get(module=module_name)
-                    if report.exception:
-                        status = 'error'
-                    else:
-                        status = 'success'
+                    status = 'error' if report.exception else 'success'
                 except Report.DoesNotExist:
                     status = 'unknown'
 

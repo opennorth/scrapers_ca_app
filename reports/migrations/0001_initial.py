@@ -4,12 +4,12 @@ from django.db import migrations, models
 
 
 class JSONField(models.TextField):
-    """Mocks jsonfield 0.92's column-type behaviour"""
+    """Mocks jsonfield 0.92's column-type behaviour."""
 
     def db_type(self, connection):
         if connection.vendor == 'postgresql' and connection.pg_version >= 90300:
             return 'json'
-        return super(JSONField, self).db_type(connection)
+        return super().db_type(connection)
 
 
 class Migration(migrations.Migration):
