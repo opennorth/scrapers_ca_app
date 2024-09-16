@@ -62,4 +62,4 @@ class Command(BaseCommand):
 
                 population = populations.get(sgc, 0)
                 if not threshold or population < threshold:
-                    print('{:<32} {:<7} {:8}'.format(module_name, status, population))
+                    print(f'{module_name:<32} {status:<7} {population:8}')

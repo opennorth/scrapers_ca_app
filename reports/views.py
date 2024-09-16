@@ -144,9 +144,9 @@ def represent(request, module_name):
         if match:
             parent = Division.objects.get(subtype1='csd', subtype2='', name=match.group(1))
             division = Division.objects.get(subtype1='csd', subid1=parent.subid1, name=match.group(2))
-            boundary_set_slug = '{}-wards'.format(parent.name.lower())
+            boundary_set_slug = f'{parent.name.lower()}-wards'
             representative['district_name'] = membership.post.label
-            representative['boundary_url'] = '/boundaries/{}/ward-{}/'.format(boundary_set_slug, division.subid2)
+            representative['boundary_url'] = f'/boundaries/{boundary_set_slug}/ward-{division.subid2}/'
             representatives.append(representative)
 
         # If the person is associated to multiple boundaries.
@@ -154,7 +154,7 @@ def represent(request, module_name):
             for district_id in re.findall(r'\d+', membership.post.label):
                 representative = representative.copy()
                 representative['district_id'] = district_id
-                representative['district_name'] = 'Ward {}'.format(district_id)
+                representative['district_name'] = f'Ward {district_id}'
                 representatives.append(representative)
 
         else:
@@ -182,9 +182,9 @@ def represent(request, module_name):
             elif post_label == metadata['division_name'] and geographic_code:
                 representative['district_name'] = post_label
                 if len(geographic_code) == 7:
-                    representative['boundary_url'] = '/boundaries/census-subdivisions/{}/'.format(geographic_code)
+                    representative['boundary_url'] = f'/boundaries/census-subdivisions/{geographic_code}/'
                 elif len(geographic_code) == 4:
-                    representative['boundary_url'] = '/boundaries/census-divisions/{}/'.format(geographic_code)
+                    representative['boundary_url'] = f'/boundaries/census-divisions/{geographic_code}/'
 
             else:
                 representative['district_name'] = post_label

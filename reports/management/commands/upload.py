@@ -65,7 +65,7 @@ class Command(BaseCommand):
             try:
                 body = codecs.encode(body, 'windows-1252')
             except UnicodeEncodeError as e:
-                log.error('{}: UnicodeEncodeError: {}'.format(key, e))
+                log.error(f'{key}: UnicodeEncodeError: {e}')
             # with open(key, 'w') as f:
             #     f.write(body)
             k = s3.Object('represent.opennorth.ca', key)
@@ -146,8 +146,7 @@ class Command(BaseCommand):
                     ]
 
                     offices = get_offices(membership)
-                    if len(offices) > offices_count:
-                        offices_count = len(offices)
+                    offices_count = max(len(offices), offices_count)
 
                     for office in offices:
                         for key in ('type', 'postal', 'tel', 'fax'):
@@ -157,7 +156,7 @@ class Command(BaseCommand):
                     if re.search(r'\AWards\b', membership.post.label):
                         for district_id in re.findall(r'\d+', membership.post.label):
                             row = row[:]
-                            row[0] = 'Ward {}'.format(district_id)
+                            row[0] = f'Ward {district_id}'
                             rows.append(row)
                     else:
                         rows.append(row)
@@ -207,8 +206,7 @@ class Command(BaseCommand):
         for report in reports:
             rows, offices_count = process(report)
             all_rows += rows
-            if offices_count > max_offices_count:
-                max_offices_count = offices_count
+            max_offices_count = max(offices_count, max_offices_count)
 
         headers = ['Organization'] + self.default_headers
         for _ in range(max_offices_count):

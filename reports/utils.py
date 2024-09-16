@@ -124,9 +124,9 @@ def flush(module_name):
         organizations_count = qs.count()
         qs.delete()
 
-        log.info("{}: {} people, {} memberships, {} posts, {} parties, {} organizations".format(jurisdiction_id, people_count, memberships_count, posts_count, parties_count, organizations_count))
+        log.info(f"{jurisdiction_id}: {people_count} people, {memberships_count} memberships, {posts_count} posts, {parties_count} parties, {organizations_count} organizations")
     except Jurisdiction.DoesNotExist:
-        log.error("No Jurisdiction with id='{}'".format(jurisdiction_id))
+        log.error(f"No Jurisdiction with id='{jurisdiction_id}'")
 
 
 def module_name_to_metadata(module_name):
