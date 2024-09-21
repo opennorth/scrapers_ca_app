@@ -1,11 +1,11 @@
-from django.conf.urls import url
+from django.urls import path, re_path
 
 from reports import views
 
 urlpatterns = [
-    url(r'^report/(?P<module_name>[a-z0-9_]+)/$', views.report, name='report'),
-    url(r'^represent/(?P<module_name>[a-z0-9_]+)/$', views.represent, name='represent'),
-    url(r'^run/(?P<module_name>[a-z0-9_]+)/$', views.run, name='run'),
-    url(r'^warnings/$', views.warnings, name='warnings'),
-    url(r'^$', views.home, name='home'),
+    re_path(r'^report/(?P<module_name>[a-z0-9_]+)/$', views.report, name='report'),
+    re_path(r'^represent/(?P<module_name>[a-z0-9_]+)/$', views.represent, name='represent'),
+    re_path(r'^run/(?P<module_name>[a-z0-9_]+)/$', views.run, name='run'),
+    path('warnings/', views.warnings, name='warnings'),
+    path('', views.home, name='home'),
 ]
