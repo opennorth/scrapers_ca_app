@@ -98,6 +98,11 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 
 # @see https://devcenter.heroku.com/articles/getting-started-with-django#settings-py
 # @see https://devcenter.heroku.com/articles/django-assets

@@ -1,4 +1,3 @@
-from django.db.models import JSONField
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 
@@ -6,7 +5,7 @@ from django.db import models
 class Report(models.Model):
     id = models.AutoField(primary_key=True)
     module = models.CharField(max_length=100)
-    report = JSONField(null=True, encoder=DjangoJSONEncoder)
+    report = models.JSONField(null=True, encoder=DjangoJSONEncoder)
     warnings = models.TextField()
     exception = models.TextField()
     updated_at = models.DateTimeField(auto_now=True)
