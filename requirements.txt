@@ -28,6 +28,8 @@ charset-normalizer==3.3.2
     # via
     #   -r scrapers/requirements.txt
     #   requests
+cloudscraper==1.2.71
+    # via -r scrapers/requirements.txt
 dj-database-url==0.3.0
     # via
     #   -r requirements.in
@@ -35,7 +37,7 @@ dj-database-url==0.3.0
     #   pupa
 dj-static==0.0.6
     # via -r requirements.in
-django==4.2.18
+django==4.2.20
     # via
     #   -r scrapers/requirements.txt
     #   opencivicdata
@@ -97,6 +99,10 @@ psycopg2-binary==2.9.9
     #   opencivicdata
 pupa @ git+https://github.com/opencivicdata/pupa@f0791f7de07574039eff10d804e4683399a16ec5
     # via -r scrapers/requirements.txt
+pyparsing==3.2.1
+    # via
+    #   -r scrapers/requirements.txt
+    #   cloudscraper
 python-dateutil==2.9.0.post0
     # via botocore
 python-slugify==8.0.4
@@ -116,7 +122,13 @@ regex==2014.4.10
 requests==2.32.3
     # via
     #   -r scrapers/requirements.txt
+    #   cloudscraper
+    #   requests-toolbelt
     #   scrapelib
+requests-toolbelt==1.0.0
+    # via
+    #   -r scrapers/requirements.txt
+    #   cloudscraper
 s3transfer==0.10.2
     # via boto3
 scrapelib==2.3.0
