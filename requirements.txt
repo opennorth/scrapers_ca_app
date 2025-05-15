@@ -37,7 +37,7 @@ dj-database-url==0.3.0
     #   pupa
 dj-static==0.0.6
     # via -r requirements.in
-django==4.2.20
+django==4.2.21
     # via
     #   -r scrapers/requirements.txt
     #   opencivicdata
@@ -93,7 +93,7 @@ psycopg2==2.9.10
     #   -r requirements.in
     #   -r scrapers/requirements.txt
     #   pupa
-psycopg2-binary==2.9.9
+psycopg2-binary==2.9.10
     # via
     #   -r scrapers/requirements.txt
     #   opencivicdata
@@ -117,9 +117,9 @@ pytz==2024.2
     # via
     #   -r scrapers/requirements.txt
     #   pupa
-regex==2014.4.10
+regex==2024.11.6
     # via -r scrapers/requirements.txt
-requests[security]==2.32.3
+requests==2.32.3
     # via
     #   -r scrapers/requirements.txt
     #   cloudscraper
