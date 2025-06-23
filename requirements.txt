@@ -37,7 +37,7 @@ dj-database-url==0.3.0
     #   pupa
 dj-static==0.0.6
     # via -r requirements.in
-django==4.2.21
+django==4.2.23
     # via
     #   -r scrapers/requirements.txt
     #   opencivicdata
@@ -119,7 +119,7 @@ pytz==2024.2
     #   pupa
 regex==2024.11.6
     # via -r scrapers/requirements.txt
-requests==2.32.3
+requests==2.32.4
     # via
     #   -r scrapers/requirements.txt
     #   cloudscraper
@@ -151,9 +151,7 @@ text-unidecode==1.3
     #   -r scrapers/requirements.txt
     #   python-slugify
 typing-extensions==4.12.2
-    # via
-    #   -r scrapers/requirements.txt
-    #   asgiref
+    # via asgiref
 unidecode==0.4.14
     # via -r scrapers/requirements.txt
 urllib3==1.26.20
