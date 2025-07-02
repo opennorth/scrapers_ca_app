@@ -131,7 +131,7 @@ requests-toolbelt==1.0.0
     #   cloudscraper
 s3transfer==0.10.2
     # via boto3
-scrapelib==2.3.0
+scrapelib==2.4.1
     # via
     #   -r scrapers/requirements.txt
     #   pupa
@@ -154,7 +154,7 @@ typing-extensions==4.12.2
     # via asgiref
 unidecode==0.4.14
     # via -r scrapers/requirements.txt
-urllib3==1.26.20
+urllib3==2.5.0
     # via
     #   -r scrapers/requirements.txt
     #   botocore
