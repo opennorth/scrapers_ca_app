@@ -14,9 +14,9 @@ babel==2.16.0
     # via
     #   -r scrapers/requirements.txt
     #   agate
-boto3==1.40.6
+boto3==1.34.105
     # via -r requirements.in
-botocore==1.40.6
+botocore==1.34.162
     # via
     #   boto3
     #   s3transfer
@@ -129,7 +129,7 @@ requests-toolbelt==1.0.0
     # via
     #   -r scrapers/requirements.txt
     #   cloudscraper
-s3transfer==0.13.1
+s3transfer==0.10.2
     # via boto3
 scrapelib==2.4.1
     # via
@@ -150,6 +150,8 @@ text-unidecode==1.3
     # via
     #   -r scrapers/requirements.txt
     #   python-slugify
+typing-extensions==4.12.2
+    # via asgiref
 unidecode==0.4.14
     # via -r scrapers/requirements.txt
 urllib3==2.5.0
