@@ -159,7 +159,7 @@ class Command(BaseCommand):
 
                 rows.sort()
 
-                headers = default_headers
+                headers = default_headers[:]
                 for _ in range(offices_count):
                     headers += office_headers
 
