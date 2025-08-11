@@ -159,12 +159,12 @@ class Command(BaseCommand):
 
                 rows.sort()
 
-                headers = self.default_headers[:]
+                headers = default_headers
                 for _ in range(offices_count):
-                    headers += self.office_headers
+                    headers += office_headers
 
                 name = metadata['name']
-                slug = self.names[name] if name in self.names else slugify(name)
+                slug = names[name] if name in names else slugify(name)
 
                 io = StringIO()
                 body = csv.writer(io)
