@@ -181,9 +181,9 @@ class Command(BaseCommand):
             return [rows, offices_count]
 
         sys.path.append(os.path.abspath('scrapers'))
-
+        boto3.set_stream_logger('', logging.DEBUG)
         s3 = boto3.resource('s3')
-        print(s3)
+
         queryset = Report.objects.filter(exception='').exclude(module__endswith='_municipalities')
 
         # Candidates.
