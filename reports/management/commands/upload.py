@@ -183,7 +183,7 @@ class Command(BaseCommand):
         sys.path.append(os.path.abspath('scrapers'))
 
         s3 = boto3.resource('s3')
-
+        print(s3)
         queryset = Report.objects.filter(exception='').exclude(module__endswith='_municipalities')
 
         # Candidates.
