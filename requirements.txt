@@ -20,7 +20,7 @@ botocore==1.34.162
     # via
     #   boto3
     #   s3transfer
-certifi==2024.8.30
+certifi==2026.10.19
     # via
     #   -r scrapers/requirements.txt
     #   requests
@@ -140,7 +140,7 @@ six==1.16.0
     #   -r scrapers/requirements.txt
     #   isodate
     #   python-dateutil
-sqlparse==0.6.0
+sqlparse==0.5.5
     # via
     #   -r scrapers/requirements.txt
     #   django
